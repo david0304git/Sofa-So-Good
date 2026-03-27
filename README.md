@@ -2,6 +2,12 @@
 
 ## Project Structure
 - LoginActivity.java / activity_login.xml  
-Handles user account and password input and verification.
+Handles user account and password input and verification
 - MainActivity.java / activity_main.xml  
-Displays the game title and main menu (Start Game, Settings, Leaderboard).
+Displays the game title and main menu (Start Game, Settings, Leaderboard)
+- SettingsActivity.java / activity_settings.xml  
+Game settings (sound effects, language, control methods)
+- DevelopersActivity.java / activity_developers.xml  
+Show developer list
+- LeaderboardActivity.java / activity_leaderboard.xml  
+Displays player score or completion time
