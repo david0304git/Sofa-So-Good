@@ -3,7 +3,7 @@
 - [ ] Login Function
 - [ ] Leaderboard Function
 - [ ] Beginner's Guide
-- [ ] Anime Character (4 types of view)
+- [x] Anime Character (4 types of view)
     - Happy
     - Thinking
     - Idle
