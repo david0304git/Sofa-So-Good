@@ -1,4 +1,23 @@
 # Sofa So Good
+## To Do List
+- [ ] Login Function
+- [ ] Leaderboard Function
+- [ ] Beginner's Guide
+- [ ] Anime Character (4 types of view)
+    - Happy
+    - Thinking
+    - Idle
+    - 2D Top View
+    - Dialog Box
+- [ ] Level Design
+    - L1 Living Room
+    - L2 Kitchen
+    - L3 Washroom
+    - L4 Bedroom
+    - L5 Balcony
+    - ....
+- [ ] UI/UX Fine-tuning
+    - Timer  
 
 ## Screens / Pages
 1. Login Page
@@ -19,12 +38,29 @@
 - LeaderboardActivity.java
 - CreditsAcivity.java
 - OutlinedTextButton.java
+- OutlinedTextView.java
+- BgmService.java
+- game/levels/Level1Acticity.java
+- game/levels/Level2Acticity.java
+- game/model
+- game/GameView.java
+- game/LevelResultActivity.java
+- game/Pause.java
+
 ### res
 - anim/button_press.xml
 - anim/button_release.xml
+
+- drawable/ic_arrow_left.xml
+- drawable/ic_arrow_right.xml
+- drawable/ic_launcher_background.xml
+- drawable/ic_launcher_foreground.xml
+- drawable/level_cell.xml
 - drawable/main_button.xml
 - drawable/menu_background.png
 - drawable/menu_title.png
+- drawable/settings_panel.xml
+
 - layout/activity_credits.xml
 - layout/activity_leaderboard.xml
 - layout/activity_level_result.xml
@@ -34,5 +70,8 @@
 - layout/activity_settings.xml
 - layout/level1.xml
 - layout/level2.xml
+  
 - raw/button_click.mp3
+- raw/background_soundtrack_loop.mp3
+  
 - values/styles.xml
