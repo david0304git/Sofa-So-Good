@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,13 +8,78 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- 遊戲標題 -->
     <TextView
+        android:id="@+id/gameTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Sofa So Good"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="48dp"/>
+
+    <LinearLayout
+        android:id="@+id/buttonGroup"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="32dp">
+
+        <!-- 開始遊戲按鈕 -->
+        <android.widget.Button
+            android:id="@+id/btnStart"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            style="@style/NeonButton"
+            app:layout_constraintTop_toBottomOf="@id/gameTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <!-- 關卡選擇按鈕 -->
+        <android.widget.Button
+            android:id="@+id/btnCredits"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Credits"
+            style="@style/NeonButton"
+            app:layout_constraintTop_toBottomOf="@id/btnStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- 設定按鈕 -->
+        <android.widget.Button
+            android:id="@+id/btnSettings"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Setting"
+            style="@style/NeonButton"
+            app:layout_constraintTop_toBottomOf="@id/btnCredits"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- 排行榜按鈕 -->
+        <android.widget.Button
+            android:id="@+id/btnQuit"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Quit"
+            style="@style/NeonButton"
+            app:layout_constraintTop_toBottomOf="@id/btnSettings"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
