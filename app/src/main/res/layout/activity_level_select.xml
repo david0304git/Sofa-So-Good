@@ -32,7 +32,7 @@
             android:text="Levels"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="italic" />
 
         <!-- 翻頁區域 -->
         <ViewFlipper
@@ -43,7 +43,7 @@
             <!-- 第一頁: 關卡 1-4 -->
             <GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="243dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:alignmentMode="alignBounds"
                 android:columnCount="2"

@@ -30,7 +30,7 @@
             android:text="Credits"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="italic" />
 
         <com.speed.sofasogood.OutlinedTextView
             android:layout_width="wrap_content"
