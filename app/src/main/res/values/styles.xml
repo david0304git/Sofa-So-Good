@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="NeonButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/neon_button</item>
-        <item name="android:textColor">#00FFFF</item>
+        <item name="android:background">@drawable/main_button</item>
+        <item name="android:textColor">#FFFFFF</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:shadowColor">#00FFFF</item>
+        <item name="android:shadowColor">#FFD700</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">0</item>
         <item name="android:shadowRadius">8</item>
