@@ -1,6 +1,6 @@
 # Sofa So Good
 ## To Do List
-- [] Login Function
+1. [ ]Login Function
 2. Leaderboard Function
 3. Beginner's Guide
 4. Anime Character (4 types of view)
