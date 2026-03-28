@@ -2,11 +2,13 @@
 ## To Do List
 1. Login Function
 2. Leaderboard Function
-3. Anime Character (4 types of view)
+3. Beginner's Guide
+4. Anime Character (4 types of view)
     - Happy
     - Thinking
     - Idle
     - 2D Top View
+    - Dialog Box
 5. Level Design
     - L1 Living Room
     - L2 Kitchen
