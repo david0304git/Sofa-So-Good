@@ -4,7 +4,13 @@
 2. Leaderboard Function
 3. Anime Character (4 types of view)
 4. Level Design
-5. UI/UX Fine-tuning
+    - L1 Living Room
+    - L2 Kitchen
+    - L3 Washroom
+    - L4 Bedroom
+    - L5 Balcony
+    - ....
+6. UI/UX Fine-tuning
 
 ## Screens / Pages
 1. Login Page
