@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".LevelSelectActivity" />
+        <activity android:name=".CreditsActivity" />
+        <service android:name=".BgmService" />
     </application>
 
 </manifest>

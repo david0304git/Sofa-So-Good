@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         clickSoundId = soundPool.load(this, R.raw.button_click, 1);
 
+        // 啟動背景音樂
+        startService(new Intent(this, BgmService.class));
+
         setupButtonAnimation(findViewById(R.id.btnStart));
         setupButtonAnimation(findViewById(R.id.btnCredits));
         setupButtonAnimation(findViewById(R.id.btnSettings));
@@ -48,10 +51,16 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnStart).setOnClickListener(v ->
                 startActivity(new Intent(this, LevelSelectActivity.class)));
 
+        findViewById(R.id.btnCredits).setOnClickListener(v ->
+                startActivity(new Intent(this, CreditsActivity.class)));
+
         findViewById(R.id.btnSettings).setOnClickListener(v ->
                 startActivity(new Intent(this, SettingsActivity.class)));
 
-        findViewById(R.id.btnQuit).setOnClickListener(v -> finishAffinity());
+        findViewById(R.id.btnQuit).setOnClickListener(v -> {
+            stopService(new Intent(this, BgmService.class));
+            finishAffinity();
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
