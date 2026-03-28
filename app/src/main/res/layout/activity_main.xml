@@ -9,7 +9,6 @@
     android:background="@drawable/menu_background"
     tools:context=".MainActivity">
 
-    <!-- 遊戲標題 -->
     <ImageView
         android:id="@+id/gameTitle"
         android:layout_width="0dp"

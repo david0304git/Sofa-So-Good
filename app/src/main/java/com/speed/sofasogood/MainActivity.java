@@ -1,6 +1,7 @@
 package com.speed.sofasogood;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -43,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
         setupButtonAnimation(findViewById(R.id.btnCredits));
         setupButtonAnimation(findViewById(R.id.btnSettings));
         setupButtonAnimation(findViewById(R.id.btnQuit));
+
+        findViewById(R.id.btnStart).setOnClickListener(v ->
+                startActivity(new Intent(this, LevelSelectActivity.class)));
+
+        findViewById(R.id.btnSettings).setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
+
+        findViewById(R.id.btnQuit).setOnClickListener(v -> finishAffinity());
     }
 
     @SuppressLint("ClickableViewAccessibility")
