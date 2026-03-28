@@ -3,7 +3,11 @@
 1. Login Function
 2. Leaderboard Function
 3. Anime Character (4 types of view)
-4. Level Design
+    - Happy
+    - Thinking
+    - Idle
+    - 2D Top View
+5. Level Design
     - L1 Living Room
     - L2 Kitchen
     - L3 Washroom
