@@ -17,6 +17,7 @@
     - L5 Balcony
     - ....
 - [ ] UI/UX Fine-tuning
+    - Timer  
 
 ## Screens / Pages
 1. Login Page
