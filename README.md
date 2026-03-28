@@ -1,22 +1,22 @@
 # Sofa So Good
 ## To Do List
-- [ ]Login Function
-- [ ]Leaderboard Function
-- [ ]Beginner's Guide
-- [ ]Anime Character (4 types of view)
+- [ ] Login Function
+- [ ] Leaderboard Function
+- [ ] Beginner's Guide
+- [ ] Anime Character (4 types of view)
     - Happy
     - Thinking
     - Idle
     - 2D Top View
     - Dialog Box
-- [ ]Level Design
+- [ ] Level Design
     - L1 Living Room
     - L2 Kitchen
     - L3 Washroom
     - L4 Bedroom
     - L5 Balcony
     - ....
-- [ ]UI/UX Fine-tuning
+- [ ] UI/UX Fine-tuning
 
 ## Screens / Pages
 1. Login Page
