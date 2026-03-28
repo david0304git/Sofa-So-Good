@@ -6,6 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_background"
     tools:context=".MainActivity">
 
     <!-- 遊戲標題 -->
@@ -33,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="40dp">
 
-        <android.widget.Button
+        <com.speed.sofasogood.OutlinedTextButton
             android:id="@+id/btnStart"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -44,7 +45,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"/>
 
-        <android.widget.Button
+        <com.speed.sofasogood.OutlinedTextButton
             android:id="@+id/btnCredits"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -55,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"/>
 
-        <android.widget.Button
+        <com.speed.sofasogood.OutlinedTextButton
             android:id="@+id/btnSettings"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp" />
 
-        <android.widget.Button
+        <com.speed.sofasogood.OutlinedTextButton
             android:id="@+id/btnQuit"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
