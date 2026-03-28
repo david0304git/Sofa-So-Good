@@ -31,6 +31,14 @@ public class Level1Activity extends AppCompatActivity {
             "Alright, let's start arranging—time to make the living room shine!"
     };
 
+    private final int[] expressions = {
+            R.drawable.character_happy,
+            R.drawable.character_thinking,
+            R.drawable.character_thinking,
+            R.drawable.character_thinking,
+            R.drawable.character_idea
+    };
+
     @Override
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +72,7 @@ public class Level1Activity extends AppCompatActivity {
             dialogIndex++;
             if (dialogIndex < dialogs.length) {
                 dialogBox.setText(dialogs[dialogIndex]);
+                dialogCharacter.setImageResource(expressions[dialogIndex]);
             } else {
                 // 對話結束，隱藏角色和對話框
                 dialogFinished = true;
