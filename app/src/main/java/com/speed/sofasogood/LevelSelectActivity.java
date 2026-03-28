@@ -1,6 +1,7 @@
 package com.speed.sofasogood;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -71,6 +72,10 @@ public class LevelSelectActivity extends AppCompatActivity {
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
+
+        // 第一關
+        findViewById(R.id.btnLevel1).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level1Activity.class)));
     }
 
     private void updateArrows() {

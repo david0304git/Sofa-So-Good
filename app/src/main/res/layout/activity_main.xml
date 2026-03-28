@@ -30,7 +30,7 @@
         android:layout_height="536dp"
         android:adjustViewBounds="true"
         android:elevation="0dp"
-        android:src="@drawable/character"
+        android:src="@drawable/character_menu"
         app:layout_constraintBottom_toBottomOf="@id/buttonGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
