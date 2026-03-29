@@ -25,6 +25,7 @@
         <activity android:name=".CreditsActivity" />
         <service android:name=".BgmService" />
         <activity android:name=".game.levels.Level1Activity" />
+        <activity android:name=".game.LevelResultActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,80 @@
 package com.speed.sofasogood.game;
 
-public class LevelResultActivity {
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.speed.sofasogood.R;
+
+public class LevelResultActivity extends AppCompatActivity {
+
+    private SoundPool soundPool;
+    private int clickSoundId;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_level_result);
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(4)
+                .setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_GAME)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build())
+                .build();
+        clickSoundId = soundPool.load(this, R.raw.button_click, 1);
+
+        String nextLevelClass = getIntent().getStringExtra("nextLevel");
+
+        View btnNext = findViewById(R.id.btnNextLevel);
+        setupButtonAnimation(btnNext);
+        if (nextLevelClass != null) {
+            btnNext.setOnClickListener(v -> {
+                try {
+                    startActivity(new Intent(this, Class.forName(nextLevelClass)));
+                } catch (ClassNotFoundException ignored) {}
+                finish();
+            });
+        } else {
+            btnNext.setVisibility(View.GONE);
+        }
+
+        View btnExit = findViewById(R.id.btnExit);
+        setupButtonAnimation(btnExit);
+        btnExit.setOnClickListener(v -> finish());
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupButtonAnimation(View button) {
+        button.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
+                    soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_release));
+                    break;
+            }
+            return false;
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
+        super.onDestroy();
+    }
 }

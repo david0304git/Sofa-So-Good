@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.speed.sofasogood.BgmService;
 import com.speed.sofasogood.R;
+import com.speed.sofasogood.game.GameView;
+import com.speed.sofasogood.game.model.LevelData;
 
 public class Level1Activity extends AppCompatActivity {
 
@@ -62,6 +64,7 @@ public class Level1Activity extends AppCompatActivity {
         TextView dialogBox = findViewById(R.id.dialogBox);
         ImageView dialogCharacter = findViewById(R.id.dialogCharacter);
         View pauseOverlay = findViewById(R.id.pauseOverlay);
+        GameView gameView = findViewById(R.id.gameView);
 
         // 顯示第一句台詞
         dialogBox.setText(dialogs[dialogIndex]);
@@ -74,11 +77,19 @@ public class Level1Activity extends AppCompatActivity {
                 dialogBox.setText(dialogs[dialogIndex]);
                 dialogCharacter.setImageResource(expressions[dialogIndex]);
             } else {
-                // 對話結束，隱藏角色和對話框
                 dialogFinished = true;
                 dialogBox.setVisibility(View.GONE);
                 dialogCharacter.setVisibility(View.GONE);
+                gameView.setVisibility(View.VISIBLE);
+                gameView.loadLevel(LevelData.LEVEL_1);
             }
+        });
+
+        gameView.setOnLevelCompleteListener(() -> {
+            Intent result = new Intent(this, com.speed.sofasogood.game.LevelResultActivity.class);
+            result.putExtra("nextLevel", "com.speed.sofasogood.game.levels.Level2Activity");
+            startActivity(result);
+            finish();
         });
 
         // 暫停按鈕
@@ -91,6 +102,20 @@ public class Level1Activity extends AppCompatActivity {
         View btnResume = findViewById(R.id.btnResume);
         setupButtonAnimation(btnResume);
         btnResume.setOnClickListener(v -> pauseOverlay.setVisibility(View.GONE));
+
+        // 重新開始
+        View btnRestart = findViewById(R.id.btnRestart);
+        setupButtonAnimation(btnRestart);
+        btnRestart.setOnClickListener(v -> {
+            pauseOverlay.setVisibility(View.GONE);
+            gameView.setVisibility(View.GONE);
+            dialogIndex = 0;
+            dialogFinished = false;
+            dialogBox.setVisibility(View.VISIBLE);
+            dialogCharacter.setVisibility(View.VISIBLE);
+            dialogBox.setText(dialogs[0]);
+            dialogCharacter.setImageResource(expressions[0]);
+        });
 
         // 退出
         View btnExit = findViewById(R.id.btnExit);
