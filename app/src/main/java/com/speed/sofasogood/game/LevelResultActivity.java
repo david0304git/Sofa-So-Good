@@ -17,6 +17,7 @@ public class LevelResultActivity extends AppCompatActivity {
 
     private SoundPool soundPool;
     private int clickSoundId;
+    private boolean soundReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class LevelResultActivity extends AppCompatActivity {
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .build())
                 .build();
+        soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
         clickSoundId = soundPool.load(this, R.raw.button_click, 1);
 
         String nextLevelClass = getIntent().getStringExtra("nextLevel");
@@ -58,7 +60,7 @@ public class LevelResultActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
-                    soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:

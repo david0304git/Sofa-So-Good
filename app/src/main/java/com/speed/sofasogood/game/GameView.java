@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.SoundPool;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,52 +16,24 @@ import com.speed.sofasogood.R;
 
 public class GameView extends View {
 
-    /*
-     * Tile codes:
-     *  0 = Empty       1 = Wall        2 = Player
-     *
-     * Single-tile boxes:
-     * 10 = Plant      12 = TV
-     *
-     * Sofa (2-tile, always L on left, R on right):
-     * 13 = Sofa Left  14 = Sofa Right
-     *
-     * Targets (ghost):
-     * 20 = Plant target   22 = TV target
-     * 23 = Sofa L target  24 = Sofa R target
-     *
-     * Box on target:
-     * 30 = Plant on target  32 = TV on target
-     * 33 = Sofa L on target 34 = Sofa R on target
-     *
-     * Player on target: 40/42/43/44
-     */
-
-    public static final int EMPTY = 0;
+    // Ground layer codes
+    public static final int FLOOR = 0;
     public static final int WALL = 1;
-    public static final int PLAYER = 2;
-
-    public static final int BOX_PLANT = 10;
-    public static final int BOX_TV = 12;
-    public static final int BOX_SOFA_L = 13;
-    public static final int BOX_SOFA_R = 14;
-
     public static final int TARGET_PLANT = 20;
     public static final int TARGET_TV = 22;
     public static final int TARGET_SOFA_L = 23;
     public static final int TARGET_SOFA_R = 24;
 
-    public static final int BOX_ON_PLANT = 30;
-    public static final int BOX_ON_TV = 32;
-    public static final int BOX_ON_SOFA_L = 33;
-    public static final int BOX_ON_SOFA_R = 34;
+    // Object layer codes
+    public static final int NONE = 0;
+    public static final int PLAYER = 2;
+    public static final int BOX_PLANT = 10;
+    public static final int BOX_TV = 12;
+    public static final int BOX_SOFA_L = 13;
+    public static final int BOX_SOFA_R = 14;
 
-    public static final int PLAYER_ON_PLANT = 40;
-    public static final int PLAYER_ON_TV = 42;
-    public static final int PLAYER_ON_SOFA_L = 43;
-    public static final int PLAYER_ON_SOFA_R = 44;
-
-    private int[][] map;
+    private int[][] ground;  // never changes after load
+    private int[][] objects; // player + boxes, moves
     private int playerRow, playerCol;
     private int tileSize;
     private int offsetX, offsetY;
@@ -71,8 +44,9 @@ public class GameView extends View {
 
     private float touchStartX, touchStartY;
     private OnLevelCompleteListener completeListener;
+    private SoundPool soundPool;
+    private int moveSoundId;
 
-    // Drop animation
     private float[][] dropProgress;
     private boolean animating = false;
     private java.util.List<ValueAnimator> runningAnimators = new java.util.ArrayList<>();
@@ -83,6 +57,11 @@ public class GameView extends View {
         void onLevelComplete();
     }
 
+    public void setSoundPool(SoundPool sp, int soundId) {
+        this.soundPool = sp;
+        this.moveSoundId = soundId;
+    }
+
     public void setOnLevelCompleteListener(OnLevelCompleteListener listener) {
         this.completeListener = listener;
     }
@@ -90,46 +69,65 @@ public class GameView extends View {
     public GameView(Context context) { super(context); }
     public GameView(Context context, AttributeSet attrs) { super(context, attrs); }
 
+    /**
+     * Load level from a single combined map.
+     * Codes: 0=floor, 1=wall, 2=player, 10=plant, 12=tv, 13=sofaL, 14=sofaR,
+     *        20=plant target, 22=tv target, 23=sofaL target, 24=sofaR target
+     */
     public void loadLevel(int[][] level) {
         cancelAnimations();
-        map = new int[level.length][];
-        for (int r = 0; r < level.length; r++) {
-            map[r] = level[r].clone();
-            for (int c = 0; c < level[r].length; c++) {
-                if (isPlayer(level[r][c])) {
+        int rows = level.length;
+        int cols = level[0].length;
+        ground = new int[rows][cols];
+        objects = new int[rows][cols];
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                int v = level[r][c];
+                if (v == WALL) {
+                    ground[r][c] = WALL;
+                    objects[r][c] = NONE;
+                } else if (v == PLAYER) {
+                    ground[r][c] = FLOOR;
+                    objects[r][c] = PLAYER;
                     playerRow = r;
                     playerCol = c;
+                } else if (v == BOX_PLANT || v == BOX_TV || v == BOX_SOFA_L || v == BOX_SOFA_R) {
+                    ground[r][c] = FLOOR;
+                    objects[r][c] = v;
+                } else if (v == TARGET_PLANT || v == TARGET_TV || v == TARGET_SOFA_L || v == TARGET_SOFA_R) {
+                    ground[r][c] = v;
+                    objects[r][c] = NONE;
+                } else {
+                    ground[r][c] = FLOOR;
+                    objects[r][c] = NONE;
                 }
             }
         }
-        dropProgress = new float[map.length][map[0].length];
+
+        dropProgress = new float[rows][cols];
         animating = true;
         if (tileSize > 0) startDropAnimation();
         invalidate();
     }
 
     private void cancelAnimations() {
-        for (ValueAnimator a : runningAnimators) {
-            a.cancel();
-        }
+        for (ValueAnimator a : runningAnimators) a.cancel();
         runningAnimators.clear();
         animating = false;
     }
 
     private void startDropAnimation() {
-        if (map == null) return;
+        if (ground == null) return;
         cancelAnimations();
-        int rows = map.length;
-        int cols = map[0].length;
+        int rows = ground.length, cols = ground[0].length;
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 final int fr = r, fc = c;
-                long delay = (r * cols + c) * TILE_DELAY;
-
                 ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f);
                 anim.setDuration(DROP_DURATION);
-                anim.setStartDelay(delay);
+                anim.setStartDelay((long) (r * cols + c) * TILE_DELAY);
                 anim.setInterpolator(new BounceInterpolator());
                 anim.addUpdateListener(a -> {
                     if (dropProgress != null && fr < dropProgress.length && fc < dropProgress[fr].length) {
@@ -137,7 +135,6 @@ public class GameView extends View {
                         invalidate();
                     }
                 });
-
                 if (r == rows - 1 && c == cols - 1) {
                     anim.addListener(new android.animation.AnimatorListenerAdapter() {
                         @Override
@@ -157,10 +154,10 @@ public class GameView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (map == null) return;
-        tileSize = Math.min(w / map[0].length, h / map.length);
-        offsetX = (w - map[0].length * tileSize) / 2;
-        offsetY = (h - map.length * tileSize) / 2;
+        if (ground == null) return;
+        tileSize = Math.min(w / ground[0].length, h / ground.length);
+        offsetX = (w - ground[0].length * tileSize) / 2;
+        offsetY = (h - ground.length * tileSize) / 2;
 
         bmpWall = scale(R.drawable.asset_wall);
         bmpFloor = scale(R.drawable.asset_floor);
@@ -179,8 +176,8 @@ public class GameView extends View {
     }
 
     private Bitmap scale(int resId) {
-        Bitmap src = BitmapFactory.decodeResource(getResources(), resId);
-        return Bitmap.createScaledBitmap(src, tileSize, tileSize, true);
+        return Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(getResources(), resId), tileSize, tileSize, true);
     }
 
     private Bitmap makeGhost(Bitmap src) {
@@ -195,180 +192,88 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (map == null) return;
+        if (ground == null) return;
 
-        int totalH = map.length * tileSize;
+        int totalH = ground.length * tileSize;
 
-        for (int r = 0; r < map.length; r++) {
-            for (int c = 0; c < map[r].length; c++) {
+        for (int r = 0; r < ground.length; r++) {
+            for (int c = 0; c < ground[r].length; c++) {
                 int x = offsetX + c * tileSize;
                 int targetY = offsetY + r * tileSize;
-
-                // During animation, tile drops from above
                 int y;
                 if (animating || (dropProgress != null && dropProgress[r][c] < 1f)) {
                     float progress = dropProgress != null ? dropProgress[r][c] : 1f;
-                    int startY = offsetY - totalH;
-                    y = (int) (startY + (targetY - startY) * progress);
+                    y = (int) ((offsetY - totalH) + (targetY - (offsetY - totalH)) * progress);
                 } else {
                     y = targetY;
                 }
 
-                int tile = map[r][c];
+                int g = ground[r][c];
+                int o = objects[r][c];
 
-                if (tile == WALL) {
+                // Ground
+                if (g == WALL) {
                     canvas.drawBitmap(bmpWall, x, y, null);
                     continue;
                 }
-
                 canvas.drawBitmap(bmpFloor, x, y, null);
 
-                // Ghost target
-                Bitmap ghost = getGhostBitmap(tile);
+                // Target ghost (always visible)
+                Bitmap ghost = getGhostForGround(g);
                 if (ghost != null) canvas.drawBitmap(ghost, x, y, null);
 
-                // Box
-                Bitmap box = getBoxBitmap(tile);
-                if (box != null) canvas.drawBitmap(box, x, y, null);
-
-                // Player
-                if (isPlayer(tile)) canvas.drawBitmap(bmpPlayer, x, y, null);
+                // Object
+                Bitmap obj = getObjectBitmap(o);
+                if (obj != null) canvas.drawBitmap(obj, x, y, null);
             }
         }
     }
 
-    private Bitmap getBoxBitmap(int t) {
-        switch (t) {
-            case BOX_PLANT: case BOX_ON_PLANT: return bmpPlant;
-            case BOX_SOFA_L: case BOX_ON_SOFA_L: return bmpSofaL;
-            case BOX_SOFA_R: case BOX_ON_SOFA_R: return bmpSofaR;
-            case BOX_TV: case BOX_ON_TV: return bmpTv;
+    private Bitmap getGhostForGround(int g) {
+        switch (g) {
+            case TARGET_PLANT: return bmpPlantGhost;
+            case TARGET_TV: return bmpTvGhost;
+            case TARGET_SOFA_L: return bmpSofaLGhost;
+            case TARGET_SOFA_R: return bmpSofaRGhost;
         }
         return null;
     }
 
-    private Bitmap getGhostBitmap(int t) {
-        switch (t) {
-            case TARGET_PLANT: case BOX_ON_PLANT: case PLAYER_ON_PLANT: return bmpPlantGhost;
-            case TARGET_SOFA_L: case BOX_ON_SOFA_L: case PLAYER_ON_SOFA_L: return bmpSofaLGhost;
-            case TARGET_SOFA_R: case BOX_ON_SOFA_R: case PLAYER_ON_SOFA_R: return bmpSofaRGhost;
-            case TARGET_TV: case BOX_ON_TV: case PLAYER_ON_TV: return bmpTvGhost;
+    private Bitmap getObjectBitmap(int o) {
+        switch (o) {
+            case PLAYER: return bmpPlayer;
+            case BOX_PLANT: return bmpPlant;
+            case BOX_TV: return bmpTv;
+            case BOX_SOFA_L: return bmpSofaL;
+            case BOX_SOFA_R: return bmpSofaR;
         }
         return null;
     }
 
-    private boolean isPlayer(int t) {
-        return t == PLAYER || t == PLAYER_ON_PLANT || t == PLAYER_ON_TV
-                || t == PLAYER_ON_SOFA_L || t == PLAYER_ON_SOFA_R;
+    private boolean isBox(int o) {
+        return o == BOX_PLANT || o == BOX_TV || o == BOX_SOFA_L || o == BOX_SOFA_R;
     }
 
-    private boolean isSingleBox(int t) {
-        return t == BOX_PLANT || t == BOX_TV;
+    private boolean isSofaPart(int o) {
+        return o == BOX_SOFA_L || o == BOX_SOFA_R;
     }
 
-    private boolean isSingleBoxOnTarget(int t) {
-        return t == BOX_ON_PLANT || t == BOX_ON_TV;
+    private boolean isTarget(int g) {
+        return g == TARGET_PLANT || g == TARGET_TV || g == TARGET_SOFA_L || g == TARGET_SOFA_R;
     }
 
-    private boolean isSofaPart(int t) {
-        return t == BOX_SOFA_L || t == BOX_SOFA_R || t == BOX_ON_SOFA_L || t == BOX_ON_SOFA_R;
-    }
-
-    private boolean isTarget(int t) {
-        return t == TARGET_PLANT || t == TARGET_TV
-                || t == TARGET_SOFA_L || t == TARGET_SOFA_R;
-    }
-
-    private boolean isPlayerOnTarget(int t) {
-        return t == PLAYER_ON_PLANT || t == PLAYER_ON_TV
-                || t == PLAYER_ON_SOFA_L || t == PLAYER_ON_SOFA_R;
-    }
-
-    private boolean isAnyBox(int t) {
-        return isSingleBox(t) || isSingleBoxOnTarget(t) || isSofaPart(t);
-    }
-
-    private boolean isBlocking(int t) {
-        return t == WALL || isAnyBox(t);
-    }
-
-    private boolean canWalkOn(int t) {
-        return t == EMPTY || isTarget(t) || isPlayerOnTarget(t);
-    }
-
-    private int tileTargetCode(int t) {
-        switch (t) {
-            case TARGET_PLANT: case BOX_ON_PLANT: case PLAYER_ON_PLANT: return TARGET_PLANT;
-            case TARGET_TV: case BOX_ON_TV: case PLAYER_ON_TV: return TARGET_TV;
-            case TARGET_SOFA_L: case BOX_ON_SOFA_L: case PLAYER_ON_SOFA_L: return TARGET_SOFA_L;
-            case TARGET_SOFA_R: case BOX_ON_SOFA_R: case PLAYER_ON_SOFA_R: return TARGET_SOFA_R;
-        }
-        return -1;
-    }
-
-    // What tile code to place a box of given type on a destination
-    private int placeBox(int boxTile, int dest) {
-        // boxTile is the original box tile (BOX_PLANT, BOX_SOFA_L, etc.)
-        int rawBox;
-        switch (boxTile) {
-            case BOX_SOFA_L: case BOX_ON_SOFA_L: rawBox = BOX_SOFA_L; break;
-            case BOX_SOFA_R: case BOX_ON_SOFA_R: rawBox = BOX_SOFA_R; break;
-            case BOX_PLANT: case BOX_ON_PLANT: rawBox = BOX_PLANT; break;
-            case BOX_TV: case BOX_ON_TV: rawBox = BOX_TV; break;
-            default: rawBox = boxTile;
-        }
-
-        // Check if dest is the matching target
-        if (rawBox == BOX_PLANT && (dest == TARGET_PLANT || dest == PLAYER_ON_PLANT)) return BOX_ON_PLANT;
-        if (rawBox == BOX_TV && (dest == TARGET_TV || dest == PLAYER_ON_TV)) return BOX_ON_TV;
-        if (rawBox == BOX_SOFA_L && (dest == TARGET_SOFA_L || dest == PLAYER_ON_SOFA_L)) return BOX_ON_SOFA_L;
-        if (rawBox == BOX_SOFA_R && (dest == TARGET_SOFA_R || dest == PLAYER_ON_SOFA_R)) return BOX_ON_SOFA_R;
-
-        return rawBox;
-    }
-
-    // Remove box from tile, restoring target underneath if any
-    private int removeBox(int t) {
-        int tc = tileTargetCode(t);
-        return tc >= 0 ? tc : EMPTY;
-    }
-
-    // Place player on a tile (which may be empty or a target)
-    private int placePlayer(int dest) {
-        int tc = tileTargetCode(dest);
-        if (tc == TARGET_PLANT) return PLAYER_ON_PLANT;
-        if (tc == TARGET_TV) return PLAYER_ON_TV;
-        if (tc == TARGET_SOFA_L) return PLAYER_ON_SOFA_L;
-        if (tc == TARGET_SOFA_R) return PLAYER_ON_SOFA_R;
-        if (dest == EMPTY) return PLAYER;
-        return PLAYER;
-    }
-
-    // Remove player from tile, restoring target underneath
-    private int removePlayer(int t) {
-        int tc = tileTargetCode(t);
-        return tc >= 0 ? tc : EMPTY;
-    }
-
-    // Find the other half of a sofa pair
     private int[] findSofaPair(int r, int c) {
-        int t = map[r][c];
-        if (t == BOX_SOFA_L || t == BOX_ON_SOFA_L) {
-            // Right half should be at (r, c+1)
-            if (inBounds(r, c + 1) && isSofaRight(map[r][c + 1])) return new int[]{r, c + 1};
-        } else if (t == BOX_SOFA_R || t == BOX_ON_SOFA_R) {
-            // Left half should be at (r, c-1)
-            if (inBounds(r, c - 1) && isSofaLeft(map[r][c - 1])) return new int[]{r, c - 1};
-        }
+        int o = objects[r][c];
+        if (o == BOX_SOFA_L && inBounds(r, c + 1) && objects[r][c + 1] == BOX_SOFA_R)
+            return new int[]{r, c + 1};
+        if (o == BOX_SOFA_R && inBounds(r, c - 1) && objects[r][c - 1] == BOX_SOFA_L)
+            return new int[]{r, c - 1};
         return null;
     }
-
-    private boolean isSofaLeft(int t) { return t == BOX_SOFA_L || t == BOX_ON_SOFA_L; }
-    private boolean isSofaRight(int t) { return t == BOX_SOFA_R || t == BOX_ON_SOFA_R; }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (animating) return true; // Block input during animation
+        if (animating) return true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchStartX = event.getX();
@@ -377,123 +282,99 @@ public class GameView extends View {
             case MotionEvent.ACTION_UP:
                 float dx = event.getX() - touchStartX;
                 float dy = event.getY() - touchStartY;
-                float minSwipe = tileSize * 0.5f;
-                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > minSwipe) {
+                float min = tileSize * 0.5f;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > min)
                     move(0, dx > 0 ? 1 : -1);
-                } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > minSwipe) {
+                else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > min)
                     move(dy > 0 ? 1 : -1, 0);
-                }
                 return true;
         }
         return super.onTouchEvent(event);
     }
 
     private void move(int dr, int dc) {
-        int newR = playerRow + dr;
-        int newC = playerCol + dc;
-        if (!inBounds(newR, newC)) return;
+        int nr = playerRow + dr, nc = playerCol + dc;
+        if (!inBounds(nr, nc) || ground[nr][nc] == WALL) return;
 
-        int next = map[newR][newC];
-        if (next == WALL) return;
+        int nextObj = objects[nr][nc];
+        boolean pushed = false;
 
-        // Pushing a sofa part
-        if (isSofaPart(next)) {
-            if (!pushSofa(newR, newC, dr, dc)) return;
-            next = map[newR][newC];
-        }
-        // Pushing a single box
-        else if (isSingleBox(next) || isSingleBoxOnTarget(next)) {
-            int behindR = newR + dr;
-            int behindC = newC + dc;
-            if (!inBounds(behindR, behindC)) return;
-            int behind = map[behindR][behindC];
-            if (isBlocking(behind)) return;
-
-            map[behindR][behindC] = placeBox(next, behind);
-            map[newR][newC] = removeBox(next);
-            next = map[newR][newC];
+        if (isSofaPart(nextObj)) {
+            if (!pushSofa(nr, nc, dr, dc)) return;
+            pushed = true;
+        } else if (isBox(nextObj)) {
+            int br = nr + dr, bc = nc + dc;
+            if (!inBounds(br, bc) || ground[br][bc] == WALL || objects[br][bc] != NONE) return;
+            objects[br][bc] = nextObj;
+            objects[nr][nc] = NONE;
+            pushed = true;
+        } else if (nextObj != NONE) {
+            return;
         }
 
-        if (isBlocking(next)) return;
-
-        // Move player
-        map[playerRow][playerCol] = removePlayer(map[playerRow][playerCol]);
-        map[newR][newC] = placePlayer(next);
-        playerRow = newR;
-        playerCol = newC;
+        objects[playerRow][playerCol] = NONE;
+        objects[nr][nc] = PLAYER;
+        playerRow = nr;
+        playerCol = nc;
 
         invalidate();
+        if (pushed && soundPool != null) soundPool.play(moveSoundId, 0.5f, 0.5f, 1, 0, 1f);
         checkWin();
     }
 
     private boolean pushSofa(int sofaR, int sofaC, int dr, int dc) {
         int[] pair = findSofaPair(sofaR, sofaC);
         if (pair == null) return false;
-
-        int pairR = pair[0], pairC = pair[1];
-        int sofaTile = map[sofaR][sofaC];
-        int pairTile = map[pairR][pairC];
+        int pR = pair[0], pC = pair[1];
 
         if (dc != 0) {
             // Horizontal push
-            // Determine the leading piece (the one in the push direction)
             int leadR, leadC, trailR, trailC;
-            int leadTile, trailTile;
             if (dc > 0) {
-                // Pushing right: rightmost piece leads
-                if (sofaC > pairC) { leadR = sofaR; leadC = sofaC; leadTile = sofaTile; trailR = pairR; trailC = pairC; trailTile = pairTile; }
-                else { leadR = pairR; leadC = pairC; leadTile = pairTile; trailR = sofaR; trailC = sofaC; trailTile = sofaTile; }
+                if (sofaC > pC) { leadR = sofaR; leadC = sofaC; trailR = pR; trailC = pC; }
+                else { leadR = pR; leadC = pC; trailR = sofaR; trailC = sofaC; }
             } else {
-                // Pushing left: leftmost piece leads
-                if (sofaC < pairC) { leadR = sofaR; leadC = sofaC; leadTile = sofaTile; trailR = pairR; trailC = pairC; trailTile = pairTile; }
-                else { leadR = pairR; leadC = pairC; leadTile = pairTile; trailR = sofaR; trailC = sofaC; trailTile = sofaTile; }
+                if (sofaC < pC) { leadR = sofaR; leadC = sofaC; trailR = pR; trailC = pC; }
+                else { leadR = pR; leadC = pC; trailR = sofaR; trailC = sofaC; }
             }
+            int destR = leadR + dr, destC = leadC + dc;
+            if (!inBounds(destR, destC) || ground[destR][destC] == WALL || objects[destR][destC] != NONE)
+                return false;
 
-            int destR = leadR + dr;
-            int destC = leadC + dc;
-            if (!inBounds(destR, destC)) return false;
-            int dest = map[destR][destC];
-            if (isBlocking(dest)) return false;
-
-            // Move lead to dest
-            map[destR][destC] = placeBox(leadTile, dest);
-            // Move trail to where lead was
-            map[leadR][leadC] = placeBox(trailTile, removeBox(leadTile));
-            // Clear trail original position
-            map[trailR][trailC] = removeBox(trailTile);
-
+            int leadObj = objects[leadR][leadC];
+            int trailObj = objects[trailR][trailC];
+            objects[destR][destC] = leadObj;
+            objects[leadR][leadC] = trailObj;
+            objects[trailR][trailC] = NONE;
         } else {
-            // Vertical push: both halves move in same direction
-            int destSofaR = sofaR + dr;
-            int destSofaC = sofaC + dc;
-            int destPairR = pairR + dr;
-            int destPairC = pairC + dc;
+            // Vertical push
+            int dSR = sofaR + dr, dSC = sofaC;
+            int dPR = pR + dr, dPC = pC;
+            if (!inBounds(dSR, dSC) || !inBounds(dPR, dPC)) return false;
+            if (ground[dSR][dSC] == WALL || ground[dPR][dPC] == WALL) return false;
+            if (objects[dSR][dSC] != NONE || objects[dPR][dPC] != NONE) return false;
 
-            if (!inBounds(destSofaR, destSofaC) || !inBounds(destPairR, destPairC)) return false;
-            int destSofa = map[destSofaR][destSofaC];
-            int destPair = map[destPairR][destPairC];
-            if (isBlocking(destSofa) || isBlocking(destPair)) return false;
-
-            // Clear both old positions first
-            map[sofaR][sofaC] = removeBox(sofaTile);
-            map[pairR][pairC] = removeBox(pairTile);
-
-            // Place both at new positions
-            map[destSofaR][destSofaC] = placeBox(sofaTile, destSofa);
-            map[destPairR][destPairC] = placeBox(pairTile, destPair);
+            objects[dSR][dSC] = objects[sofaR][sofaC];
+            objects[dPR][dPC] = objects[pR][pC];
+            objects[sofaR][sofaC] = NONE;
+            objects[pR][pC] = NONE;
         }
-
         return true;
     }
 
     private boolean inBounds(int r, int c) {
-        return r >= 0 && r < map.length && c >= 0 && c < map[0].length;
+        return r >= 0 && r < ground.length && c >= 0 && c < ground[0].length;
     }
 
     private void checkWin() {
-        for (int[] row : map) {
-            for (int tile : row) {
-                if (isSingleBox(tile) || tile == BOX_SOFA_L || tile == BOX_SOFA_R) return;
+        for (int r = 0; r < ground.length; r++) {
+            for (int c = 0; c < ground[r].length; c++) {
+                int g = ground[r][c];
+                int o = objects[r][c];
+                if (g == TARGET_PLANT && o != BOX_PLANT) return;
+                if (g == TARGET_TV && o != BOX_TV) return;
+                if (g == TARGET_SOFA_L && o != BOX_SOFA_L) return;
+                if (g == TARGET_SOFA_R && o != BOX_SOFA_R) return;
             }
         }
         if (completeListener != null) completeListener.onLevelComplete();

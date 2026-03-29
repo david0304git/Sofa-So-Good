@@ -1,27 +1,15 @@
 package com.speed.sofasogood.game.levels;
 
-import android.content.Intent;
-import android.os.Bundle;
+import com.speed.sofasogood.R;
+import com.speed.sofasogood.game.model.LevelData;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.speed.sofasogood.BgmService;
-
-public class Level2Activity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Intent bgm = new Intent(this, BgmService.class);
-        bgm.setAction("PAUSE");
-        startService(bgm);
+public class Level2Activity extends BaseLevelActivity {
+    @Override protected int[][] getLevelData() { return LevelData.LEVEL_2; }
+    @Override protected String getNextLevelClass() { return Level3Activity.class.getName(); }
+    @Override protected String[] getDialogs() {
+        return new String[]{ "The kitchen is next… let's get it sorted!" };
     }
-
-    @Override
-    protected void onDestroy() {
-        Intent bgm = new Intent(this, BgmService.class);
-        bgm.setAction("RESUME");
-        startService(bgm);
-        super.onDestroy();
+    @Override protected int[] getExpressions() {
+        return new int[]{ R.drawable.character_happy };
     }
 }

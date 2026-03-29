@@ -20,6 +20,7 @@ public class LevelSelectActivity extends AppCompatActivity {
 
     private SoundPool soundPool;
     private int clickSoundId;
+    private boolean soundReady = false;
     private ViewFlipper viewFlipper;
     private View btnPrev, btnNext;
 
@@ -41,6 +42,7 @@ public class LevelSelectActivity extends AppCompatActivity {
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .build())
                 .build();
+        soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
         clickSoundId = soundPool.load(this, R.raw.button_click, 1);
 
         viewFlipper = findViewById(R.id.viewFlipper);
@@ -49,12 +51,12 @@ public class LevelSelectActivity extends AppCompatActivity {
 
         // 翻頁
         btnNext.setOnClickListener(v -> {
-            soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+            if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
             viewFlipper.showNext();
             updateArrows();
         });
         btnPrev.setOnClickListener(v -> {
-            soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+            if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
             viewFlipper.showPrevious();
             updateArrows();
         });
@@ -76,6 +78,20 @@ public class LevelSelectActivity extends AppCompatActivity {
         // 第一關
         findViewById(R.id.btnLevel1).setOnClickListener(v ->
                 startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level1Activity.class)));
+        findViewById(R.id.btnLevel2).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level2Activity.class)));
+        findViewById(R.id.btnLevel3).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level3Activity.class)));
+        findViewById(R.id.btnLevel4).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level4Activity.class)));
+        findViewById(R.id.btnLevel5).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level5Activity.class)));
+        findViewById(R.id.btnLevel6).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level6Activity.class)));
+        findViewById(R.id.btnLevel7).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level7Activity.class)));
+        findViewById(R.id.btnLevel8).setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level8Activity.class)));
     }
 
     private void updateArrows() {
@@ -91,7 +107,7 @@ public class LevelSelectActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
-                    soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
