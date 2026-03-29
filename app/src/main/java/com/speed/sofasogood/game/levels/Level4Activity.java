@@ -16,9 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.speed.sofasogood.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
+import com.speed.sofasogood.game.LevelResultActivity;
 import com.speed.sofasogood.game.model.LevelData;
 
-public class Level2Activity extends AppCompatActivity {
+public class Level4Activity extends AppCompatActivity {
 
     private SoundPool soundPool;
     private int clickSoundId;
@@ -26,11 +27,11 @@ public class Level2Activity extends AppCompatActivity {
     private boolean dialogFinished = false;
 
     private final String[] dialogs = {
-            "The living room looks great! Now let's tackle the kitchen.",
-            "There are pots and utensils scattered everywhere.",
-            "I need to get the fridge and stove in the right spots.",
-            "Those kitchen boxes won't unpack themselves either.",
-            "Alright, let's get this kitchen organised!"
+            "Washroom's sparkling! Now for the bedroom.",
+            "The bed frame and wardrobe are blocking everything.",
+            "I need to squeeze past all this furniture.",
+            "A good night's sleep starts with a tidy room.",
+            "Let's get this bedroom sorted!"
     };
 
     private final int[] expressions = {
@@ -45,9 +46,8 @@ public class Level2Activity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.level2);
+        setContentView(R.layout.level4);
 
-        // 暫停 BGM
         Intent bgm = new Intent(this, BgmService.class);
         bgm.setAction("PAUSE");
         startService(bgm);
@@ -71,13 +71,12 @@ public class Level2Activity extends AppCompatActivity {
             dialogBox.setVisibility(View.GONE);
             dialogCharacter.setVisibility(View.GONE);
             gameView.setVisibility(View.VISIBLE);
-            gameView.loadLevel(LevelData.LEVEL_2);
+            gameView.loadLevel(LevelData.LEVEL_4);
         } else {
             dialogBox.setText(dialogs[dialogIndex]);
         }
 
-        // 點擊畫面切換台詞
-        findViewById(R.id.level2Root).setOnClickListener(v -> {
+        findViewById(R.id.level4Root).setOnClickListener(v -> {
             if (dialogFinished) return;
             dialogIndex++;
             if (dialogIndex < dialogs.length) {
@@ -88,30 +87,26 @@ public class Level2Activity extends AppCompatActivity {
                 dialogBox.setVisibility(View.GONE);
                 dialogCharacter.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
-                gameView.loadLevel(LevelData.LEVEL_2);
+                gameView.loadLevel(LevelData.LEVEL_4);
             }
         });
 
         gameView.setOnLevelCompleteListener(() -> {
-            Intent result = new Intent(this, com.speed.sofasogood.game.LevelResultActivity.class);
-            // No next level after Level 2 yet
-            result.putExtra("nextLevel", "com.speed.sofasogood.game.levels.Level3Activity");
+            Intent result = new Intent(this, LevelResultActivity.class);
+            result.putExtra("nextLevel", "com.speed.sofasogood.game.levels.Level5Activity");
             startActivity(result);
             finish();
         });
 
-        // 暫停按鈕
         findViewById(R.id.btnPause).setOnClickListener(v -> {
             soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
             pauseOverlay.setVisibility(View.VISIBLE);
         });
 
-        // 繼續
         View btnResume = findViewById(R.id.btnResume);
         setupButtonAnimation(btnResume);
         btnResume.setOnClickListener(v -> pauseOverlay.setVisibility(View.GONE));
 
-        // 重新開始
         View btnRestart = findViewById(R.id.btnRestart);
         setupButtonAnimation(btnRestart);
         btnRestart.setOnClickListener(v -> {
@@ -125,7 +120,6 @@ public class Level2Activity extends AppCompatActivity {
             dialogCharacter.setImageResource(expressions[0]);
         });
 
-        // 退出
         View btnExit = findViewById(R.id.btnExit);
         setupButtonAnimation(btnExit);
         btnExit.setOnClickListener(v -> finish());

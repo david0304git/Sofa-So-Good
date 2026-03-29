@@ -73,9 +73,21 @@ public class LevelSelectActivity extends AppCompatActivity {
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
 
-        // 第一關
-        findViewById(R.id.btnLevel1).setOnClickListener(v ->
-                startActivity(new Intent(this, com.speed.sofasogood.game.levels.Level1Activity.class)));
+        Class<?>[] levels = {
+                com.speed.sofasogood.game.levels.Level1Activity.class,
+                com.speed.sofasogood.game.levels.Level2Activity.class,
+                com.speed.sofasogood.game.levels.Level3Activity.class,
+                com.speed.sofasogood.game.levels.Level4Activity.class,
+                com.speed.sofasogood.game.levels.Level5Activity.class,
+                com.speed.sofasogood.game.levels.Level6Activity.class,
+                com.speed.sofasogood.game.levels.Level7Activity.class,
+                com.speed.sofasogood.game.levels.Level8Activity.class
+        };
+        for (int i = 0; i < levelBtnIds.length; i++) {
+            final Class<?> levelClass = levels[i];
+            findViewById(levelBtnIds[i]).setOnClickListener(v ->
+                    startActivity(new Intent(this, levelClass)));
+        }
     }
 
     private void updateArrows() {

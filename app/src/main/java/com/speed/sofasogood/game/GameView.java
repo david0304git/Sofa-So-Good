@@ -61,6 +61,7 @@ public class GameView extends View {
     public static final int PLAYER_ON_SOFA_R = 44;
 
     private int[][] map;
+    private int[][] targets; // permanent target layer, never modified
     private int playerRow, playerCol;
     private int tileSize;
     private int offsetX, offsetY;
@@ -93,13 +94,16 @@ public class GameView extends View {
     public void loadLevel(int[][] level) {
         cancelAnimations();
         map = new int[level.length][];
+        targets = new int[level.length][level[0].length];
         for (int r = 0; r < level.length; r++) {
             map[r] = level[r].clone();
             for (int c = 0; c < level[r].length; c++) {
-                if (isPlayer(level[r][c])) {
-                    playerRow = r;
-                    playerCol = c;
+                int t = level[r][c];
+                if (isTarget(t)) {
+                    targets[r][c] = t;  // store target permanently
+                    map[r][c] = EMPTY;  // strip from main map
                 }
+                if (isPlayer(t)) { playerRow = r; playerCol = c; }
             }
         }
         dropProgress = new float[map.length][map[0].length];
@@ -223,8 +227,8 @@ public class GameView extends View {
 
                 canvas.drawBitmap(bmpFloor, x, y, null);
 
-                // Ghost target
-                Bitmap ghost = getGhostBitmap(tile);
+                // Always draw ghost from permanent targets layer
+                Bitmap ghost = getGhostBitmap(targets[r][c]);
                 if (ghost != null) canvas.drawBitmap(ghost, x, y, null);
 
                 // Box
@@ -239,20 +243,20 @@ public class GameView extends View {
 
     private Bitmap getBoxBitmap(int t) {
         switch (t) {
-            case BOX_PLANT: case BOX_ON_PLANT: return bmpPlant;
-            case BOX_SOFA_L: case BOX_ON_SOFA_L: return bmpSofaL;
-            case BOX_SOFA_R: case BOX_ON_SOFA_R: return bmpSofaR;
-            case BOX_TV: case BOX_ON_TV: return bmpTv;
+            case BOX_PLANT:  return bmpPlant;
+            case BOX_SOFA_L: return bmpSofaL;
+            case BOX_SOFA_R: return bmpSofaR;
+            case BOX_TV:     return bmpTv;
         }
         return null;
     }
 
     private Bitmap getGhostBitmap(int t) {
         switch (t) {
-            case TARGET_PLANT: case BOX_ON_PLANT: case PLAYER_ON_PLANT: return bmpPlantGhost;
-            case TARGET_SOFA_L: case BOX_ON_SOFA_L: case PLAYER_ON_SOFA_L: return bmpSofaLGhost;
-            case TARGET_SOFA_R: case BOX_ON_SOFA_R: case PLAYER_ON_SOFA_R: return bmpSofaRGhost;
-            case TARGET_TV: case BOX_ON_TV: case PLAYER_ON_TV: return bmpTvGhost;
+            case TARGET_PLANT:  return bmpPlantGhost;
+            case TARGET_SOFA_L: return bmpSofaLGhost;
+            case TARGET_SOFA_R: return bmpSofaRGhost;
+            case TARGET_TV:     return bmpTvGhost;
         }
         return null;
     }
@@ -279,6 +283,14 @@ public class GameView extends View {
                 || t == TARGET_SOFA_L || t == TARGET_SOFA_R;
     }
 
+    private boolean isMatchingTarget(int boxTile, int targetTile) {
+        switch (boxTile) {
+            case BOX_PLANT: case BOX_ON_PLANT: return targetTile == TARGET_PLANT;
+            case BOX_TV:    case BOX_ON_TV:    return targetTile == TARGET_TV;
+        }
+        return false;
+    }
+
     private boolean isPlayerOnTarget(int t) {
         return t == PLAYER_ON_PLANT || t == PLAYER_ON_TV
                 || t == PLAYER_ON_SOFA_L || t == PLAYER_ON_SOFA_R;
@@ -296,59 +308,24 @@ public class GameView extends View {
         return t == EMPTY || isTarget(t) || isPlayerOnTarget(t);
     }
 
-    private int tileTargetCode(int t) {
-        switch (t) {
-            case TARGET_PLANT: case BOX_ON_PLANT: case PLAYER_ON_PLANT: return TARGET_PLANT;
-            case TARGET_TV: case BOX_ON_TV: case PLAYER_ON_TV: return TARGET_TV;
-            case TARGET_SOFA_L: case BOX_ON_SOFA_L: case PLAYER_ON_SOFA_L: return TARGET_SOFA_L;
-            case TARGET_SOFA_R: case BOX_ON_SOFA_R: case PLAYER_ON_SOFA_R: return TARGET_SOFA_R;
-        }
-        return -1;
-    }
+    private int tileTargetCode(int t) { return -1; }
 
     // What tile code to place a box of given type on a destination
     private int placeBox(int boxTile, int dest) {
-        // boxTile is the original box tile (BOX_PLANT, BOX_SOFA_L, etc.)
-        int rawBox;
         switch (boxTile) {
-            case BOX_SOFA_L: case BOX_ON_SOFA_L: rawBox = BOX_SOFA_L; break;
-            case BOX_SOFA_R: case BOX_ON_SOFA_R: rawBox = BOX_SOFA_R; break;
-            case BOX_PLANT: case BOX_ON_PLANT: rawBox = BOX_PLANT; break;
-            case BOX_TV: case BOX_ON_TV: rawBox = BOX_TV; break;
-            default: rawBox = boxTile;
+            case BOX_SOFA_L: case BOX_ON_SOFA_L: return BOX_SOFA_L;
+            case BOX_SOFA_R: case BOX_ON_SOFA_R: return BOX_SOFA_R;
+            case BOX_PLANT:  case BOX_ON_PLANT:  return BOX_PLANT;
+            case BOX_TV:     case BOX_ON_TV:     return BOX_TV;
+            default: return boxTile;
         }
-
-        // Check if dest is the matching target
-        if (rawBox == BOX_PLANT && (dest == TARGET_PLANT || dest == PLAYER_ON_PLANT)) return BOX_ON_PLANT;
-        if (rawBox == BOX_TV && (dest == TARGET_TV || dest == PLAYER_ON_TV)) return BOX_ON_TV;
-        if (rawBox == BOX_SOFA_L && (dest == TARGET_SOFA_L || dest == PLAYER_ON_SOFA_L)) return BOX_ON_SOFA_L;
-        if (rawBox == BOX_SOFA_R && (dest == TARGET_SOFA_R || dest == PLAYER_ON_SOFA_R)) return BOX_ON_SOFA_R;
-
-        return rawBox;
     }
 
-    // Remove box from tile, restoring target underneath if any
-    private int removeBox(int t) {
-        int tc = tileTargetCode(t);
-        return tc >= 0 ? tc : EMPTY;
-    }
+    private int removeBox(int t) { return EMPTY; }
 
-    // Place player on a tile (which may be empty or a target)
-    private int placePlayer(int dest) {
-        int tc = tileTargetCode(dest);
-        if (tc == TARGET_PLANT) return PLAYER_ON_PLANT;
-        if (tc == TARGET_TV) return PLAYER_ON_TV;
-        if (tc == TARGET_SOFA_L) return PLAYER_ON_SOFA_L;
-        if (tc == TARGET_SOFA_R) return PLAYER_ON_SOFA_R;
-        if (dest == EMPTY) return PLAYER;
-        return PLAYER;
-    }
+    private int placePlayer(int dest) { return PLAYER; }
 
-    // Remove player from tile, restoring target underneath
-    private int removePlayer(int t) {
-        int tc = tileTargetCode(t);
-        return tc >= 0 ? tc : EMPTY;
-    }
+    private int removePlayer(int t) { return EMPTY; }
 
     // Find the other half of a sofa pair
     private int[] findSofaPair(int r, int c) {
@@ -491,11 +468,19 @@ public class GameView extends View {
     }
 
     private void checkWin() {
-        for (int[] row : map) {
-            for (int tile : row) {
-                if (isSingleBox(tile) || tile == BOX_SOFA_L || tile == BOX_SOFA_R) return;
+        for (int r = 0; r < map.length; r++) {
+            for (int c = 0; c < map[r].length; c++) {
+                int target = targets[r][c];
+                if (target == TARGET_PLANT  && map[r][c] != BOX_PLANT)  return;
+                if (target == TARGET_TV     && map[r][c] != BOX_TV)     return;
+                if (target == TARGET_SOFA_L && map[r][c] != BOX_SOFA_L) return;
+                if (target == TARGET_SOFA_R && map[r][c] != BOX_SOFA_R) return;
             }
         }
         if (completeListener != null) completeListener.onLevelComplete();
+    }
+
+    private boolean hasBox(int r, int c, int boxType) {
+        return map[r][c] == boxType;
     }
 }
