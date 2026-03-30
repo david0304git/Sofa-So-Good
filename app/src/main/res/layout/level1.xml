@@ -26,6 +26,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- 跳過按鈕 -->
+    <ImageButton
+        android:id="@+id/btnSkip"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/dialog_box"
+        android:elevation="10dp"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_media_next"
+        app:layout_constraintEnd_toStartOf="@id/btnPause"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/btnPause"
         android:layout_width="48dp"

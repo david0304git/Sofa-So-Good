@@ -126,6 +126,22 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         dialogCharacter.setImageResource(expressions[dialogIndex]);
         playVoice(voiceResIds, dialogIndex);
 
+        // 跳過對話按鈕
+        View btnSkip = findViewById(R.id.btnSkip);
+        btnSkip.setOnClickListener(v -> {
+            if (dialogFinished) return;
+            if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
+            stopVoice();
+            dialogFinished = true;
+            dialogBox.setVisibility(View.GONE);
+            dialogCharacter.setVisibility(View.GONE);
+            btnSkip.setVisibility(View.GONE);
+            gameView.setVisibility(View.VISIBLE);
+            gameView.loadLevel(getLevelData());
+            startLevelTimer();
+            if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
+        });
+
         findViewById(R.id.level1Root).setOnClickListener(v -> {
             if (dialogFinished) return;
             if (soundReady) soundPool.play(dialogClickId, soundVolume, soundVolume, 1, 0, 1f);
@@ -138,6 +154,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 dialogFinished = true;
                 dialogBox.setVisibility(View.GONE);
                 dialogCharacter.setVisibility(View.GONE);
+                btnSkip.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
                 gameView.loadLevel(getLevelData());
                 startLevelTimer();
@@ -196,6 +213,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             dialogBox.setText(dialogs[0]);
             dialogCharacter.setImageResource(expressions[0]);
             playVoice(voiceResIds, 0);
+            btnSkip.setVisibility(View.VISIBLE);
         });
 
         View btnExit = findViewById(R.id.btnExit);
