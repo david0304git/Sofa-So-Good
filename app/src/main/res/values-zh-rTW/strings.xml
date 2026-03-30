@@ -9,7 +9,8 @@
 
     <!-- Settings -->
     <string name="title_settings">設定</string>
-    <string name="label_volume">音量</string>
+    <string name="label_volume">背景音樂</string>
+    <string name="label_sound_volume">觸碰音效</string>
     <string name="label_language">語言</string>
     <string name="btn_logout">登出</string>
     <string name="btn_back">返回</string>
