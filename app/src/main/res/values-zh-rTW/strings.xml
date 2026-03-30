@@ -37,19 +37,59 @@
     <string name="btn_resume">繼續</string>
     <string name="btn_restart">重新開始</string>
 
-    <!-- Level 1 Dialogs -->
-    <string name="l1_d1">終於搬進來了……這就是我的新家。</string>
-    <string name="l1_d2">但客廳好亂，到處都是箱子和傢俬。</string>
-    <string name="l1_d3">我應該先把沙發和桌子擺好，這樣才有家的感覺。</string>
-    <string name="l1_d4">嗯，角落那些箱子也要整理一下。</string>
-    <string name="l1_d5">好吧，開始佈置——讓客廳煥然一新！</string>
+    <!-- Level 1 -->
+    <string name="l1_d1">這就是我的新家了！</string>
+    <string name="l1_d2">雖然空蕩蕩的，但很有期待感。</string>
+    <string name="l1_d3">先把家具擺好，才算真正安定下來。</string>
+    <string name="l1_d4">沙發應該放在客廳中央吧。</string>
+    <string name="l1_d5">好，開始動手吧！</string>
 
-    <!-- Level 2–8 Dialogs -->
-    <string name="l2_d1">接下來是廚房……來整理一下吧！</string>
-    <string name="l3_d1">洗手間也需要整理一下！</string>
-    <string name="l4_d1">是時候佈置睡房了！</string>
-    <string name="l5_d1">露台的空間好窄……</string>
-    <string name="l6_d1">這個房間有好多傢俬要搬！</string>
-    <string name="l7_d1">快完成了……只剩兩個房間！</string>
-    <string name="l8_d1">最後一個房間……完成它吧！</string>
+    <!-- Level 2 -->
+    <string name="l2_d1">廚房是家的心臟，必須先弄好。</string>
+    <string name="l2_d2">冰箱和櫥櫃要放得方便才行。</string>
+    <string name="l2_d3">這些家具比想像中還重。</string>
+    <string name="l2_d4">得小心，不要刮花地板。</string>
+    <string name="l2_d5">好，準備推動吧！</string>
+
+    <!-- Level 3 -->
+    <string name="l3_d1">廁所雖小，但很重要。</string>
+    <string name="l3_d2">洗手盆和馬桶的位置要合理。</string>
+    <string name="l3_d3">這些東西不好搬，要慢慢來。</string>
+    <string name="l3_d4">擺放整齊才會方便使用。</string>
+    <string name="l3_d5">好，開始搬吧！</string>
+
+    <!-- Level 4 -->
+    <string name="l4_d1">臥室是休息的地方，要舒服才行。</string>
+    <string name="l4_d2">床最好靠近窗戶，早上有陽光。</string>
+    <string name="l4_d3">衣櫃太大了，得好好規劃位置。</string>
+    <string name="l4_d4">這樣一來，房間才會整齊。</string>
+    <string name="l4_d5">好，開始搬吧！</string>
+
+    <!-- Level 5 -->
+    <string name="l5_d1">這張桌子底下有奇怪的刻痕。</string>
+    <string name="l5_d2">看起來像是某種符號。</string>
+    <string name="l5_d3">難道是舊房主留下的？</string>
+    <string name="l5_d4">得把家具移開才能看清楚。</string>
+    <string name="l5_d5">好，開始搬吧！</string>
+
+    <!-- Level 6 -->
+    <string name="l6_d1">怎麼突然停電了？</string>
+    <string name="l6_d2">沒有電，什麼都不能做。</string>
+    <string name="l6_d3">聽說有備用發電機。</string>
+    <string name="l6_d4">得把它推到正確位置才能恢復供電。</string>
+    <string name="l6_d5">好，開始搬吧！</string>
+
+    <!-- Level 7 -->
+    <string name="l7_d1">牆角竟然有暗門！</string>
+    <string name="l7_d2">原來書房後面還有密室。</string>
+    <string name="l7_d3">裡面牆壁上滿是符號。</string>
+    <string name="l7_d4">這是什麼？</string>
+    <string name="l7_d5">搬開看看吧。</string>
+
+    <!-- Level 8 -->
+    <string name="l8_d1">密室裡的符號開始發光。</string>
+    <string name="l8_d2">它們好像在指引我某個方向。</string>
+    <string name="l8_d3">家具的位置或許能觸發機關。</string>
+    <string name="l8_d4">有點兒害怕~</string>
+    <string name="l8_d5">家具有點重，要慢慢推。</string>
 </resources>

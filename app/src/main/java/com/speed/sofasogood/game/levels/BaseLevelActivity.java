@@ -43,6 +43,10 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected abstract String getNextLevelClass();
     protected abstract int getLevelNumber();
 
+    protected int getBackgroundResId() {
+        return R.drawable.level1_background;
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase));
@@ -53,6 +57,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level1);
+        findViewById(R.id.level1Root).setBackgroundResource(getBackgroundResId());
         ImmersiveHelper.enable(getWindow());
 
         Intent pauseBgm = new Intent(this, BgmService.class);
