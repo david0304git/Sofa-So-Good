@@ -9,7 +9,7 @@
     - Idle
     - 2D Top View
     - Dialog Box
-- [ ] Level Design
+- [x] Level Design
     - L1 Living Room
     - L2 Kitchen
     - L3 Washroom
