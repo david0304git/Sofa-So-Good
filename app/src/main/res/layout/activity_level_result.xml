@@ -14,20 +14,23 @@
         android:layout_height="match_parent"
         android:background="@drawable/pause_overlay"/>
 
-    <ImageButton
+    <!-- 排行榜按鈕 -->
+    <com.speed.sofasogood.views.OutlinedTextButton
         android:id="@+id/btnLeaderboard"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/dialog_box"
+        style="@style/NeonButton"
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
         android:elevation="10dp"
-        android:scaleType="centerInside"
-        android:src="@android:drawable/ic_media_pause"
+        android:text="@string/title_leaderboard"
+        app:layout_constraintBottom_toTopOf="@id/resultPanel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
+    <LinearLayout
+        android:id="@+id/resultPanel"
             android:layout_width="347dp"
             android:layout_height="547dp"
             android:layout_marginStart="32dp"

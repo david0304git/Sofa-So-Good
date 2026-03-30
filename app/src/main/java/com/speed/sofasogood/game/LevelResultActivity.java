@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
+import com.speed.sofasogood.activities.LeaderboardActivity;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
@@ -52,16 +53,9 @@ public class LevelResultActivity extends AppCompatActivity {
         String nextLevelClass = getIntent().getStringExtra("nextLevel");
 
         View btnLeaderboard = findViewById(R.id.btnLeaderboard);
-
-        findViewById(R.id.findViewById(R.id.btnLeaderboard).setOnClickListener(v -> {
+        setupButtonAnimation(btnLeaderboard);
+        btnLeaderboard.setOnClickListener(v -> {
             int level = getIntent().getIntExtra("level", 1);
-
-            Intent intent = new Intent(LevelResultActivity.this, LeaderboardActivity.class);
-            intent.putExtra("level", level);
-            startActivity(intent);
-        });).setOnClickListener(v -> {
-            int level = getIntent().getIntExtra("level", 1);
-
             Intent intent = new Intent(LevelResultActivity.this, LeaderboardActivity.class);
             intent.putExtra("level", level);
             startActivity(intent);
