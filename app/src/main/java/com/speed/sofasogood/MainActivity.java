@@ -1,6 +1,7 @@
 package com.speed.sofasogood;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -20,10 +21,17 @@ public class MainActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
+    private String currentLang;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentLang = LocaleHelper.getLanguage(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -63,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, BgmService.class));
             finishAffinity();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String lang = LocaleHelper.getLanguage(this);
+        if (!lang.equals(currentLang)) {
+            currentLang = lang;
+            recreate();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

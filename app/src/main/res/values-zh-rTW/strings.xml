@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">沙發真好</string>
+
+    <!-- Main Menu -->
+    <string name="btn_start">開始</string>
+    <string name="btn_credits">製作團隊</string>
+    <string name="btn_settings">設定</string>
+    <string name="btn_quit">退出</string>
+
+    <!-- Settings -->
+    <string name="title_settings">設定</string>
+    <string name="label_volume">音量</string>
+    <string name="label_language">語言</string>
+    <string name="btn_logout">登出</string>
+    <string name="btn_back">返回</string>
+
+    <!-- Level Select -->
+    <string name="title_levels">關卡</string>
+
+    <!-- Credits -->
+    <string name="title_credits">製作團隊</string>
+    <string name="label_developed_by">開發者</string>
+    <string name="label_team">Team Speed</string>
+    <string name="label_version">版本 1.0.0</string>
+
+    <!-- Level Result -->
+    <string name="title_level_complete">關卡完成！</string>
+    <string name="btn_next_level">下一關</string>
+    <string name="btn_exit">退出</string>
+
+    <!-- Pause -->
+    <string name="title_paused">暫停</string>
+    <string name="btn_resume">繼續</string>
+    <string name="btn_restart">重新開始</string>
+
+    <!-- Level 1 Dialogs -->
+    <string name="l1_d1">終於搬進來了……這就是我的新家。</string>
+    <string name="l1_d2">但客廳好亂，到處都是箱子和傢俬。</string>
+    <string name="l1_d3">我應該先把沙發和桌子擺好，這樣才有家的感覺。</string>
+    <string name="l1_d4">嗯，角落那些箱子也要整理一下。</string>
+    <string name="l1_d5">好吧，開始佈置——讓客廳煥然一新！</string>
+
+    <!-- Level 2–8 Dialogs -->
+    <string name="l2_d1">接下來是廚房……來整理一下吧！</string>
+    <string name="l3_d1">洗手間也需要整理一下！</string>
+    <string name="l4_d1">是時候佈置睡房了！</string>
+    <string name="l5_d1">露台的空間好窄……</string>
+    <string name="l6_d1">這個房間有好多傢俬要搬！</string>
+    <string name="l7_d1">快完成了……只剩兩個房間！</string>
+    <string name="l8_d1">最後一個房間……完成它吧！</string>
+</resources>

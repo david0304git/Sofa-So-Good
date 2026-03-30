@@ -1,6 +1,7 @@
 package com.speed.sofasogood;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -19,6 +20,11 @@ public class CreditsActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(com.speed.sofasogood.LocaleHelper.applyLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

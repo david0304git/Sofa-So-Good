@@ -1,3 +1,51 @@
 <resources>
     <string name="app_name">SofaSoGood</string>
+
+    <!-- Main Menu -->
+    <string name="btn_start">Start</string>
+    <string name="btn_credits">Credits</string>
+    <string name="btn_settings">Setting</string>
+    <string name="btn_quit">Quit</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Setting</string>
+    <string name="label_volume">Volume</string>
+    <string name="label_language">Language</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_back">Back</string>
+
+    <!-- Level Select -->
+    <string name="title_levels">Levels</string>
+
+    <!-- Credits -->
+    <string name="title_credits">Credits</string>
+    <string name="label_developed_by">Developed by</string>
+    <string name="label_team">Team Speed</string>
+    <string name="label_version">Version 1.0.0</string>
+
+    <!-- Level Result -->
+    <string name="title_level_complete">Level Complete!</string>
+    <string name="btn_next_level">Next Level</string>
+    <string name="btn_exit">Exit</string>
+
+    <!-- Pause -->
+    <string name="title_paused">Paused</string>
+    <string name="btn_resume">Resume</string>
+    <string name="btn_restart">Restart</string>
+
+    <!-- Level 1 Dialogs -->
+    <string name="l1_d1">Finally, I\u2019ve moved in… this is my new home.</string>
+    <string name="l1_d2">But the living room is such a mess, boxes and furniture everywhere.</string>
+    <string name="l1_d3">I should set up the sofa and table first, so it feels more like home.</string>
+    <string name="l1_d4">Hmm, those boxes in the corner need sorting too.</string>
+    <string name="l1_d5">Alright, let\u2019s start arranging—time to make the living room shine!</string>
+
+    <!-- Level 2–8 Dialogs -->
+    <string name="l2_d1">The kitchen is next… let\u2019s get it sorted!</string>
+    <string name="l3_d1">The washroom needs some work too!</string>
+    <string name="l4_d1">Time to set up the bedroom!</string>
+    <string name="l5_d1">The balcony is a tight squeeze…</string>
+    <string name="l6_d1">This room has a lot of furniture to move!</string>
+    <string name="l7_d1">Almost there… just two more rooms!</string>
+    <string name="l8_d1">The final room… let\u2019s finish this!</string>
 </resources>

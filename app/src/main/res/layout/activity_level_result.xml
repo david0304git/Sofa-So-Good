@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Level Complete!"
+            android:text="@string/title_level_complete"
             android:textColor="#FFFFFF"
             android:textSize="26sp"
             android:textStyle="italic" />
@@ -54,7 +54,7 @@
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:text="Next Level" />
+            android:text="@string/btn_next_level" />
 
         <!-- 退出 -->
         <com.speed.sofasogood.OutlinedTextButton
@@ -62,7 +62,7 @@
             style="@style/NeonButton"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:text="Exit" />
+            android:text="@string/btn_exit" />
 
     </LinearLayout>
 

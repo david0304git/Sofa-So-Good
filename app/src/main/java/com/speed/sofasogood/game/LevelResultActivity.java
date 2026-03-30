@@ -1,6 +1,7 @@
 package com.speed.sofasogood.game;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -18,6 +19,11 @@ public class LevelResultActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(com.speed.sofasogood.LocaleHelper.applyLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

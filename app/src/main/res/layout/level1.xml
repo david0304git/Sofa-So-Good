@@ -75,7 +75,7 @@
             android:id="@+id/pauseTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paused"
+            android:text="@string/title_paused"
             android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:textStyle="bold"
@@ -100,7 +100,7 @@
                 style="@style/NeonButton"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Resume"
+                android:text="@string/btn_resume"
                 android:layout_marginBottom="16dp"/>
 
             <com.speed.sofasogood.OutlinedTextButton
@@ -108,7 +108,7 @@
                 style="@style/NeonButton"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Restart"
+                android:text="@string/btn_restart"
                 android:layout_marginBottom="16dp"/>
 
             <com.speed.sofasogood.OutlinedTextButton
@@ -116,7 +116,7 @@
                 style="@style/NeonButton"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Exit"/>
+                android:text="@string/btn_exit"/>
 
         </LinearLayout>
 

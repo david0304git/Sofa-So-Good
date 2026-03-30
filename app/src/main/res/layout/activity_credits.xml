@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Credits"
+            android:text="@string/title_credits"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="italic" />
@@ -35,7 +35,7 @@
         <com.speed.sofasogood.OutlinedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Developed by"
+            android:text="@string/label_developed_by"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Team Speed"
+            android:text="@string/label_team"
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Version 1.0.0"
+            android:text="@string/label_version"
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
@@ -61,7 +61,7 @@
             style="@style/NeonButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Back" />
+            android:text="@string/btn_back" />
 
     </LinearLayout>
 

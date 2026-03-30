@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="81dp"
             android:layout_marginBottom="24dp"
-            android:text="Setting"
+            android:text="@string/title_settings"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
             android:textStyle="italic" />
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Volume"
+            android:text="@string/label_volume"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Language"
+            android:text="@string/label_language"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -70,7 +70,8 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@drawable/main_button" />
+            android:background="@drawable/main_button"
+            android:popupBackground="@drawable/settings_panel" />
 
         <!-- 登出 -->
         <com.speed.sofasogood.OutlinedTextButton
@@ -79,7 +80,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:text="Logout" />
+            android:text="@string/btn_logout" />
 
         <!-- 返回 -->
         <com.speed.sofasogood.OutlinedTextButton
@@ -87,7 +88,7 @@
             style="@style/NeonButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="Back" />
+            android:text="@string/btn_back" />
 
     </LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.speed.sofasogood.game.levels;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -31,9 +32,14 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private MediaPlayer levelBgm;
 
     protected abstract int[][] getLevelData();
-    protected abstract String[] getDialogs();
+    protected abstract int[] getDialogResIds();
     protected abstract int[] getExpressions();
-    protected abstract String getNextLevelClass(); // null if last level
+    protected abstract String getNextLevelClass();
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(com.speed.sofasogood.LocaleHelper.applyLocale(newBase));
+    }
 
     @Override
     @SuppressLint("ClickableViewAccessibility")
@@ -66,7 +72,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         GameView gameView = findViewById(R.id.gameView);
         gameView.setSoundPool(soundPool, pushSoundId);
 
-        String[] dialogs = getDialogs();
+        int[] dialogResIds = getDialogResIds();
+        String[] dialogs = new String[dialogResIds.length];
+        for (int i = 0; i < dialogResIds.length; i++) dialogs[i] = getString(dialogResIds[i]);
         int[] expressions = getExpressions();
 
         dialogBox.setText(dialogs[dialogIndex]);

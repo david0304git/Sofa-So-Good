@@ -1,6 +1,7 @@
 package com.speed.sofasogood;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -23,6 +24,11 @@ public class LevelSelectActivity extends AppCompatActivity {
     private boolean soundReady = false;
     private ViewFlipper viewFlipper;
     private View btnPrev, btnNext;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
