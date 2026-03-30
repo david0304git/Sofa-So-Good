@@ -46,6 +46,7 @@ public class GameView extends View {
     private OnLevelCompleteListener completeListener;
     private SoundPool soundPool;
     private int moveSoundId;
+    private float soundVolume = 1.0f;
 
     private float[][] dropProgress;
     private boolean animating = false;
@@ -60,6 +61,10 @@ public class GameView extends View {
     public void setSoundPool(SoundPool sp, int soundId) {
         this.soundPool = sp;
         this.moveSoundId = soundId;
+    }
+
+    public void setSoundVolume(float volume) {
+        this.soundVolume = volume;
     }
 
     public void setOnLevelCompleteListener(OnLevelCompleteListener listener) {
@@ -318,7 +323,7 @@ public class GameView extends View {
         playerCol = nc;
 
         invalidate();
-        if (pushed && soundPool != null) soundPool.play(moveSoundId, 0.5f, 0.5f, 1, 0, 1f);
+        if (pushed && soundPool != null) soundPool.play(moveSoundId, soundVolume * 0.5f, soundVolume * 0.5f, 1, 0, 1f);
         checkWin();
     }
 

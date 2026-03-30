@@ -2,6 +2,7 @@ package com.speed.sofasogood;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -14,12 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
 
 public class CreditsActivity extends AppCompatActivity {
 
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
+    private float soundVolume = 1.0f;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -47,6 +50,9 @@ public class CreditsActivity extends AppCompatActivity {
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
         clickSoundId = soundPool.load(this, R.raw.button_click, 1);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        soundVolume = prefs.getFloat("sound_volume", 1.0f);
+
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
@@ -58,7 +64,7 @@ public class CreditsActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
-                    if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:

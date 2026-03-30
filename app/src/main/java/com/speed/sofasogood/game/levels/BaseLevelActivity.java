@@ -55,6 +55,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         bgm.setAction("PAUSE");
         startService(bgm);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        soundVolume = prefs.getFloat("sound_volume", 1.0f);
+
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
                 .setAudioAttributes(new AudioAttributes.Builder()
@@ -75,6 +78,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         View pauseOverlay = findViewById(R.id.pauseOverlay);
         GameView gameView = findViewById(R.id.gameView);
         gameView.setSoundPool(soundPool, pushSoundId);
+        gameView.setSoundVolume(soundVolume);
 
         int[] dialogResIds = getDialogResIds();
         String[] dialogs = new String[dialogResIds.length];
@@ -86,7 +90,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         findViewById(R.id.level1Root).setOnClickListener(v -> {
             if (dialogFinished) return;
-            if (soundReady) soundPool.play(dialogClickId, 1f, 1f, 1, 0, 1f);
+            if (soundReady) soundPool.play(dialogClickId, soundVolume, soundVolume, 1, 0, 1f);
             dialogIndex++;
             if (dialogIndex < dialogs.length) {
                 dialogBox.setText(dialogs[dialogIndex]);
@@ -110,7 +114,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnPause).setOnClickListener(v -> {
-            if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+            if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
             if (levelBgm != null && levelBgm.isPlaying()) levelBgm.pause();
             pauseOverlay.setVisibility(View.VISIBLE);
         });
@@ -148,7 +152,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
-                    if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
