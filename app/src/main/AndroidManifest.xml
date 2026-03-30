@@ -14,6 +14,7 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,23 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="false">
-        </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".LevelSelectActivity" />
-        <activity android:name=".CreditsActivity" />
+        <activity android:name=".MainActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".SettingsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LevelSelectActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CreditsActivity" android:screenOrientation="portrait" />
         <service android:name=".BgmService" />
-        <activity android:name=".game.levels.Level1Activity" />
-        <activity android:name=".game.levels.Level2Activity" />
-        <activity android:name=".game.levels.Level3Activity" />
-        <activity android:name=".game.levels.Level4Activity" />
-        <activity android:name=".game.levels.Level5Activity" />
-        <activity android:name=".game.levels.Level6Activity" />
-        <activity android:name=".game.levels.Level7Activity" />
-        <activity android:name=".game.levels.Level8Activity" />
-        <activity android:name=".game.LevelResultActivity" />
+        <activity android:name=".game.levels.Level1Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level2Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level3Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level4Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level5Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level6Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level7Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.Level8Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.LevelResultActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>
