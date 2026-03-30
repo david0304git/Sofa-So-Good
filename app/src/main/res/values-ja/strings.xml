@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">ソファ・ソー・グッド</string>
+
+    <!-- Main Menu -->
+    <string name="btn_start">スタート</string>
+    <string name="btn_credits">クレジット</string>
+    <string name="btn_settings">設定</string>
+    <string name="btn_quit">終了</string>
+
+    <!-- Settings -->
+    <string name="title_settings">設定</string>
+    <string name="label_volume">音量</string>
+    <string name="label_language">言語</string>
+    <string name="btn_logout">ログアウト</string>
+    <string name="btn_back">戻る</string>
+
+    <!-- Level Select -->
+    <string name="title_levels">ステージ</string>
+
+    <!-- Credits -->
+    <string name="title_credits">クレジット</string>
+    <string name="label_developed_by">開発者</string>
+    <string name="label_team">Team Speed</string>
+    <string name="label_version">バージョン 1.0.0</string>
+
+    <!-- Level Result -->
+    <string name="title_level_complete">ステージクリア！</string>
+    <string name="btn_next_level">次のステージ</string>
+    <string name="btn_exit">終了</string>
+
+    <!-- Pause -->
+    <string name="title_paused">一時停止</string>
+    <string name="btn_resume">再開</string>
+    <string name="btn_restart">やり直す</string>
+
+    <!-- Level 1 Dialogs -->
+    <string name="l1_d1">やっと引っ越してきた……ここが新しい家だ。</string>
+    <string name="l1_d2">でもリビングはめちゃくちゃ、箱と家具だらけ。</string>
+    <string name="l1_d3">まずソファとテーブルを置いて、家らしくしよう。</string>
+    <string name="l1_d4">うーん、隅の箱も片付けないと。</string>
+    <string name="l1_d5">よし、配置を始めよう——リビングをピカピカにするぞ！</string>
+
+    <!-- Level 2–8 Dialogs -->
+    <string name="l2_d1">次はキッチン……片付けよう！</string>
+    <string name="l3_d1">洗面所も整理しないと！</string>
+    <string name="l4_d1">寝室をセットアップする時間だ！</string>
+    <string name="l5_d1">バルコニーは狭いな……</string>
+    <string name="l6_d1">この部屋は動かす家具がたくさん！</string>
+    <string name="l7_d1">もう少し……あと二部屋だ！</string>
+    <string name="l8_d1">最後の部屋……仕上げよう！</string>
+</resources>

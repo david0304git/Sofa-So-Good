@@ -69,8 +69,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Language Spinner
         Spinner spinnerLanguage = findViewById(R.id.spinnerLanguage);
-        String[] languages = {"English", "繁體中文"};
-        String[] langCodes = {"en", "zh-TW"};
+        String[] languages = {"English", "繁體中文", "日本語"};
+        String[] langCodes = {"en", "zh-TW", "ja"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.spinner_item, languages);

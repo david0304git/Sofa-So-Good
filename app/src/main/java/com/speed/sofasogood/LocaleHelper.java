@@ -17,6 +17,8 @@ public class LocaleHelper {
         Locale locale;
         if ("zh-TW".equals(lang)) {
             locale = Locale.TRADITIONAL_CHINESE;
+        } else if ("ja".equals(lang)) {
+            locale = Locale.JAPANESE;
         } else {
             locale = Locale.ENGLISH;
         }
