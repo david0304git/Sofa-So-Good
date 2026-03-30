@@ -29,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     private int clickSoundId;
     private boolean soundReady = false;
     private float soundVolume = 1.0f;  // Default to full volume
+    private float mediaVolume = 1.0f;  // Default to full volume
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -59,7 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Media Volume (controls music volume)
-        float mediaVolume = prefs.getFloat("media_volume", 1.0f);
+        mediaVolume = prefs.getFloat("media_volume", 1.0f);
         SeekBar seekBarVolume = findViewById(R.id.seekBarVolume);
         seekBarVolume.setMax(100);
         seekBarVolume.setProgress((int) (mediaVolume * 100));
