@@ -2,101 +2,135 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/levelResult"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/menu_background">
 
-    <!-- 深色濾鏡 -->
+    <!-- Overlay -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/pause_overlay"/>
 
-    <!-- 排行榜按鈕 -->
-    <com.speed.sofasogood.views.OutlinedTextButton
-        android:id="@+id/btnLeaderboard"
-        style="@style/NeonButton"
-        android:layout_width="347dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        android:elevation="10dp"
-        android:text="@string/title_leaderboard"
-        app:layout_constraintBottom_toTopOf="@id/resultPanel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
+    <!-- Panel -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/resultPanel"
-        android:layout_width="342dp"
-        android:layout_height="576dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/settings_panel"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.85">
 
-        <!-- 通關文字 -->
+        <!-- Title -->
         <com.speed.sofasogood.views.OutlinedTextView
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:text="@string/title_level_complete"
             android:textColor="#FFFFFF"
-            android:textSize="26sp"
-            android:textStyle="italic" />
+            android:textSize="30sp"
+            android:textStyle="italic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Time -->
         <com.speed.sofasogood.views.OutlinedTextView
             android:id="@+id/resultFinishTime"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="Time: 1:23.45"
             android:textColor="#CCCCCC"
             android:textSize="18sp"
-            tools:text="Time: 1:23.45" />
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Score -->
         <com.speed.sofasogood.views.OutlinedTextView
             android:id="@+id/resultScore"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="Score: 999000"
             android:textColor="#CCCCCC"
             android:textSize="18sp"
-            tools:text="Score: 999000" />
+            app:layout_constraintTop_toBottomOf="@id/resultFinishTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- 疲累角色 -->
+        <!-- Image (adaptive, won't crush layout) -->
+
+        <!-- Next Level -->
         <ImageView
-            android:layout_width="197dp"
-            android:layout_height="252dp"
-            android:layout_marginBottom="16dp"
+            android:id="@+id/resultCharacter"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/character_tired" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/character_tired"
+            app:layout_constraintBottom_toTopOf="@id/btnNextLevel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.5"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resultScore" />
 
-        <!-- 下一關 -->
         <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnNextLevel"
             style="@style/NeonButton"
-            android:layout_width="220dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="@string/btn_next_level" />
+            android:text="@string/btn_next_level"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resultCharacter"
+            app:layout_constraintWidth_percent="0.7" />
 
-        <!-- 退出 -->
+        <!-- Exit -->
         <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnExit"
             style="@style/NeonButton"
-            android:layout_width="220dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/btn_exit" />
+            android:text="@string/btn_exit"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnNextLevel"
 
-    </LinearLayout>
+            app:layout_constraintWidth_percent="0.7" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Leaderboard button (attached to panel) -->
+    <com.speed.sofasogood.views.OutlinedTextButton
+        android:id="@+id/btnLeaderboard"
+        style="@style/NeonButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/title_leaderboard"
+
+        app:layout_constraintBottom_toTopOf="@id/resultPanel"
+        app:layout_constraintStart_toStartOf="@id/resultPanel"
+        app:layout_constraintEnd_toEndOf="@id/resultPanel"
+
+        app:layout_constraintWidth_percent="0.7"
+        android:layout_marginBottom="12dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

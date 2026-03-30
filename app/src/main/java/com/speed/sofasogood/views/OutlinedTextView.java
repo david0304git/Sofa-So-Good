@@ -11,10 +11,33 @@ public class OutlinedTextView extends AppCompatTextView {
 
     private int strokeColor = 0xFF5A3A1A;
     private float strokeWidth = 6f;
+    private int outlinePadding;
 
-    public OutlinedTextView(Context context) { super(context); }
-    public OutlinedTextView(Context context, AttributeSet attrs) { super(context, attrs); }
-    public OutlinedTextView(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle); }
+    public OutlinedTextView(Context context) {
+        super(context);
+        init();
+    }
+
+    public OutlinedTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public OutlinedTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init() {
+        outlinePadding = (int) Math.ceil(strokeWidth);
+
+        setPadding(
+                getPaddingLeft() + outlinePadding,
+                getPaddingTop() + outlinePadding,
+                getPaddingRight() + outlinePadding,
+                getPaddingBottom() + outlinePadding
+        );
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
