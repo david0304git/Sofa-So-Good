@@ -8,7 +8,7 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;

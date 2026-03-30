@@ -9,7 +9,8 @@
 
     <!-- Settings -->
     <string name="title_settings">Setting</string>
-    <string name="label_volume">Volume</string>
+    <string name="label_volume">Media Volume</string>
+    <string name="label_sound_volume">Sound Effects Volume</string>
     <string name="label_language">Language</string>
     <string name="btn_logout">Logout</string>
     <string name="btn_back">Back</string>

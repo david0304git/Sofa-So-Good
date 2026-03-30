@@ -55,7 +55,25 @@
             android:progressTint="#FFD700"
             android:thumbTint="#FFD700" />
 
-        <!-- 語言 -->
+        <!-- 音效音量 -->
+        <com.speed.sofasogood.OutlinedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/label_sound_volume"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/seekBarSoundVolume"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:max="100"
+            android:progress="100"
+            android:progressTint="#FFD700"
+            android:thumbTint="#FFD700" />
         <com.speed.sofasogood.OutlinedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
