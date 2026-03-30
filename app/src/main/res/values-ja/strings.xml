@@ -39,19 +39,59 @@
     <string name="btn_resume">再開</string>
     <string name="btn_restart">やり直す</string>
 
-    <!-- Level 1 Dialogs -->
-    <string name="l1_d1">やっと引っ越してきた……ここが新しい家だ。</string>
-    <string name="l1_d2">でもリビングはめちゃくちゃ、箱と家具だらけ。</string>
-    <string name="l1_d3">まずソファとテーブルを置いて、家らしくしよう。</string>
-    <string name="l1_d4">うーん、隅の箱も片付けないと。</string>
-    <string name="l1_d5">よし、配置を始めよう——リビングをピカピカにするぞ！</string>
+    <!-- Level 1 -->
+    <string name="l1_d1">ここが新しい家か！</string>
+    <string name="l1_d2">がらんとしてるけど、期待でいっぱいだ。</string>
+    <string name="l1_d3">家具を並べて、やっと落ち着ける。</string>
+    <string name="l1_d4">ソファはリビングの真ん中がいいかな。</string>
+    <string name="l1_d5">よし、始めよう！</string>
 
-    <!-- Level 2–8 Dialogs -->
-    <string name="l2_d1">次はキッチン……片付けよう！</string>
-    <string name="l3_d1">洗面所も整理しないと！</string>
-    <string name="l4_d1">寝室をセットアップする時間だ！</string>
-    <string name="l5_d1">バルコニーは狭いな……</string>
-    <string name="l6_d1">この部屋は動かす家具がたくさん！</string>
-    <string name="l7_d1">もう少し……あと二部屋だ！</string>
-    <string name="l8_d1">最後の部屋……仕上げよう！</string>
+    <!-- Level 2 -->
+    <string name="l2_d1">キッチンは家の心臓、まず整えないと。</string>
+    <string name="l2_d2">冷蔵庫と食器棚は使いやすい場所に。</string>
+    <string name="l2_d3">思ったより重いな。</string>
+    <string name="l2_d4">床を傷つけないように気をつけよう。</string>
+    <string name="l2_d5">よし、押すぞ！</string>
+
+    <!-- Level 3 -->
+    <string name="l3_d1">トイレは小さいけど大事だ。</string>
+    <string name="l3_d2">洗面台とトイレの位置をちゃんと決めないと。</string>
+    <string name="l3_d3">これは動かしにくい、ゆっくりやろう。</string>
+    <string name="l3_d4">きれいに並べれば使いやすくなる。</string>
+    <string name="l3_d5">よし、動かそう！</string>
+
+    <!-- Level 4 -->
+    <string name="l4_d1">寝室は休む場所、居心地よくしないと。</string>
+    <string name="l4_d2">ベッドは窓の近くがいい、朝日が入る。</string>
+    <string name="l4_d3">クローゼットが大きい、場所をよく考えないと。</string>
+    <string name="l4_d4">そうすれば部屋がすっきりする。</string>
+    <string name="l4_d5">よし、動かそう！</string>
+
+    <!-- Level 5 -->
+    <string name="l5_d1">このテーブルの下に変な彫り跡がある。</string>
+    <string name="l5_d2">何かの記号みたいだ。</string>
+    <string name="l5_d3">前の住人が残したのかな？</string>
+    <string name="l5_d4">家具を動かしてよく見ないと。</string>
+    <string name="l5_d5">よし、動かそう！</string>
+
+    <!-- Level 6 -->
+    <string name="l6_d1">なんで急に停電したんだ？</string>
+    <string name="l6_d2">電気がないと何もできない。</string>
+    <string name="l6_d3">予備の発電機があるらしい。</string>
+    <string name="l6_d4">正しい場所に押して電力を復旧させないと。</string>
+    <string name="l6_d5">よし、動かそう！</string>
+
+    <!-- Level 7 -->
+    <string name="l7_d1">壁の角に隠し扉があった！</string>
+    <string name="l7_d2">書斎の奥に秘密の部屋があった。</string>
+    <string name="l7_d3">中の壁は記号だらけだ。</string>
+    <string name="l7_d4">これは…？</string>
+    <string name="l7_d5">動かして見てみよう。</string>
+
+    <!-- Level 8 -->
+    <string name="l8_d1">秘密の部屋の記号が光り始めた。</string>
+    <string name="l8_d2">何かの方向を指し示しているようだ。</string>
+    <string name="l8_d3">家具の位置で仕掛けが作動するかも。</string>
+    <string name="l8_d4">ちょっと怖い…</string>
+    <string name="l8_d5">家具が重い、ゆっくり押そう。</string>
 </resources>
