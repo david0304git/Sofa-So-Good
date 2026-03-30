@@ -51,9 +51,17 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level1);
 
-        Intent bgm = new Intent(this, BgmService.class);
-        bgm.setAction("PAUSE");
-        startService(bgm);
+        // Pause the background music service
+        Intent pauseBgm = new Intent(this, BgmService.class);
+        pauseBgm.setAction("PAUSE");
+        startService(pauseBgm);
+
+        // Small delay to ensure PAUSE command is processed
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);

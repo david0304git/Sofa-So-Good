@@ -14,11 +14,11 @@ public class BgmService extends Service {
     private MediaPlayer mediaPlayer;
     private boolean pausedByLevel = false;
     private final LifecycleEventObserver lifecycleObserver = (source, event) -> {
-        if (mediaPlayer == null) return;
+        if (mediaPlayer == null || pausedByLevel) return;
         if (event == Lifecycle.Event.ON_STOP) {
             if (mediaPlayer.isPlaying()) mediaPlayer.pause();
         } else if (event == Lifecycle.Event.ON_START) {
-            if (!pausedByLevel && !mediaPlayer.isPlaying()) mediaPlayer.start();
+            if (!mediaPlayer.isPlaying()) mediaPlayer.start();
         }
     };
 
@@ -32,6 +32,8 @@ public class BgmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (mediaPlayer == null) return START_STICKY;
+        
         if (intent != null && "PAUSE".equals(intent.getAction())) {
             pausedByLevel = true;
             if (mediaPlayer.isPlaying()) mediaPlayer.pause();
@@ -40,7 +42,7 @@ public class BgmService extends Service {
             if (!mediaPlayer.isPlaying()) mediaPlayer.start();
         } else if (intent != null && "SET_VOLUME".equals(intent.getAction())) {
             float volume = intent.getFloatExtra("volume", 1.0f);
-            if (mediaPlayer != null) mediaPlayer.setVolume(volume, volume);
+            mediaPlayer.setVolume(volume, volume);
         } else {
             pausedByLevel = false;
             if (!mediaPlayer.isPlaying()) mediaPlayer.start();
