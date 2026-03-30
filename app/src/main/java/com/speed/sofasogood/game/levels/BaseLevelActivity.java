@@ -128,6 +128,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         // 跳過對話按鈕
         View btnSkip = findViewById(R.id.btnSkip);
+        setupButtonAnimation(btnSkip);
         btnSkip.setOnClickListener(v -> {
             if (dialogFinished) return;
             if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
@@ -182,7 +183,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             finish();
         });
 
-        findViewById(R.id.btnPause).setOnClickListener(v -> {
+        View btnPause = findViewById(R.id.btnPause);
+        setupButtonAnimation(btnPause);
+        btnPause.setOnClickListener(v -> {
             if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
             if (levelBgm != null && levelBgm.isPlaying()) levelBgm.pause();
             pushPause();
