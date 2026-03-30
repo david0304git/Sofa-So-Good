@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
+
 import com.speed.sofasogood.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
@@ -30,6 +33,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private int dialogIndex = 0;
     private boolean dialogFinished = false;
     private MediaPlayer levelBgm;
+    private float soundVolume = 1.0f;
 
     protected abstract int[][] getLevelData();
     protected abstract int[] getDialogResIds();
