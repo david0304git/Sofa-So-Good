@@ -38,6 +38,9 @@ public class BgmService extends Service {
         } else if (intent != null && "RESUME".equals(intent.getAction())) {
             pausedByLevel = false;
             if (!mediaPlayer.isPlaying()) mediaPlayer.start();
+        } else if (intent != null && "SET_VOLUME".equals(intent.getAction())) {
+            float volume = intent.getFloatExtra("volume", 1.0f);
+            if (mediaPlayer != null) mediaPlayer.setVolume(volume, volume);
         } else {
             pausedByLevel = false;
             if (!mediaPlayer.isPlaying()) mediaPlayer.start();

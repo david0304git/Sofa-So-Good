@@ -58,19 +58,32 @@ public class SettingsActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        // Media Volume (existing SeekBar, now explicitly for media)
+        // Media Volume (controls music volume)
+        float mediaVolume = prefs.getFloat("media_volume", 1.0f);
         SeekBar seekBarVolume = findViewById(R.id.seekBarVolume);
-        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-        seekBarVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        seekBarVolume.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+        seekBarVolume.setMax(100);
+        seekBarVolume.setProgress((int) (mediaVolume * 100));
         seekBarVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+                if (fromUser) {
+                    mediaVolume = progress / 100.0f;
+                    prefs.edit().putFloat("media_volume", mediaVolume).apply();
+                    Intent intent = new Intent(SettingsActivity.this, BgmService.class);
+                    intent.setAction("SET_VOLUME");
+                    intent.putExtra("volume", mediaVolume);
+                    startService(intent);
+                }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+        // Set initial music volume
+        Intent volumeIntent = new Intent(this, BgmService.class);
+        volumeIntent.setAction("SET_VOLUME");
+        volumeIntent.putExtra("volume", mediaVolume);
+        startService(volumeIntent);
 
         // Sound Effects Volume (new SeekBar)
         SeekBar seekBarSoundVolume = findViewById(R.id.seekBarSoundVolume);
