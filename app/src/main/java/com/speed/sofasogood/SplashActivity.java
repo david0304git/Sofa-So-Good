@@ -17,7 +17,6 @@ public class SplashActivity extends AppCompatActivity {
 
         ImageView logo = findViewById(R.id.splashLogo);
 
-        // Fade in over 1.5s, hold 2s, then go to main
         logo.animate()
                 .alpha(1f)
                 .setDuration(1500)

@@ -57,6 +57,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
+        // 標題圖片跟隨語言切換
+        ImageView gameTitle = findViewById(R.id.gameTitle);
+        switch (currentLang) {
+            case "zh-TW": gameTitle.setImageResource(R.drawable.menu_title_cn); break;
+            case "ja":    gameTitle.setImageResource(R.drawable.menu_title_jp); break;
+            default:      gameTitle.setImageResource(R.drawable.menu_title);    break;
+        }
+
         // 啟動背景音樂
         startService(new Intent(this, BgmService.class));
 
