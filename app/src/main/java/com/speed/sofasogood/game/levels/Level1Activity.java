@@ -13,4 +13,7 @@ public class Level1Activity extends BaseLevelActivity {
         return new int[]{ R.drawable.character_happy, R.drawable.character_thinking, R.drawable.character_thinking, R.drawable.character_thinking, R.drawable.character_idea };
     }
     @Override protected int getLevelNumber() { return 1; }
+    @Override protected int[] getVoiceResIds() {
+        return new int[]{ R.raw.l1_d1, R.raw.l1_d2, R.raw.l1_d3, R.raw.l1_d4, R.raw.l1_d5 };
+    }
 }

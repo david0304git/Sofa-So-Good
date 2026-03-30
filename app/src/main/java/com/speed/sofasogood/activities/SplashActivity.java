@@ -1,6 +1,7 @@
 package com.speed.sofasogood.activities;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -21,10 +22,14 @@ public class SplashActivity extends AppCompatActivity {
 
         ImageView logo = findViewById(R.id.splashLogo);
 
+        MediaPlayer splashSound = MediaPlayer.create(this, R.raw.splashscreen);
+
         logo.animate()
                 .alpha(1f)
                 .setDuration(1500)
+                .withStartAction(() -> splashSound.start())
                 .withEndAction(() -> logo.postDelayed(() -> {
+                    splashSound.release();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 }, 2000))

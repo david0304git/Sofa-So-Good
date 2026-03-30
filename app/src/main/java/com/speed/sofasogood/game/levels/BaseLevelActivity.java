@@ -38,6 +38,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private int dialogIndex = 0;
     private boolean dialogFinished = false;
     private MediaPlayer levelBgm;
+    private MediaPlayer voicePlayer;
     private float soundVolume = 1.0f;
     private float mediaVolume = 1.0f;
 
@@ -57,6 +58,11 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
     protected int getBackgroundResId() {
         return R.drawable.level1_background;
+    }
+
+    /** Override to provide voice-over resource IDs for each dialog line. Return null if no voice. */
+    protected int[] getVoiceResIds() {
+        return null;
     }
 
     @Override
@@ -114,9 +120,11 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         String[] dialogs = new String[dialogResIds.length];
         for (int i = 0; i < dialogResIds.length; i++) dialogs[i] = getString(dialogResIds[i]);
         int[] expressions = getExpressions();
+        int[] voiceResIds = getVoiceResIds();
 
         dialogBox.setText(dialogs[dialogIndex]);
         dialogCharacter.setImageResource(expressions[dialogIndex]);
+        playVoice(voiceResIds, dialogIndex);
 
         findViewById(R.id.level1Root).setOnClickListener(v -> {
             if (dialogFinished) return;
@@ -125,6 +133,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             if (dialogIndex < dialogs.length) {
                 dialogBox.setText(dialogs[dialogIndex]);
                 dialogCharacter.setImageResource(expressions[dialogIndex]);
+                playVoice(voiceResIds, dialogIndex);
             } else {
                 dialogFinished = true;
                 dialogBox.setVisibility(View.GONE);
@@ -186,6 +195,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             dialogCharacter.setVisibility(View.VISIBLE);
             dialogBox.setText(dialogs[0]);
             dialogCharacter.setImageResource(expressions[0]);
+            playVoice(voiceResIds, 0);
         });
 
         View btnExit = findViewById(R.id.btnExit);
@@ -265,6 +275,25 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         if (dialogFinished) popPause();
     }
 
+    private void playVoice(int[] voiceResIds, int index) {
+        stopVoice();
+        if (voiceResIds == null || index >= voiceResIds.length) return;
+        voicePlayer = MediaPlayer.create(this, voiceResIds[index]);
+        if (voicePlayer != null) {
+            voicePlayer.setVolume(soundVolume, soundVolume);
+            voicePlayer.setOnCompletionListener(mp -> stopVoice());
+            voicePlayer.start();
+        }
+    }
+
+    private void stopVoice() {
+        if (voicePlayer != null) {
+            voicePlayer.stop();
+            voicePlayer.release();
+            voicePlayer = null;
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
         button.setOnTouchListener((v, event) -> {
@@ -285,6 +314,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         stopLevelTimerTicks();
+        stopVoice();
         if (levelBgm != null) {
             levelBgm.stop();
             levelBgm.release();
