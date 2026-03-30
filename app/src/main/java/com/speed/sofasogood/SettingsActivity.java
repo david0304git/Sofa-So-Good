@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     mediaVolume = progress / 100.0f;
-                    prefs.edit().putFloat("media_volume", mediaVolume).apply();
+                    prefs.edit().putFloat("media_volume", mediaVolume).commit();
                     Intent intent = new Intent(SettingsActivity.this, BgmService.class);
                     intent.setAction("SET_VOLUME");
                     intent.putExtra("volume", mediaVolume);
@@ -96,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     soundVolume = progress / 100.0f;
-                    prefs.edit().putFloat("sound_volume", soundVolume).apply();
+                    prefs.edit().putFloat("sound_volume", soundVolume).commit();
                 }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}

@@ -34,6 +34,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private boolean dialogFinished = false;
     private MediaPlayer levelBgm;
     private float soundVolume = 1.0f;
+    private float mediaVolume = 1.0f;
 
     protected abstract int[][] getLevelData();
     protected abstract int[] getDialogResIds();
@@ -65,6 +66,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
+        mediaVolume = prefs.getFloat("media_volume", 1.0f);
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
@@ -80,6 +82,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         levelBgm = MediaPlayer.create(this, R.raw.level_soundtrack_loop);
         levelBgm.setLooping(true);
+        levelBgm.setVolume(mediaVolume, mediaVolume);
 
         TextView dialogBox = findViewById(R.id.dialogBox);
         ImageView dialogCharacter = findViewById(R.id.dialogCharacter);

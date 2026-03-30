@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
             currentLang = lang;
             recreate();
         }
+        // Reload sound volume in case it was changed in Settings
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        soundVolume = prefs.getFloat("sound_volume", 1.0f);
     }
 
     @SuppressLint("ClickableViewAccessibility")
