@@ -3,10 +3,12 @@ package com.speed.sofasogood;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -26,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
+    private float soundVolume = 1.0f;  // Default to full volume
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -53,7 +56,9 @@ public class SettingsActivity extends AppCompatActivity {
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
         clickSoundId = soundPool.load(this, R.raw.button_click, 1);
 
-        // Volume
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Media Volume (existing SeekBar, now explicitly for media)
         SeekBar seekBarVolume = findViewById(R.id.seekBarVolume);
         AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         seekBarVolume.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
@@ -62,6 +67,23 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        // Sound Effects Volume (new SeekBar)
+        SeekBar seekBarSoundVolume = findViewById(R.id.seekBarSoundVolume);
+        seekBarSoundVolume.setMax(100);  // 0-100 for finer control
+        soundVolume = prefs.getFloat("sound_volume", 1.0f);
+        seekBarSoundVolume.setProgress((int) (soundVolume * 100));
+        seekBarSoundVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    soundVolume = progress / 100.0f;
+                    prefs.edit().putFloat("sound_volume", soundVolume).apply();
+                }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
@@ -120,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
-                    if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
