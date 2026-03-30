@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
+import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.LocaleHelper;
 
 public class LevelResultActivity extends AppCompatActivity {
 
@@ -25,14 +27,14 @@ public class LevelResultActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(com.speed.sofasogood.LocaleHelper.applyLocale(newBase));
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase));
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_result);
-        com.speed.sofasogood.ImmersiveHelper.enable(getWindow());
+        ImmersiveHelper.enable(getWindow());
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
@@ -48,6 +50,22 @@ public class LevelResultActivity extends AppCompatActivity {
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
         String nextLevelClass = getIntent().getStringExtra("nextLevel");
+
+        View btnLeaderboard = findViewById(R.id.btnLeaderboard);
+
+        findViewById(R.id.findViewById(R.id.btnLeaderboard).setOnClickListener(v -> {
+            int level = getIntent().getIntExtra("level", 1);
+
+            Intent intent = new Intent(LevelResultActivity.this, LeaderboardActivity.class);
+            intent.putExtra("level", level);
+            startActivity(intent);
+        });).setOnClickListener(v -> {
+            int level = getIntent().getIntExtra("level", 1);
+
+            Intent intent = new Intent(LevelResultActivity.this, LeaderboardActivity.class);
+            intent.putExtra("level", level);
+            startActivity(intent);
+        });
 
         View btnNext = findViewById(R.id.btnNextLevel);
         setupButtonAnimation(btnNext);

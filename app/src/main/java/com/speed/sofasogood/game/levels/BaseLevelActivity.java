@@ -14,14 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
-import com.speed.sofasogood.BgmService;
+import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
 import com.speed.sofasogood.game.LevelResultActivity;
+import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.LocaleHelper;
 
 public abstract class BaseLevelActivity extends AppCompatActivity {
 
@@ -40,10 +41,11 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected abstract int[] getDialogResIds();
     protected abstract int[] getExpressions();
     protected abstract String getNextLevelClass();
+    protected abstract int getLevelNumber();
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(com.speed.sofasogood.LocaleHelper.applyLocale(newBase));
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase));
     }
 
     @Override
@@ -51,14 +53,12 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level1);
-        com.speed.sofasogood.ImmersiveHelper.enable(getWindow());
+        ImmersiveHelper.enable(getWindow());
 
-        // Pause the background music service
         Intent pauseBgm = new Intent(this, BgmService.class);
         pauseBgm.setAction("PAUSE");
         startService(pauseBgm);
 
-        // Small delay to ensure PAUSE command is processed
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -119,8 +119,14 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         gameView.setOnLevelCompleteListener(() -> {
             Intent result = new Intent(this, LevelResultActivity.class);
+
             String next = getNextLevelClass();
-            if (next != null) result.putExtra("nextLevel", next);
+            if (next != null) {
+                result.putExtra("nextLevel", next);
+            }
+
+            result.putExtra("level", getLevelNumber());
+
             startActivity(result);
             finish();
         });

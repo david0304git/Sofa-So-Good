@@ -1,8 +1,7 @@
-package com.speed.sofasogood;
+package com.speed.sofasogood.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -10,17 +9,19 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity {
+import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.R;
+import com.speed.sofasogood.utils.LocaleHelper;
+
+public class CreditsActivity extends AppCompatActivity {
 
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
-    private String currentLang;
     private float soundVolume = 1.0f;
 
     @Override
@@ -31,8 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentLang = LocaleHelper.getLanguage(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_credits);
         ImmersiveHelper.enable(getWindow());
 
         soundPool = new SoundPool.Builder()
@@ -48,48 +48,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
-        // 標題圖片跟隨語言切換
-        ImageView gameTitle = findViewById(R.id.gameTitle);
-        switch (currentLang) {
-            case "zh-TW": gameTitle.setImageResource(R.drawable.menu_title_cn); break;
-            case "ja":    gameTitle.setImageResource(R.drawable.menu_title_jp); break;
-            default:      gameTitle.setImageResource(R.drawable.menu_title);    break;
-        }
-
-        // 啟動背景音樂
-        startService(new Intent(this, BgmService.class));
-
-        setupButtonAnimation(findViewById(R.id.btnStart));
-        setupButtonAnimation(findViewById(R.id.btnCredits));
-        setupButtonAnimation(findViewById(R.id.btnSettings));
-        setupButtonAnimation(findViewById(R.id.btnQuit));
-
-        findViewById(R.id.btnStart).setOnClickListener(v ->
-                startActivity(new Intent(this, LevelSelectActivity.class)));
-
-        findViewById(R.id.btnCredits).setOnClickListener(v ->
-                startActivity(new Intent(this, CreditsActivity.class)));
-
-        findViewById(R.id.btnSettings).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
-
-        findViewById(R.id.btnQuit).setOnClickListener(v -> {
-            stopService(new Intent(this, BgmService.class));
-            finishAffinity();
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String lang = LocaleHelper.getLanguage(this);
-        if (!lang.equals(currentLang)) {
-            currentLang = lang;
-            recreate();
-        }
-        // Reload sound volume in case it was changed in Settings
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        soundVolume = prefs.getFloat("sound_volume", 1.0f);
+        View btnBack = findViewById(R.id.btnBack);
+        setupButtonAnimation(btnBack);
+        btnBack.setOnClickListener(v -> finish());
     }
 
     @SuppressLint("ClickableViewAccessibility")

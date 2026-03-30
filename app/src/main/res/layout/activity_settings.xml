@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/menu_background"
-    tools:context=".SettingsActivity">
+    tools:context=".activities.SettingsActivity">
 
     <!-- Overlay 面板 -->
     <LinearLayout
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- 標題 -->
-        <com.speed.sofasogood.OutlinedTextView
+        <com.speed.sofasogood.views.OutlinedTextView
             android:id="@+id/settingsTitle"
             android:layout_width="wrap_content"
             android:layout_height="81dp"
@@ -36,7 +36,7 @@
             android:textStyle="italic" />
 
         <!-- 音量 -->
-        <com.speed.sofasogood.OutlinedTextView
+        <com.speed.sofasogood.views.OutlinedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -56,7 +56,7 @@
             android:thumbTint="#FFD700" />
 
         <!-- 音效音量 -->
-        <com.speed.sofasogood.OutlinedTextView
+        <com.speed.sofasogood.views.OutlinedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -74,7 +74,7 @@
             android:progress="100"
             android:progressTint="#FFD700"
             android:thumbTint="#FFD700" />
-        <com.speed.sofasogood.OutlinedTextView
+        <com.speed.sofasogood.views.OutlinedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -92,7 +92,7 @@
             android:popupBackground="@drawable/settings_panel" />
 
         <!-- 登出 -->
-        <com.speed.sofasogood.OutlinedTextButton
+        <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnLogout"
             style="@style/NeonButton"
             android:layout_width="250dp"
@@ -101,7 +101,7 @@
             android:text="@string/btn_logout" />
 
         <!-- 返回 -->
-        <com.speed.sofasogood.OutlinedTextButton
+        <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnBack"
             style="@style/NeonButton"
             android:layout_width="250dp"

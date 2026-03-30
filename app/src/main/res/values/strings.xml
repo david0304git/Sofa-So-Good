@@ -15,6 +15,9 @@
     <string name="btn_logout">Logout</string>
     <string name="btn_back">Back</string>
 
+    <!--leaderboard-->
+    <string name="title_leaderboard">Leaderboard</string>
+
     <!-- Level Select -->
     <string name="title_levels">Levels</string>
 

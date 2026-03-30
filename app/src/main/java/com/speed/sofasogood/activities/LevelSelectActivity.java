@@ -1,4 +1,4 @@
-package com.speed.sofasogood;
+package com.speed.sofasogood.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,6 +14,10 @@ import android.widget.ViewFlipper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+
+import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.LocaleHelper;
+import com.speed.sofasogood.R;
 
 public class LevelSelectActivity extends AppCompatActivity {
 

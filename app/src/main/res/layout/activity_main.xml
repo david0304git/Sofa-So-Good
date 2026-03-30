@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/menu_background"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <ImageView
         android:id="@+id/gameTitle"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="40dp">
 
-        <com.speed.sofasogood.OutlinedTextButton
+        <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnStart"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"/>
 
-        <com.speed.sofasogood.OutlinedTextButton
+        <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnCredits"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"/>
 
-        <com.speed.sofasogood.OutlinedTextButton
+        <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnSettings"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp" />
 
-        <com.speed.sofasogood.OutlinedTextButton
+        <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnQuit"
             android:layout_width="250dp"
             android:layout_height="wrap_content"

@@ -1,11 +1,10 @@
-package com.speed.sofasogood;
+package com.speed.sofasogood.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import androidx.preference.PreferenceManager;
@@ -18,6 +17,11 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.speed.sofasogood.services.BgmService;
+import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.LocaleHelper;
+import com.speed.sofasogood.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

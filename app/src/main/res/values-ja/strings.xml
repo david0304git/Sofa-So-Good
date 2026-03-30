@@ -15,6 +15,9 @@
     <string name="btn_logout">ログアウト</string>
     <string name="btn_back">戻る</string>
 
+    <!--leaderboard-->
+    <string name="title_leaderboard">スコアボード</string>
+
     <!-- Level Select -->
     <string name="title_levels">ステージ</string>
 

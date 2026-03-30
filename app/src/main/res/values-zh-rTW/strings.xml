@@ -15,6 +15,9 @@
     <string name="btn_logout">登出</string>
     <string name="btn_back">返回</string>
 
+    <!--leaderboard-->
+    <string name="title_leaderboard">排行榜</string>
+
     <!-- Level Select -->
     <string name="title_levels">關卡</string>
 

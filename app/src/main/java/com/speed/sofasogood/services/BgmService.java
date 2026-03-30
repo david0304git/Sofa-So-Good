@@ -1,4 +1,4 @@
-package com.speed.sofasogood;
+package com.speed.sofasogood.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.os.IBinder;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.ProcessLifecycleOwner;
+
+import com.speed.sofasogood.R;
 
 public class BgmService extends Service {
 

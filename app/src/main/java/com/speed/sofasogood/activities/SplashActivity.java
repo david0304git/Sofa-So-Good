@@ -1,4 +1,4 @@
-package com.speed.sofasogood;
+package com.speed.sofasogood.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
+
+import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.R;
 
 public class SplashActivity extends AppCompatActivity {
 

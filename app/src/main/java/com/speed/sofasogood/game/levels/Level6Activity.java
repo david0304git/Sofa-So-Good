@@ -8,4 +8,7 @@ public class Level6Activity extends BaseLevelActivity {
     @Override protected String getNextLevelClass() { return Level7Activity.class.getName(); }
     @Override protected int[] getDialogResIds() { return new int[]{ R.string.l6_d1 }; }
     @Override protected int[] getExpressions() { return new int[]{ R.drawable.character_thinking }; }
+    @Override protected int getLevelNumber() {
+        return 6;
+    }
 }

@@ -12,4 +12,7 @@ public class Level1Activity extends BaseLevelActivity {
     @Override protected int[] getExpressions() {
         return new int[]{ R.drawable.character_happy, R.drawable.character_thinking, R.drawable.character_thinking, R.drawable.character_thinking, R.drawable.character_idea };
     }
+    @Override protected int getLevelNumber() {
+        return 1;
+    }
 }
