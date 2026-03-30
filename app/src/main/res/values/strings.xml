@@ -29,6 +29,8 @@
 
     <!-- Level Result -->
     <string name="title_level_complete">Level Complete!</string>
+    <string name="label_finish_time">Time: %1$s</string>
+    <string name="label_finish_score">Score: %1$d</string>
     <string name="btn_next_level">Next Level</string>
     <string name="btn_exit">Exit</string>
 

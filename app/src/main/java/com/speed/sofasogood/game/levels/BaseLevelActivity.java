@@ -7,6 +7,9 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -21,6 +24,7 @@ import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
 import com.speed.sofasogood.game.LevelResultActivity;
+import com.speed.sofasogood.game.LevelTimeScore;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
@@ -36,6 +40,14 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private MediaPlayer levelBgm;
     private float soundVolume = 1.0f;
     private float mediaVolume = 1.0f;
+
+    private TextView levelTimer;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private Runnable timerTick;
+    private long gameStartElapsed;
+    private long pausedTotalMs;
+    private int pauseDepth;
+    private long pauseSegmentStart;
 
     protected abstract int[][] getLevelData();
     protected abstract int[] getDialogResIds();
@@ -89,6 +101,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         ImageView dialogCharacter = findViewById(R.id.dialogCharacter);
         View pauseOverlay = findViewById(R.id.pauseOverlay);
         GameView gameView = findViewById(R.id.gameView);
+        levelTimer = findViewById(R.id.levelTimer);
         gameView.setSoundPool(soundPool, pushSoundId);
         gameView.setSoundVolume(soundVolume);
 
@@ -113,11 +126,16 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 dialogCharacter.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
                 gameView.loadLevel(getLevelData());
+                startLevelTimer();
                 if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
             }
         });
 
         gameView.setOnLevelCompleteListener(() -> {
+            long finishMs = elapsedPlayMs();
+            int score = LevelTimeScore.scoreFromElapsedMs(finishMs);
+            resetLevelTimerUi();
+
             Intent result = new Intent(this, LevelResultActivity.class);
 
             String next = getNextLevelClass();
@@ -126,6 +144,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             }
 
             result.putExtra("level", getLevelNumber());
+            result.putExtra(LevelResultActivity.EXTRA_FINISH_TIME_MS, finishMs);
+            result.putExtra(LevelResultActivity.EXTRA_SCORE, score);
 
             startActivity(result);
             finish();
@@ -134,6 +154,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         findViewById(R.id.btnPause).setOnClickListener(v -> {
             if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
             if (levelBgm != null && levelBgm.isPlaying()) levelBgm.pause();
+            pushPause();
             pauseOverlay.setVisibility(View.VISIBLE);
         });
 
@@ -141,6 +162,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         setupButtonAnimation(btnResume);
         btnResume.setOnClickListener(v -> {
             pauseOverlay.setVisibility(View.GONE);
+            popPause();
             if (levelBgm != null && dialogFinished && !levelBgm.isPlaying()) levelBgm.start();
         });
 
@@ -148,6 +170,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         setupButtonAnimation(btnRestart);
         btnRestart.setOnClickListener(v -> {
             pauseOverlay.setVisibility(View.GONE);
+            while (pauseDepth > 0) popPause();
+            resetLevelTimerUi();
             if (levelBgm != null && levelBgm.isPlaying()) levelBgm.pause();
             levelBgm.seekTo(0);
             gameView.setVisibility(View.GONE);
@@ -162,6 +186,78 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         View btnExit = findViewById(R.id.btnExit);
         setupButtonAnimation(btnExit);
         btnExit.setOnClickListener(v -> finish());
+    }
+
+    private void pushPause() {
+        if (gameStartElapsed == 0) return;
+        if (pauseDepth == 0) pauseSegmentStart = SystemClock.elapsedRealtime();
+        pauseDepth++;
+    }
+
+    private void popPause() {
+        if (pauseDepth == 0) return;
+        pauseDepth--;
+        if (pauseDepth == 0 && pauseSegmentStart != 0) {
+            pausedTotalMs += SystemClock.elapsedRealtime() - pauseSegmentStart;
+            pauseSegmentStart = 0;
+        }
+    }
+
+    private long elapsedPlayMs() {
+        if (gameStartElapsed == 0) return 0;
+        long now = SystemClock.elapsedRealtime();
+        long midPause = (pauseDepth > 0 && pauseSegmentStart != 0)
+                ? (now - pauseSegmentStart)
+                : 0;
+        return now - gameStartElapsed - pausedTotalMs - midPause;
+    }
+
+    private void startLevelTimer() {
+        stopLevelTimerTicks();
+        gameStartElapsed = SystemClock.elapsedRealtime();
+        pausedTotalMs = 0;
+        pauseDepth = 0;
+        pauseSegmentStart = 0;
+        levelTimer.setVisibility(View.VISIBLE);
+        levelTimer.setText(LevelTimeScore.formatElapsed(0));
+        timerTick = new Runnable() {
+            @Override
+            public void run() {
+                if (gameStartElapsed == 0 || timerTick == null) return;
+                levelTimer.setText(LevelTimeScore.formatElapsed(elapsedPlayMs()));
+                mainHandler.postDelayed(timerTick, 50);
+            }
+        };
+        mainHandler.post(timerTick);
+    }
+
+    private void stopLevelTimerTicks() {
+        if (timerTick != null) {
+            mainHandler.removeCallbacks(timerTick);
+            timerTick = null;
+        }
+    }
+
+    private void resetLevelTimerUi() {
+        stopLevelTimerTicks();
+        gameStartElapsed = 0;
+        pausedTotalMs = 0;
+        pauseDepth = 0;
+        pauseSegmentStart = 0;
+        levelTimer.setVisibility(View.GONE);
+        levelTimer.setText("0:00.00");
+    }
+
+    @Override
+    protected void onPause() {
+        if (dialogFinished) pushPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (dialogFinished) popPause();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -183,6 +279,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        stopLevelTimerTicks();
         if (levelBgm != null) {
             levelBgm.stop();
             levelBgm.release();

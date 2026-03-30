@@ -48,11 +48,29 @@
             <com.speed.sofasogood.views.OutlinedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="8dp"
                 android:text="@string/title_level_complete"
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="italic" />
+
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:id="@+id/resultFinishTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:textColor="#CCCCCC"
+                android:textSize="18sp"
+                tools:text="Time: 1:23.45" />
+
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:id="@+id/resultScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:textColor="#CCCCCC"
+                android:textSize="18sp"
+                tools:text="Score: 999000" />
 
             <!-- 疲累角色 -->
             <ImageView

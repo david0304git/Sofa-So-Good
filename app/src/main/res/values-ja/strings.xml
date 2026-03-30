@@ -29,6 +29,8 @@
 
     <!-- Level Result -->
     <string name="title_level_complete">ステージクリア！</string>
+    <string name="label_finish_time">タイム: %1$s</string>
+    <string name="label_finish_score">スコア: %1$d</string>
     <string name="btn_next_level">次のステージ</string>
     <string name="btn_exit">終了</string>
 

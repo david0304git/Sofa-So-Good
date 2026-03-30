@@ -10,16 +10,28 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.activities.LeaderboardActivity;
+import com.speed.sofasogood.models.LeaderboardSubmitRequest;
+import com.speed.sofasogood.network.LeaderboardApi;
+import com.speed.sofasogood.network.RetrofitClient;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LevelResultActivity extends AppCompatActivity {
+
+    public static final String EXTRA_FINISH_TIME_MS = "finishTimeMs";
+    public static final String EXTRA_SCORE = "score";
 
     private SoundPool soundPool;
     private int clickSoundId;
@@ -51,11 +63,20 @@ public class LevelResultActivity extends AppCompatActivity {
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
         String nextLevelClass = getIntent().getStringExtra("nextLevel");
+        int level = getIntent().getIntExtra("level", 1);
+        long finishTimeMs = getIntent().getLongExtra(EXTRA_FINISH_TIME_MS, 0L);
+        int score = getIntent().getIntExtra(EXTRA_SCORE, 0);
+
+        TextView resultFinishTime = findViewById(R.id.resultFinishTime);
+        TextView resultScore = findViewById(R.id.resultScore);
+        resultFinishTime.setText(getString(R.string.label_finish_time, LevelTimeScore.formatElapsed(finishTimeMs)));
+        resultScore.setText(getString(R.string.label_finish_score, score));
+
+        submitScoreToLeaderboard(level, score, finishTimeMs);
 
         View btnLeaderboard = findViewById(R.id.btnLeaderboard);
         setupButtonAnimation(btnLeaderboard);
         btnLeaderboard.setOnClickListener(v -> {
-            int level = getIntent().getIntExtra("level", 1);
             Intent intent = new Intent(LevelResultActivity.this, LeaderboardActivity.class);
             intent.putExtra("level", level);
             startActivity(intent);
@@ -77,6 +98,22 @@ public class LevelResultActivity extends AppCompatActivity {
         View btnExit = findViewById(R.id.btnExit);
         setupButtonAnimation(btnExit);
         btnExit.setOnClickListener(v -> finish());
+    }
+
+    private void submitScoreToLeaderboard(int level, int score, long timeMs) {
+        LeaderboardApi api = RetrofitClient.getClient().create(LeaderboardApi.class);
+        LeaderboardSubmitRequest body = new LeaderboardSubmitRequest(level, score, timeMs, "");
+        api.submitScore(body).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                // Best-effort; webhook may not implement POST yet.
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Ignore network errors for gameplay flow.
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -29,6 +29,8 @@
 
     <!-- Level Result -->
     <string name="title_level_complete">關卡完成！</string>
+    <string name="label_finish_time">時間: %1$s</string>
+    <string name="label_finish_score">分數: %1$d</string>
     <string name="btn_next_level">下一關</string>
     <string name="btn_exit">退出</string>
 
