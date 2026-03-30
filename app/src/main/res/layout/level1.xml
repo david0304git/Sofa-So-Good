@@ -9,19 +9,22 @@
     android:background="@drawable/level1_background">
 
     <!-- 暫停按鈕 -->
+
+    <!-- 遊戲畫面 -->
+
     <ImageButton
         android:id="@+id/btnPause"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@android:drawable/ic_media_pause"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/dialog_box"
-        android:scaleType="centerInside"
-        android:layout_margin="16dp"
         android:elevation="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_media_pause"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 遊戲畫面 -->
     <com.speed.sofasogood.game.GameView
         android:id="@+id/gameView"
         android:layout_width="0dp"

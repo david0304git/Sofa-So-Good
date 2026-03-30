@@ -32,6 +32,7 @@ public class LevelResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_result);
+        com.speed.sofasogood.ImmersiveHelper.enable(getWindow());
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)

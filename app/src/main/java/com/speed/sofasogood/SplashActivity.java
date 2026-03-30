@@ -14,6 +14,7 @@ public class SplashActivity extends AppCompatActivity {
         SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        ImmersiveHelper.enable(getWindow());
 
         ImageView logo = findViewById(R.id.splashLogo);
 

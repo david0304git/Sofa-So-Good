@@ -51,6 +51,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level1);
+        com.speed.sofasogood.ImmersiveHelper.enable(getWindow());
 
         // Pause the background music service
         Intent pauseBgm = new Intent(this, BgmService.class);
