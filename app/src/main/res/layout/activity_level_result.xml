@@ -31,72 +31,72 @@
 
     <LinearLayout
         android:id="@+id/resultPanel"
-            android:layout_width="347dp"
-            android:layout_height="547dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:background="@drawable/settings_panel"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="342dp"
+        android:layout_height="576dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/settings_panel"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <!-- 通關文字 -->
-            <com.speed.sofasogood.views.OutlinedTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/title_level_complete"
-                android:textColor="#FFFFFF"
-                android:textSize="26sp"
-                android:textStyle="italic" />
+        <!-- 通關文字 -->
+        <com.speed.sofasogood.views.OutlinedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/title_level_complete"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="italic" />
 
-            <com.speed.sofasogood.views.OutlinedTextView
-                android:id="@+id/resultFinishTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:textColor="#CCCCCC"
-                android:textSize="18sp"
-                tools:text="Time: 1:23.45" />
+        <com.speed.sofasogood.views.OutlinedTextView
+            android:id="@+id/resultFinishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:textColor="#CCCCCC"
+            android:textSize="18sp"
+            tools:text="Time: 1:23.45" />
 
-            <com.speed.sofasogood.views.OutlinedTextView
-                android:id="@+id/resultScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:textColor="#CCCCCC"
-                android:textSize="18sp"
-                tools:text="Score: 999000" />
+        <com.speed.sofasogood.views.OutlinedTextView
+            android:id="@+id/resultScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:textColor="#CCCCCC"
+            android:textSize="18sp"
+            tools:text="Score: 999000" />
 
-            <!-- 疲累角色 -->
-            <ImageView
-                android:layout_width="197dp"
-                android:layout_height="252dp"
-                android:layout_marginBottom="16dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/character_tired" />
+        <!-- 疲累角色 -->
+        <ImageView
+            android:layout_width="197dp"
+            android:layout_height="252dp"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/character_tired" />
 
-            <!-- 下一關 -->
-            <com.speed.sofasogood.views.OutlinedTextButton
-                android:id="@+id/btnNextLevel"
-                style="@style/NeonButton"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="@string/btn_next_level" />
+        <!-- 下一關 -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnNextLevel"
+            style="@style/NeonButton"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="@string/btn_next_level" />
 
-            <!-- 退出 -->
-            <com.speed.sofasogood.views.OutlinedTextButton
-                android:id="@+id/btnExit"
-                style="@style/NeonButton"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_exit" />
+        <!-- 退出 -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnExit"
+            style="@style/NeonButton"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_exit" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
