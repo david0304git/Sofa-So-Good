@@ -136,7 +136,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             dialogFinished = true;
             dialogBox.setVisibility(View.GONE);
             dialogCharacter.setVisibility(View.GONE);
-            btnSkip.setVisibility(View.GONE);
+            v.clearAnimation();
+            v.setVisibility(View.GONE);
             gameView.setVisibility(View.VISIBLE);
             gameView.loadLevel(getLevelData());
             startLevelTimer();
@@ -155,6 +156,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 dialogFinished = true;
                 dialogBox.setVisibility(View.GONE);
                 dialogCharacter.setVisibility(View.GONE);
+                btnSkip.clearAnimation();
                 btnSkip.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
                 gameView.loadLevel(getLevelData());
