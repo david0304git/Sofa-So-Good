@@ -99,6 +99,12 @@ public class LevelSelectActivity extends AppCompatActivity {
             setLevelBackground(btn, levelBgRes[i], radiusPx, strokePx);
         }
 
+        // 排行榜
+        View btnLeaderboard = findViewById(R.id.btnLeaderboard);
+        setupButtonAnimation(btnLeaderboard);
+        btnLeaderboard.setOnClickListener(v ->
+                startActivity(new Intent(this, LeaderboardActivity.class)));
+
         // 返回
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);

@@ -17,6 +17,7 @@
 
     <!--leaderboard-->
     <string name="title_leaderboard">スコアボード</string>
+    <string name="label_no_data">データなし</string>
 
     <!-- Level Select -->
     <string name="title_levels">ステージ</string>

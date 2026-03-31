@@ -17,6 +17,7 @@
 
     <!--leaderboard-->
     <string name="title_leaderboard">排行榜</string>
+    <string name="label_no_data">暫無資料</string>
 
     <!-- Level Select -->
     <string name="title_levels">關卡</string>

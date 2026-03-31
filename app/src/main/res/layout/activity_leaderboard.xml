@@ -1,51 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/menu_background">
+    android:background="@drawable/menu_background"
+    tools:context=".activities.LeaderboardActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="32dp"
+    <LinearLayout
+        android:layout_width="347dp"
+        android:layout_height="547dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/settings_panel"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:background="@color/lime"
-        android:padding="16dp">
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- 標題 -->
         <com.speed.sofasogood.views.OutlinedTextView
-            android:id="@+id/tvLeaderboardTitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="@string/title_leaderboard"
+            android:textColor="#FFFFFF"
             android:textSize="28sp"
-            android:textColor="@color/white"
-            android:textStyle="italic"
-            android:gravity="center"
-            android:padding="12dp" />
+            android:textStyle="italic" />
 
+        <!-- 關卡切換 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnPrevLevel"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_left" />
+
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:id="@+id/tvLevelLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Level 1"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnNextLevel"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_right" />
+        </LinearLayout>
+
+        <!-- Loading -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:layout_marginBottom="12dp" />
+            android:visibility="gone" />
 
-        <TextView
+        <!-- 空資料提示 -->
+        <com.speed.sofasogood.views.OutlinedTextView
             android:id="@+id/tvEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No data"
-            android:textSize="16sp"
             android:gravity="center"
-            android:visibility="gone"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:text="@string/label_no_data"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
+        <!-- 排行榜列表 -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewLeaderboard"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+
+        <!-- 返回 -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnBack"
+            style="@style/NeonButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/btn_back" />
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

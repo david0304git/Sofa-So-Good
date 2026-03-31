@@ -17,6 +17,7 @@
 
     <!--leaderboard-->
     <string name="title_leaderboard">Leaderboard</string>
+    <string name="label_no_data">No data yet</string>
 
     <!-- Level Select -->
     <string name="title_levels">Levels</string>
