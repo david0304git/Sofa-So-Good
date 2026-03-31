@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,6 +72,15 @@ public class LevelResultActivity extends AppCompatActivity {
         TextView resultScore = findViewById(R.id.resultScore);
         resultFinishTime.setText(getString(R.string.label_finish_time, LevelTimeScore.formatElapsed(finishTimeMs)));
         resultScore.setText(getString(R.string.label_finish_score, score));
+
+        // Stars
+        int stars = LevelTimeScore.starsFromScore(score);
+        ImageView star1 = findViewById(R.id.star1);
+        ImageView star2 = findViewById(R.id.star2);
+        ImageView star3 = findViewById(R.id.star3);
+        star1.setImageResource(stars >= 1 ? R.drawable.ic_star_filled : R.drawable.ic_star_empty);
+        star2.setImageResource(stars >= 2 ? R.drawable.ic_star_filled : R.drawable.ic_star_empty);
+        star3.setImageResource(stars >= 3 ? R.drawable.ic_star_filled : R.drawable.ic_star_empty);
 
         submitScoreToLeaderboard(level, score, finishTimeMs);
 

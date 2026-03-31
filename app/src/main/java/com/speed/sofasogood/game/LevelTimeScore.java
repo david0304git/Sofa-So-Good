@@ -2,25 +2,45 @@ package com.speed.sofasogood.game;
 
 import java.util.Locale;
 
-/**
- * Formats level elapsed time for UI and derives a score (faster = higher).
- */
 public final class LevelTimeScore {
 
-    private static final int SCORE_BASE = 1_000_000;
-    /** Lose one point per 100 ms of play time (after pauses are excluded). */
-    private static final int MS_PER_SCORE_UNIT = 100;
+    // Score range
+    private static final int MAX_SCORE = 10000;
+    private static final int MIN_SCORE = 100;
+
+    // Time thresholds (in ms)
+    private static final long THREE_STAR_MS = 30_000;   // ≤30s = 10000 (3 stars)
+    private static final long TWO_STAR_MS = 120_000;    // ≤2min = ~5000 (2 stars)
+    private static final long ONE_STAR_MS = 300_000;    // ≤5min = ~1000 (1 star)
 
     private LevelTimeScore() {}
 
+    /**
+     * Calculate score from elapsed play time (pauses excluded).
+     * ≤30s  → 10000 (3 stars)
+     * 30s–5min → linear decay from 10000 to 100
+     * >5min → 100 (1 star)
+     */
     public static int scoreFromElapsedMs(long elapsedMs) {
-        if (elapsedMs <= 0) return SCORE_BASE;
-        long lost = elapsedMs / MS_PER_SCORE_UNIT;
-        long score = SCORE_BASE - lost;
-        return score > 0 ? (int) score : 0;
+        if (elapsedMs <= THREE_STAR_MS) return MAX_SCORE;
+        if (elapsedMs >= ONE_STAR_MS) return MIN_SCORE;
+
+        // Linear interpolation between 30s and 5min
+        float ratio = (float)(elapsedMs - THREE_STAR_MS) / (ONE_STAR_MS - THREE_STAR_MS);
+        int score = (int)(MAX_SCORE - ratio * (MAX_SCORE - MIN_SCORE));
+        return Math.max(score, MIN_SCORE);
     }
 
-    /** Minutes, seconds, centiseconds — e.g. {@code 3:07.45}. */
+    /**
+     * Star rating: 3 = excellent, 2 = good, 1 = completed.
+     */
+    public static int starsFromScore(int score) {
+        if (score >= 7000) return 3;
+        if (score >= 3500) return 2;
+        return 1;
+    }
+
+    /** Format as m:ss.cc — e.g. 3:07.45 */
     public static String formatElapsed(long ms) {
         if (ms < 0) ms = 0;
         long totalSec = ms / 1000;
