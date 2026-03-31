@@ -10,10 +10,14 @@
     <!-- Settings -->
     <string name="title_settings">設定</string>
     <string name="label_volume">背景音樂</string>
-    <string name="label_sound_volume">觸碰音效</string>
+    <string name="label_sound_volume">操作音效</string>
     <string name="label_language">語言</string>
     <string name="btn_logout">登出</string>
     <string name="btn_back">返回</string>
+
+    <!-- Navigation -->
+    <string name="back">上一頁</string>
+    <string name="next">下一頁</string>
 
     <!--leaderboard-->
     <string name="title_leaderboard">排行榜</string>
@@ -45,7 +49,7 @@
     <string name="l1_d1">這就是我的新家了！</string>
     <string name="l1_d2">雖然空蕩蕩的，但很有期待感。</string>
     <string name="l1_d3">先把家具擺好，才算真正安定下來。</string>
-    <string name="l1_d4">沙發應該放在客廳中央吧。</string>
+    <string name="l1_d4">沙發應該放在客廳中間吧。</string>
     <string name="l1_d5">好，開始動手吧！</string>
 
     <!-- Level 2 -->
@@ -94,6 +98,6 @@
     <string name="l8_d1">密室裡的符號開始發光。</string>
     <string name="l8_d2">它們好像在指引我某個方向。</string>
     <string name="l8_d3">家具的位置或許能觸發機關。</string>
-    <string name="l8_d4">有點兒害怕~</string>
+    <string name="l8_d4">有點害怕…</string>
     <string name="l8_d5">家具有點重，要慢慢推。</string>
 </resources>

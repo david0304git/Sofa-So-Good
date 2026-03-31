@@ -4,18 +4,22 @@
     <!-- Main Menu -->
     <string name="btn_start">Start</string>
     <string name="btn_credits">Credits</string>
-    <string name="btn_settings">Setting</string>
+    <string name="btn_settings">Settings</string>
     <string name="btn_quit">Quit</string>
 
     <!-- Settings -->
-    <string name="title_settings">Setting</string>
-    <string name="label_volume">Media Volume</string>
+    <string name="title_settings">Settings</string>
+    <string name="label_volume">Music Volume</string>
     <string name="label_sound_volume">Sound Effects Volume</string>
     <string name="label_language">Language</string>
     <string name="btn_logout">Logout</string>
     <string name="btn_back">Back</string>
 
-    <!--leaderboard-->
+    <!-- Navigation -->
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+
+    <!-- leaderboard -->
     <string name="title_leaderboard">Leaderboard</string>
     <string name="label_no_data">No data yet</string>
 
@@ -31,10 +35,10 @@
     <!-- Level Result -->
     <string name="title_level_complete">Level Complete!</string>
     <string name="label_finish_time">Time: %1$s</string>
+    <string name="label_finish_steps">Steps: %d</string>
     <string name="label_finish_score">Score: %1$d</string>
     <string name="btn_next_level">Next Level</string>
     <string name="btn_exit">Exit</string>
-    <string name="label_finish_steps">Steps: %d</string>
 
     <!-- Pause -->
     <string name="title_paused">Paused</string>
