@@ -41,6 +41,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private MediaPlayer voicePlayer;
     private float soundVolume = 1.0f;
     private float mediaVolume = 1.0f;
+    private boolean typing = false;
+    private Runnable typeRunnable;
 
     private TextView levelTimer;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -122,7 +124,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         int[] expressions = getExpressions();
         int[] voiceResIds = getVoiceResIds();
 
-        dialogBox.setText(dialogs[dialogIndex]);
+        typeText(dialogBox, dialogs[dialogIndex]);
         dialogCharacter.setImageResource(expressions[dialogIndex]);
         playVoice(voiceResIds, dialogIndex);
 
@@ -134,6 +136,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         setupButtonAnimation(btnSkip);
         btnSkip.setOnClickListener(v -> {
             if (dialogFinished) return;
+            cancelTyping();
             stopVoice();
             dialogFinished = true;
             dialogBox.setVisibility(View.GONE);
@@ -147,10 +150,16 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         findViewById(R.id.level1Root).setOnClickListener(v -> {
             if (dialogFinished) return;
+            // If still typing, show full text immediately
+            if (typing) {
+                cancelTyping();
+                dialogBox.setText(dialogs[dialogIndex]);
+                return;
+            }
             if (soundReady) soundPool.play(dialogClickId, soundVolume, soundVolume, 1, 0, 1f);
             dialogIndex++;
             if (dialogIndex < dialogs.length) {
-                dialogBox.setText(dialogs[dialogIndex]);
+                typeText(dialogBox, dialogs[dialogIndex]);
                 dialogCharacter.setImageResource(expressions[dialogIndex]);
                 playVoice(voiceResIds, dialogIndex);
             } else {
@@ -167,7 +176,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         gameView.setOnLevelCompleteListener(() -> {
             long finishMs = elapsedPlayMs();
-            int score = LevelTimeScore.scoreFromElapsedMs(finishMs);
+            int steps = gameView.getMoveCount();
+            int score = LevelTimeScore.scoreFromElapsedMs(finishMs, steps);
             resetLevelTimerUi();
 
             Intent result = new Intent(this, LevelResultActivity.class);
@@ -179,6 +189,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
             result.putExtra("level", getLevelNumber());
             result.putExtra(LevelResultActivity.EXTRA_FINISH_TIME_MS, finishMs);
+            result.putExtra(LevelResultActivity.EXTRA_STEPS, steps);
             result.putExtra(LevelResultActivity.EXTRA_SCORE, score);
 
             startActivity(result);
@@ -318,6 +329,35 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (dialogFinished) popPause();
+    }
+
+    private static final long TYPE_DELAY = 40; // ms per character
+
+    private void typeText(TextView tv, String text) {
+        cancelTyping();
+        typing = true;
+        tv.setText("");
+        typeRunnable = new Runnable() {
+            int index = 0;
+            @Override
+            public void run() {
+                if (index < text.length()) {
+                    tv.setText(text.substring(0, ++index));
+                    mainHandler.postDelayed(this, TYPE_DELAY);
+                } else {
+                    typing = false;
+                }
+            }
+        };
+        mainHandler.post(typeRunnable);
+    }
+
+    private void cancelTyping() {
+        if (typeRunnable != null) {
+            mainHandler.removeCallbacks(typeRunnable);
+            typeRunnable = null;
+        }
+        typing = false;
     }
 
     private void playVoice(int[] voiceResIds, int index) {

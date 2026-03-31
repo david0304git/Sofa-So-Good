@@ -4,35 +4,51 @@ import java.util.Locale;
 
 public final class LevelTimeScore {
 
-    // Score range
     private static final int MAX_SCORE = 10000;
     private static final int MIN_SCORE = 100;
 
-    // Time thresholds (in ms)
-    private static final long THREE_STAR_MS = 30_000;   // ≤30s = 10000 (3 stars)
-    private static final long TWO_STAR_MS = 120_000;    // ≤2min = ~5000 (2 stars)
-    private static final long ONE_STAR_MS = 300_000;    // ≤5min = ~1000 (1 star)
+    // Time thresholds
+    private static final long PERFECT_TIME_MS = 30_000;   // ≤30s = max time score
+    private static final long WORST_TIME_MS = 300_000;    // ≥5min = min time score
+
+    // Steps thresholds
+    private static final int PERFECT_STEPS = 15;          // ≤15 steps = max steps score
+    private static final int WORST_STEPS = 150;           // ≥150 steps = min steps score
 
     private LevelTimeScore() {}
 
     /**
-     * Calculate score from elapsed play time (pauses excluded).
-     * ≤30s  → 10000 (3 stars)
-     * 30s–5min → linear decay from 10000 to 100
-     * >5min → 100 (1 star)
+     * Calculate combined score from time and steps.
+     * Time contributes 50%, steps contribute 50%.
      */
-    public static int scoreFromElapsedMs(long elapsedMs) {
-        if (elapsedMs <= THREE_STAR_MS) return MAX_SCORE;
-        if (elapsedMs >= ONE_STAR_MS) return MIN_SCORE;
+    public static int scoreFromElapsedMs(long elapsedMs, int steps) {
+        int timeScore = calcTimeScore(elapsedMs);
+        int stepsScore = calcStepsScore(steps);
+        return (timeScore + stepsScore) / 2;
+    }
 
-        // Linear interpolation between 30s and 5min
-        float ratio = (float)(elapsedMs - THREE_STAR_MS) / (ONE_STAR_MS - THREE_STAR_MS);
-        int score = (int)(MAX_SCORE - ratio * (MAX_SCORE - MIN_SCORE));
-        return Math.max(score, MIN_SCORE);
+    /** Backwards-compatible: time-only scoring */
+    public static int scoreFromElapsedMs(long elapsedMs) {
+        return calcTimeScore(elapsedMs);
+    }
+
+    private static int calcTimeScore(long elapsedMs) {
+        if (elapsedMs <= PERFECT_TIME_MS) return MAX_SCORE;
+        if (elapsedMs >= WORST_TIME_MS) return MIN_SCORE;
+        float ratio = (float)(elapsedMs - PERFECT_TIME_MS) / (WORST_TIME_MS - PERFECT_TIME_MS);
+        return Math.max((int)(MAX_SCORE - ratio * (MAX_SCORE - MIN_SCORE)), MIN_SCORE);
+    }
+
+    private static int calcStepsScore(int steps) {
+        if (steps <= PERFECT_STEPS) return MAX_SCORE;
+        if (steps >= WORST_STEPS) return MIN_SCORE;
+        float ratio = (float)(steps - PERFECT_STEPS) / (WORST_STEPS - PERFECT_STEPS);
+        return Math.max((int)(MAX_SCORE - ratio * (MAX_SCORE - MIN_SCORE)), MIN_SCORE);
     }
 
     /**
-     * Star rating: 3 = excellent, 2 = good, 1 = completed.
+     * Star rating based on combined score.
+     * 3 stars: ≥7000, 2 stars: ≥3500, 1 star: rest
      */
     public static int starsFromScore(int score) {
         if (score >= 7000) return 3;

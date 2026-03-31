@@ -34,6 +34,7 @@
     <string name="label_finish_score">Score: %1$d</string>
     <string name="btn_next_level">Next Level</string>
     <string name="btn_exit">Exit</string>
+    <string name="label_finish_steps">Steps: %d</string>
 
     <!-- Pause -->
     <string name="title_paused">Paused</string>

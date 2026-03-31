@@ -47,6 +47,7 @@ public class GameView extends View {
     private SoundPool soundPool;
     private int moveSoundId;
     private float soundVolume = 1.0f;
+    private int moveCount = 0;
 
     private float[][] dropProgress;
     private boolean animating = false;
@@ -78,6 +79,8 @@ public class GameView extends View {
         this.soundPool = sp;
         this.moveSoundId = soundId;
     }
+
+    public int getMoveCount() { return moveCount; }
 
     public void setSoundVolume(float volume) {
         this.soundVolume = volume;
@@ -128,6 +131,7 @@ public class GameView extends View {
 
         dropProgress = new float[rows][cols];
         animating = true;
+        moveCount = 0;
         if (tileSize > 0) startDropAnimation();
         invalidate();
     }
@@ -373,6 +377,7 @@ public class GameView extends View {
         objects[nr][nc] = PLAYER;
         playerRow = nr;
         playerCol = nc;
+        moveCount++;
         movedCells.add(new long[]{cellKey(nr, nc), dr, dc});
 
         if (pushed && soundPool != null) soundPool.play(moveSoundId, soundVolume * 0.5f, soundVolume * 0.5f, 1, 0, 1f);

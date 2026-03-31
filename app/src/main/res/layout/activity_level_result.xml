@@ -63,6 +63,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
+        <!-- Steps -->
+        <com.speed.sofasogood.views.OutlinedTextView
+            android:id="@+id/resultSteps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="Steps: 0"
+            android:textColor="#CCCCCC"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resultFinishTime" />
+
         <!-- Score -->
         <com.speed.sofasogood.views.OutlinedTextView
             android:id="@+id/resultScore"
@@ -76,7 +91,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/resultFinishTime" />
+            app:layout_constraintTop_toBottomOf="@id/resultSteps" />
 
         <!-- Stars -->
         <LinearLayout

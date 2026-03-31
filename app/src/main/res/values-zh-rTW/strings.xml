@@ -34,6 +34,7 @@
     <string name="label_finish_score">分數: %1$d</string>
     <string name="btn_next_level">下一關</string>
     <string name="btn_exit">退出</string>
+    <string name="label_finish_steps">步數: %d</string>
 
     <!-- Pause -->
     <string name="title_paused">暫停</string>

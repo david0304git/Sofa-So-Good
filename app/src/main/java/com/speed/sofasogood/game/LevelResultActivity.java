@@ -32,6 +32,7 @@ import retrofit2.Response;
 public class LevelResultActivity extends AppCompatActivity {
 
     public static final String EXTRA_FINISH_TIME_MS = "finishTimeMs";
+    public static final String EXTRA_STEPS = "steps";
     public static final String EXTRA_SCORE = "score";
 
     private SoundPool soundPool;
@@ -66,11 +67,14 @@ public class LevelResultActivity extends AppCompatActivity {
         String nextLevelClass = getIntent().getStringExtra("nextLevel");
         int level = getIntent().getIntExtra("level", 1);
         long finishTimeMs = getIntent().getLongExtra(EXTRA_FINISH_TIME_MS, 0L);
+        int steps = getIntent().getIntExtra(EXTRA_STEPS, 0);
         int score = getIntent().getIntExtra(EXTRA_SCORE, 0);
 
         TextView resultFinishTime = findViewById(R.id.resultFinishTime);
+        TextView resultSteps = findViewById(R.id.resultSteps);
         TextView resultScore = findViewById(R.id.resultScore);
         resultFinishTime.setText(getString(R.string.label_finish_time, LevelTimeScore.formatElapsed(finishTimeMs)));
+        resultSteps.setText(getString(R.string.label_finish_steps, steps));
         resultScore.setText(getString(R.string.label_finish_score, score));
 
         // Stars
