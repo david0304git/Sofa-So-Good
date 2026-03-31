@@ -10,104 +10,115 @@
     tools:context=".activities.SettingsActivity">
 
     <!-- Overlay 面板 -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="347dp"
         android:layout_height="547dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/settings_panel"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- 標題 -->
-        <com.speed.sofasogood.views.OutlinedTextView
-            android:id="@+id/settingsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="81dp"
-            android:layout_marginBottom="24dp"
-            android:text="@string/title_settings"
-            android:textColor="#FFFFFF"
-            android:textSize="40sp"
-            android:textStyle="italic" />
-
-        <!-- 音量 -->
-        <com.speed.sofasogood.views.OutlinedTextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/label_volume"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <SeekBar
-            android:id="@+id/seekBarVolume"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:max="100"
-            android:progress="50"
-            android:progressTint="#FFD700"
-            android:thumbTint="#FFD700" />
+            <!-- 標題 -->
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:id="@+id/settingsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/title_settings"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:textStyle="italic" />
 
-        <!-- 音效音量 -->
-        <com.speed.sofasogood.views.OutlinedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/label_sound_volume"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <!-- 音量 -->
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/label_volume"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <SeekBar
-            android:id="@+id/seekBarSoundVolume"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:max="100"
-            android:progress="100"
-            android:progressTint="#FFD700"
-            android:thumbTint="#FFD700" />
-        <com.speed.sofasogood.views.OutlinedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/label_language"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <SeekBar
+                android:id="@+id/seekBarVolume"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:max="100"
+                android:progress="50"
+                android:progressTint="#FFD700"
+                android:thumbTint="#FFD700" />
 
-        <Spinner
-            android:id="@+id/spinnerLanguage"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/main_button"
-            android:popupBackground="@drawable/settings_panel" />
+            <!-- 音效音量 -->
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/label_sound_volume"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <!-- 登出 -->
-        <com.speed.sofasogood.views.OutlinedTextButton
-            android:id="@+id/btnLogout"
-            style="@style/NeonButton"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="@string/btn_logout" />
+            <SeekBar
+                android:id="@+id/seekBarSoundVolume"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:max="100"
+                android:progress="100"
+                android:progressTint="#FFD700"
+                android:thumbTint="#FFD700" />
 
-        <!-- 返回 -->
-        <com.speed.sofasogood.views.OutlinedTextButton
-            android:id="@+id/btnBack"
-            style="@style/NeonButton"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_back" />
+            <!-- 語言 -->
+            <com.speed.sofasogood.views.OutlinedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/label_language"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/main_button"
+                android:popupBackground="@drawable/settings_panel" />
+
+            <!-- 登出 -->
+            <com.speed.sofasogood.views.OutlinedTextButton
+                android:id="@+id/btnLogout"
+                style="@style/NeonButton"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/btn_logout" />
+
+            <!-- 返回 -->
+            <com.speed.sofasogood.views.OutlinedTextButton
+                android:id="@+id/btnBack"
+                style="@style/NeonButton"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_back" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
