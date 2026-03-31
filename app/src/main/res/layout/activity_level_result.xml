@@ -14,6 +14,8 @@
         android:background="@drawable/pause_overlay"/>
 
     <!-- Panel -->
+
+    <!-- Leaderboard button (attached to panel) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/resultPanel"
         android:layout_width="0dp"
@@ -23,8 +25,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.75"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.73"
         app:layout_constraintWidth_percent="0.85">
 
         <!-- Title -->
@@ -32,6 +36,7 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:gravity="center"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
@@ -39,9 +44,9 @@
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:textStyle="italic"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Time -->
         <com.speed.sofasogood.views.OutlinedTextView
@@ -54,9 +59,9 @@
             android:text="Time: 1:23.45"
             android:textColor="#CCCCCC"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <!-- Score -->
         <com.speed.sofasogood.views.OutlinedTextView
@@ -69,49 +74,49 @@
             android:text="Score: 999000"
             android:textColor="#CCCCCC"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/resultFinishTime"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/resultFinishTime" />
 
         <!-- Stars -->
         <LinearLayout
             android:id="@+id/starsRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/resultScore"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/resultScore">
 
             <ImageView
                 android:id="@+id/star1"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_star_empty"/>
+                android:src="@drawable/ic_star_empty" />
 
             <ImageView
                 android:id="@+id/star2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_star_empty"/>
+                android:src="@drawable/ic_star_empty" />
 
             <ImageView
                 android:id="@+id/star3"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_star_empty"/>
+                android:src="@drawable/ic_star_empty" />
 
         </LinearLayout>
 
         <!-- Character -->
         <ImageView
             android:id="@+id/resultCharacter"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="310dp"
+            android:layout_height="197dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/character_tired"
@@ -126,8 +131,8 @@
             style="@style/NeonButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:text="@string/btn_next_level"
-            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/resultCharacter"
@@ -139,8 +144,8 @@
             style="@style/NeonButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:text="@string/btn_exit"
-            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnNextLevel"
@@ -149,7 +154,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Leaderboard button (attached to panel) -->
     <com.speed.sofasogood.views.OutlinedTextButton
         android:id="@+id/btnLeaderboard"
         style="@style/NeonButton"
