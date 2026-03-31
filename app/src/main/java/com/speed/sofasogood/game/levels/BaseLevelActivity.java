@@ -126,12 +126,14 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         dialogCharacter.setImageResource(expressions[dialogIndex]);
         playVoice(voiceResIds, dialogIndex);
 
+        View countdownOverlay = findViewById(R.id.countdownOverlay);
+        com.speed.sofasogood.views.OutlinedTextView countdownText = findViewById(R.id.countdownText);
+
         // 跳過對話按鈕
         View btnSkip = findViewById(R.id.btnSkip);
         setupButtonAnimation(btnSkip);
         btnSkip.setOnClickListener(v -> {
             if (dialogFinished) return;
-            if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
             stopVoice();
             dialogFinished = true;
             dialogBox.setVisibility(View.GONE);
@@ -140,8 +142,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             v.setVisibility(View.GONE);
             gameView.setVisibility(View.VISIBLE);
             gameView.loadLevel(getLevelData());
-            startLevelTimer();
-            if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
+            showCountdownOverlay(countdownOverlay, countdownText, gameView);
         });
 
         findViewById(R.id.level1Root).setOnClickListener(v -> {
@@ -160,8 +161,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 btnSkip.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
                 gameView.loadLevel(getLevelData());
-                startLevelTimer();
-                if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
+                showCountdownOverlay(countdownOverlay, countdownText, gameView);
             }
         });
 
@@ -188,7 +188,6 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         View btnPause = findViewById(R.id.btnPause);
         setupButtonAnimation(btnPause);
         btnPause.setOnClickListener(v -> {
-            if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
             if (levelBgm != null && levelBgm.isPlaying()) levelBgm.pause();
             pushPause();
             pauseOverlay.setVisibility(View.VISIBLE);
@@ -219,6 +218,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             dialogCharacter.setImageResource(expressions[0]);
             playVoice(voiceResIds, 0);
             btnSkip.setVisibility(View.VISIBLE);
+            countdownOverlay.setVisibility(View.GONE);
+            mainHandler.removeCallbacksAndMessages(null);
         });
 
         View btnExit = findViewById(R.id.btnExit);
@@ -248,6 +249,27 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 ? (now - pauseSegmentStart)
                 : 0;
         return now - gameStartElapsed - pausedTotalMs - midPause;
+    }
+
+    private void showCountdownOverlay(View overlay, com.speed.sofasogood.views.OutlinedTextView text, GameView gameView) {
+        overlay.setVisibility(View.VISIBLE);
+        text.setText("3");
+        text.setTextSize(72);
+
+        mainHandler.postDelayed(() -> text.setText("2"), 1000);
+        mainHandler.postDelayed(() -> text.setText("1"), 2000);
+
+        // Wait for drop animation to finish, then show "Start!" and begin
+        gameView.setOnDropCompleteListener(() -> {
+            text.setText("Start!");
+            text.setTextSize(52);
+            mainHandler.postDelayed(() -> {
+                overlay.setVisibility(View.GONE);
+                text.setTextSize(72);
+                startLevelTimer();
+                if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
+            }, 800);
+        });
     }
 
     private void startLevelTimer() {

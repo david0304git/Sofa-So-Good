@@ -51,7 +51,7 @@ public class GameView extends View {
     private float[][] dropProgress;
     private boolean animating = false;
     private java.util.List<ValueAnimator> runningAnimators = new java.util.ArrayList<>();
-    private static final long TILE_DELAY = 50;
+    private static final long TOTAL_DROP_TIME = 3000; // all tiles must land within 3s
     private static final long DROP_DURATION = 400;
 
     // Slide animation
@@ -62,6 +62,16 @@ public class GameView extends View {
 
     public interface OnLevelCompleteListener {
         void onLevelComplete();
+    }
+
+    public interface OnDropCompleteListener {
+        void onDropComplete();
+    }
+
+    private OnDropCompleteListener dropCompleteListener;
+
+    public void setOnDropCompleteListener(OnDropCompleteListener listener) {
+        this.dropCompleteListener = listener;
     }
 
     public void setSoundPool(SoundPool sp, int soundId) {
@@ -133,12 +143,15 @@ public class GameView extends View {
         cancelAnimations();
         int rows = ground.length, cols = ground[0].length;
 
+        int totalTiles = rows * cols;
+        long tileDelay = Math.max(1, (TOTAL_DROP_TIME - DROP_DURATION) / Math.max(totalTiles - 1, 1));
+
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 final int fr = r, fc = c;
                 ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f);
                 anim.setDuration(DROP_DURATION);
-                anim.setStartDelay((long) (r * cols + c) * TILE_DELAY);
+                anim.setStartDelay((long)(r * cols + c) * tileDelay);
                 anim.setInterpolator(new BounceInterpolator());
                 anim.addUpdateListener(a -> {
                     if (dropProgress != null && fr < dropProgress.length && fc < dropProgress[fr].length) {
@@ -153,6 +166,7 @@ public class GameView extends View {
                             animating = false;
                             runningAnimators.clear();
                             invalidate();
+                            if (dropCompleteListener != null) dropCompleteListener.onDropComplete();
                         }
                     });
                 }
