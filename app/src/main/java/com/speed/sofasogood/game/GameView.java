@@ -54,6 +54,12 @@ public class GameView extends View {
     private static final long TILE_DELAY = 50;
     private static final long DROP_DURATION = 400;
 
+    // Slide animation
+    private static final long SLIDE_DURATION = 120;
+    private boolean sliding = false;
+    private final java.util.Map<Long, float[]> slideOffsets = new java.util.HashMap<>();
+    private Runnable onSlideEnd;
+
     public interface OnLevelCompleteListener {
         void onLevelComplete();
     }
@@ -201,6 +207,7 @@ public class GameView extends View {
 
         int totalH = ground.length * tileSize;
 
+        // Pass 1: ground + ghost
         for (int r = 0; r < ground.length; r++) {
             for (int c = 0; c < ground[r].length; c++) {
                 int x = offsetX + c * tileSize;
@@ -214,22 +221,38 @@ public class GameView extends View {
                 }
 
                 int g = ground[r][c];
-                int o = objects[r][c];
-
-                // Ground
                 if (g == WALL) {
                     canvas.drawBitmap(bmpWall, x, y, null);
                     continue;
                 }
                 canvas.drawBitmap(bmpFloor, x, y, null);
 
-                // Target ghost (always visible)
                 Bitmap ghost = getGhostForGround(g);
                 if (ghost != null) canvas.drawBitmap(ghost, x, y, null);
+            }
+        }
 
-                // Object
+        // Pass 2: objects (on top of all ground)
+        for (int r = 0; r < ground.length; r++) {
+            for (int c = 0; c < ground[r].length; c++) {
+                int o = objects[r][c];
                 Bitmap obj = getObjectBitmap(o);
-                if (obj != null) canvas.drawBitmap(obj, x, y, null);
+                if (obj == null) continue;
+
+                int x = offsetX + c * tileSize;
+                int targetY = offsetY + r * tileSize;
+                int y;
+                if (animating || (dropProgress != null && dropProgress[r][c] < 1f)) {
+                    float progress = dropProgress != null ? dropProgress[r][c] : 1f;
+                    y = (int) ((offsetY - totalH) + (targetY - (offsetY - totalH)) * progress);
+                } else {
+                    y = targetY;
+                }
+
+                float ox = 0, oy = 0;
+                float[] off = slideOffsets.get(cellKey(r, c));
+                if (off != null) { ox = off[0]; oy = off[1]; }
+                canvas.drawBitmap(obj, x + ox, y + oy, null);
             }
         }
     }
@@ -278,7 +301,7 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (animating) return true;
+        if (animating || sliding) return true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touchStartX = event.getX();
@@ -297,34 +320,80 @@ public class GameView extends View {
         return super.onTouchEvent(event);
     }
 
+    private long cellKey(int r, int c) { return ((long) r << 16) | (c & 0xFFFFL); }
+
     private void move(int dr, int dc) {
+        if (sliding) return;
         int nr = playerRow + dr, nc = playerCol + dc;
         if (!inBounds(nr, nc) || ground[nr][nc] == WALL) return;
 
         int nextObj = objects[nr][nc];
         boolean pushed = false;
+        java.util.List<long[]> movedCells = new java.util.ArrayList<>();
 
         if (isSofaPart(nextObj)) {
+            int[] pair = findSofaPair(nr, nc);
+            if (pair == null) return;
             if (!pushSofa(nr, nc, dr, dc)) return;
             pushed = true;
+            // sofa cells that moved
+            movedCells.add(new long[]{cellKey(nr + dr, nc + dc), dr, dc});
+            movedCells.add(new long[]{cellKey(pair[0] + dr, pair[1] + dc), dr, dc});
+            if (dc != 0) {
+                // horizontal: one cell stays in place visually (trail becomes lead's old pos)
+                // just animate all destination cells
+            }
         } else if (isBox(nextObj)) {
             int br = nr + dr, bc = nc + dc;
             if (!inBounds(br, bc) || ground[br][bc] == WALL || objects[br][bc] != NONE) return;
             objects[br][bc] = nextObj;
             objects[nr][nc] = NONE;
             pushed = true;
+            movedCells.add(new long[]{cellKey(br, bc), dr, dc});
         } else if (nextObj != NONE) {
             return;
         }
 
+        int oldR = playerRow, oldC = playerCol;
         objects[playerRow][playerCol] = NONE;
         objects[nr][nc] = PLAYER;
         playerRow = nr;
         playerCol = nc;
+        movedCells.add(new long[]{cellKey(nr, nc), dr, dc});
 
-        invalidate();
         if (pushed && soundPool != null) soundPool.play(moveSoundId, soundVolume * 0.5f, soundVolume * 0.5f, 1, 0, 1f);
-        checkWin();
+
+        // Setup slide offsets (start from -1 tile in move direction, animate to 0)
+        slideOffsets.clear();
+        for (long[] mc : movedCells) {
+            slideOffsets.put(mc[0], new float[]{-mc[2] * tileSize, -mc[1] * tileSize});
+        }
+        sliding = true;
+        invalidate();
+
+        ValueAnimator anim = ValueAnimator.ofFloat(1f, 0f);
+        anim.setDuration(SLIDE_DURATION);
+        anim.addUpdateListener(a -> {
+            float f = (float) a.getAnimatedValue();
+            for (long[] mc : movedCells) {
+                float[] off = slideOffsets.get(mc[0]);
+                if (off != null) {
+                    off[0] = -mc[2] * tileSize * f;
+                    off[1] = -mc[1] * tileSize * f;
+                }
+            }
+            invalidate();
+        });
+        anim.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                slideOffsets.clear();
+                sliding = false;
+                invalidate();
+                checkWin();
+            }
+        });
+        anim.start();
     }
 
     private boolean pushSofa(int sofaR, int sofaC, int dr, int dc) {
