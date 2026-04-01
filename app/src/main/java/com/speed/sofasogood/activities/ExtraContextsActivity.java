@@ -49,15 +49,20 @@ public class ExtraContextsActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
-        View btnCameraMode = findViewById(R.id.btnCameraMode);
-        setupButtonAnimation(btnCameraMode);
-        btnCameraMode.setOnClickListener(v ->
+        View cardCamera = findViewById(R.id.cardCameraMode);
+        setupButtonAnimation(cardCamera);
+        cardCamera.setOnClickListener(v ->
                 startActivity(new Intent(this, CameraModeActivity.class)));
 
-        View btnBathroomMode = findViewById(R.id.btnBathroomMode);
-        setupButtonAnimation(btnBathroomMode);
-        btnBathroomMode.setOnClickListener(v ->
+        View cardBathroom = findViewById(R.id.cardBathroomMode);
+        setupButtonAnimation(cardBathroom);
+        cardBathroom.setOnClickListener(v ->
                 startActivity(new Intent(this, BathroomSelectActivity.class)));
+
+        View cardCat = findViewById(R.id.cardCatMode);
+        setupButtonAnimation(cardCat);
+        cardCat.setOnClickListener(v ->
+                startActivity(new Intent(this, CatSelectActivity.class)));
 
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);

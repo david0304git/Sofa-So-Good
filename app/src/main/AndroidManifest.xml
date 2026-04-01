@@ -30,6 +30,7 @@
         <activity android:name=".activities.LeaderboardActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.ExtraContextsActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.CameraModeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.CatSelectActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.BathroomSelectActivity" android:screenOrientation="portrait" />
         <service android:name=".services.BgmService" />
         <activity android:name=".game.levels.Level1Activity" android:screenOrientation="portrait" />

@@ -32,38 +32,106 @@
             android:textStyle="bold" />
 
         <!-- Camera Mode -->
-        <com.speed.sofasogood.views.OutlinedTextButton
-            android:id="@+id/btnCameraMode"
-            style="@style/NeonButton"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardCameraMode"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/btn_camera_mode" />
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_camera_mode"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_border_only"/>
+            <com.speed.sofasogood.views.OutlinedTextButton
+                android:id="@+id/btnCameraMode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:text="@string/btn_camera_mode"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </androidx.cardview.widget.CardView>
 
         <!-- Bathroom Mode -->
-        <com.speed.sofasogood.views.OutlinedTextButton
-            android:id="@+id/btnBathroomMode"
-            style="@style/NeonButton"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardBathroomMode"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/btn_bathroom_mode" />
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_bathroom_mode"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_border_only"/>
+            <com.speed.sofasogood.views.OutlinedTextButton
+                android:id="@+id/btnBathroomMode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:text="@string/btn_bathroom_mode"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </androidx.cardview.widget.CardView>
 
-        <!-- Coming Soon 2 -->
-        <com.speed.sofasogood.views.OutlinedTextButton
-            android:id="@+id/btnComingSoon2"
-            style="@style/NeonButton"
+        <!-- Cat Mode -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardCatMode"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_marginBottom="24dp"
-            android:alpha="0.5"
-            android:text="@string/btn_coming_soon" />
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_cat_mode"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_border_only"/>
+            <com.speed.sofasogood.views.OutlinedTextButton
+                android:id="@+id/btnCatMode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center"
+                android:text="@string/btn_cat_mode"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </androidx.cardview.widget.CardView>
 
         <!-- Back -->
         <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnBack"
             style="@style/NeonButton"
-            android:layout_width="250dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:text="@string/btn_back" />
 

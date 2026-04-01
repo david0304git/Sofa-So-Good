@@ -49,6 +49,8 @@
     <string name="title_extra_contexts">Extra Contexts</string>
     <string name="btn_camera_mode">Camera Mode</string>
     <string name="btn_coming_soon">Coming Soon</string>
+    <string name="btn_cat_mode">Bad Cat Mode</string>
+    <string name="title_cat_mode">Naughty Cat</string>
     <string name="btn_bathroom_mode">Bathroom Mode</string>
     <string name="title_bathroom_mode">Bathroom Bump &amp; Slide</string>
     <string name="title_camera_mode">Camera Mode</string>

@@ -49,6 +49,8 @@
     <string name="title_extra_contexts">エクストラ</string>
     <string name="btn_camera_mode">カメラモード</string>
     <string name="btn_coming_soon">近日公開</string>
+    <string name="btn_cat_mode">悪い猫モード</string>
+    <string name="title_cat_mode">いたずら猫</string>
     <string name="btn_bathroom_mode">バスルームモード</string>
     <string name="title_bathroom_mode">バスルーム・バンプ＆スライド</string>
     <string name="title_camera_mode">カメラモード</string>
