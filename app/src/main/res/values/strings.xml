@@ -45,6 +45,21 @@
     <string name="btn_resume">Resume</string>
     <string name="btn_restart">Restart</string>
 
+    <!-- Extra Contexts -->
+    <string name="title_extra_contexts">Extra Contexts</string>
+    <string name="btn_camera_mode">Camera Mode</string>
+    <string name="btn_coming_soon">Coming Soon</string>
+    <string name="title_camera_mode">Camera Mode</string>
+    <string name="label_asset_wall">Wall</string>
+    <string name="label_asset_floor">Floor</string>
+    <string name="label_asset_player">Player</string>
+    <string name="label_asset_plant">Plant</string>
+    <string name="label_asset_sofa_left">Sofa Left</string>
+    <string name="label_asset_sofa_right">Sofa Right</string>
+    <string name="label_asset_tv">TV</string>
+    <string name="label_asset_tub_left">Tub Left</string>
+    <string name="label_asset_tub_right">Tub Right</string>
+
     <!-- Level 1 -->
     <string name="l1_d1">So this is my new home!</string>
     <string name="l1_d2">It feels empty, but full of promise.</string>

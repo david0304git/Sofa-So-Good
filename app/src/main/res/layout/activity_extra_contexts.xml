@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/extraContexts"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/menu_background">
+
+    <LinearLayout
+        android:layout_width="347dp"
+        android:layout_height="463dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/settings_panel"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Title -->
+        <com.speed.sofasogood.views.OutlinedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/title_extra_contexts"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- Camera Mode -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnCameraMode"
+            style="@style/NeonButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/btn_camera_mode" />
+
+        <!-- Coming Soon 1 -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnComingSoon1"
+            style="@style/NeonButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:alpha="0.5"
+            android:text="@string/btn_coming_soon" />
+
+        <!-- Coming Soon 2 -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnComingSoon2"
+            style="@style/NeonButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:alpha="0.5"
+            android:text="@string/btn_coming_soon" />
+
+        <!-- Back -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnBack"
+            style="@style/NeonButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_back" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

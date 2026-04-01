@@ -198,10 +198,10 @@ public class GameView extends View {
         bmpWall = scale(R.drawable.asset_wall);
         bmpFloor = scale(R.drawable.asset_floor);
         bmpPlayer = scale(R.drawable.asset_player);
-        bmpPlant  = scaleOrCustom(R.drawable.asset_plant,      FurnitureStore.KEY_PLANT);
-        bmpSofaL  = scaleOrCustom(R.drawable.asset_sofa_left,  FurnitureStore.KEY_SOFA_L);
-        bmpSofaR  = scaleOrCustom(R.drawable.asset_sofa_right, FurnitureStore.KEY_SOFA_R);
-        bmpTv     = scaleOrCustom(R.drawable.asset_tv,         FurnitureStore.KEY_TV);
+        bmpPlant = scale(R.drawable.asset_plant);
+        bmpSofaL = scale(R.drawable.asset_sofa_left);
+        bmpSofaR = scale(R.drawable.asset_sofa_right);
+        bmpTv = scale(R.drawable.asset_tv);
         bmpPlantGhost = makeGhost(bmpPlant);
         bmpSofaLGhost = makeGhost(bmpSofaL);
         bmpSofaRGhost = makeGhost(bmpSofaR);
@@ -217,6 +217,14 @@ public class GameView extends View {
     }
 
     private Bitmap scale(int resId) {
+        // Check for custom skin first
+        String key = resIdToKey(resId);
+        if (key != null) {
+            android.graphics.Bitmap custom = AssetSkinManager.loadCustomBitmap(getContext(), key);
+            if (custom != null) {
+                return android.graphics.Bitmap.createScaledBitmap(custom, tileSize, tileSize, true);
+            }
+        }
         Bitmap src = srcCache.get(resId);
         if (src == null || src.isRecycled()) {
             src = BitmapFactory.decodeResource(getResources(), resId);
@@ -225,15 +233,15 @@ public class GameView extends View {
         return Bitmap.createScaledBitmap(src, tileSize, tileSize, true);
     }
 
-    private Bitmap scaleOrCustom(int resId, String key) {
-        Bitmap src = FurnitureStore.get().has(key)
-                ? FurnitureStore.get().get(key)
-                : srcCache.get(resId);
-        if (src == null || src.isRecycled()) {
-            src = BitmapFactory.decodeResource(getResources(), resId);
-            srcCache.put(resId, src);
-        }
-        return Bitmap.createScaledBitmap(src, tileSize, tileSize, true);
+    private static String resIdToKey(int resId) {
+        if (resId == R.drawable.asset_wall) return "asset_wall";
+        if (resId == R.drawable.asset_floor) return "asset_floor";
+        if (resId == R.drawable.asset_player) return "asset_player";
+        if (resId == R.drawable.asset_plant) return "asset_plant";
+        if (resId == R.drawable.asset_sofa_left) return "asset_sofa_left";
+        if (resId == R.drawable.asset_sofa_right) return "asset_sofa_right";
+        if (resId == R.drawable.asset_tv) return "asset_tv";
+        return null;
     }
 
     private Bitmap makeGhost(Bitmap src) {
