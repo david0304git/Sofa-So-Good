@@ -198,10 +198,10 @@ public class GameView extends View {
         bmpWall = scale(R.drawable.asset_wall);
         bmpFloor = scale(R.drawable.asset_floor);
         bmpPlayer = scale(R.drawable.asset_player);
-        bmpPlant = scale(R.drawable.asset_plant);
-        bmpSofaL = scale(R.drawable.asset_sofa_left);
-        bmpSofaR = scale(R.drawable.asset_sofa_right);
-        bmpTv = scale(R.drawable.asset_tv);
+        bmpPlant  = scaleOrCustom(R.drawable.asset_plant,      FurnitureStore.KEY_PLANT);
+        bmpSofaL  = scaleOrCustom(R.drawable.asset_sofa_left,  FurnitureStore.KEY_SOFA_L);
+        bmpSofaR  = scaleOrCustom(R.drawable.asset_sofa_right, FurnitureStore.KEY_SOFA_R);
+        bmpTv     = scaleOrCustom(R.drawable.asset_tv,         FurnitureStore.KEY_TV);
         bmpPlantGhost = makeGhost(bmpPlant);
         bmpSofaLGhost = makeGhost(bmpSofaL);
         bmpSofaRGhost = makeGhost(bmpSofaR);
@@ -218,6 +218,17 @@ public class GameView extends View {
 
     private Bitmap scale(int resId) {
         Bitmap src = srcCache.get(resId);
+        if (src == null || src.isRecycled()) {
+            src = BitmapFactory.decodeResource(getResources(), resId);
+            srcCache.put(resId, src);
+        }
+        return Bitmap.createScaledBitmap(src, tileSize, tileSize, true);
+    }
+
+    private Bitmap scaleOrCustom(int resId, String key) {
+        Bitmap src = FurnitureStore.get().has(key)
+                ? FurnitureStore.get().get(key)
+                : srcCache.get(resId);
         if (src == null || src.isRecycled()) {
             src = BitmapFactory.decodeResource(getResources(), resId);
             srcCache.put(resId, src);

@@ -98,8 +98,8 @@
                 android:contentDescription="@string/back"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_left"
-                tools:ignore="ImageContrastCheck"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageButton
                 android:id="@+id/btnNextPage"
@@ -110,7 +110,8 @@
                 android:contentDescription="@string/next"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_right"
-                tools:ignore="ImageContrastCheck"/>
+                tools:ignore="ImageContrastCheck" />
+
         </LinearLayout>
 
         <!-- Dynamic pages will be added in Java -->
@@ -126,5 +127,20 @@
             app:layout_constraintTop_toBottomOf="@id/btnLeaderboard" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Custom Furniture button floating at top-center over the background -->
+    <com.speed.sofasogood.views.OutlinedTextButton
+        android:id="@+id/btnCustomFurniture"
+        style="@style/NeonButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:text="📷 Custom Furniture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

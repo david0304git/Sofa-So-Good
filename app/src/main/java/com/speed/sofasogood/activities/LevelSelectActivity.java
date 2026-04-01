@@ -152,6 +152,11 @@ public class LevelSelectActivity extends AppCompatActivity {
         btnLeaderboard.setOnClickListener(v ->
                 startActivity(new Intent(this, LeaderboardActivity.class)));
 
+        View btnCustomFurniture = findViewById(R.id.btnCustomFurniture);
+        setupButtonAnimation(btnCustomFurniture);
+        btnCustomFurniture.setOnClickListener(v ->
+                startActivity(new Intent(this, com.speed.sofasogood.activities.CustomFurnitureActivity.class)));
+
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
