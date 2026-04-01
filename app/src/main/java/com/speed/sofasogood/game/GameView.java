@@ -41,6 +41,8 @@ public class GameView extends View {
     private Bitmap bmpWall, bmpFloor, bmpPlayer;
     private Bitmap bmpPlant, bmpSofaL, bmpSofaR, bmpTv;
     private Bitmap bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost;
+    // Cache decoded source bitmaps to avoid repeated decoding
+    private static final android.util.SparseArray<Bitmap> srcCache = new android.util.SparseArray<>();
 
     private float touchStartX, touchStartY;
     private OnLevelCompleteListener completeListener;
@@ -187,7 +189,12 @@ public class GameView extends View {
         tileSize = Math.min(w / ground[0].length, h / ground.length);
         offsetX = (w - ground[0].length * tileSize) / 2;
         offsetY = (h - ground.length * tileSize) / 2;
+        recycleBitmaps();
+        loadBitmaps();
+        startDropAnimation();
+    }
 
+    private void loadBitmaps() {
         bmpWall = scale(R.drawable.asset_wall);
         bmpFloor = scale(R.drawable.asset_floor);
         bmpPlayer = scale(R.drawable.asset_player);
@@ -195,18 +202,27 @@ public class GameView extends View {
         bmpSofaL = scale(R.drawable.asset_sofa_left);
         bmpSofaR = scale(R.drawable.asset_sofa_right);
         bmpTv = scale(R.drawable.asset_tv);
-
         bmpPlantGhost = makeGhost(bmpPlant);
         bmpSofaLGhost = makeGhost(bmpSofaL);
         bmpSofaRGhost = makeGhost(bmpSofaR);
         bmpTvGhost = makeGhost(bmpTv);
+    }
 
-        startDropAnimation();
+    private void recycleBitmaps() {
+        Bitmap[] all = { bmpWall, bmpFloor, bmpPlayer, bmpPlant, bmpSofaL, bmpSofaR, bmpTv,
+                bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost };
+        for (Bitmap b : all) {
+            if (b != null && !b.isRecycled()) b.recycle();
+        }
     }
 
     private Bitmap scale(int resId) {
-        return Bitmap.createScaledBitmap(
-                BitmapFactory.decodeResource(getResources(), resId), tileSize, tileSize, true);
+        Bitmap src = srcCache.get(resId);
+        if (src == null || src.isRecycled()) {
+            src = BitmapFactory.decodeResource(getResources(), resId);
+            srcCache.put(resId, src);
+        }
+        return Bitmap.createScaledBitmap(src, tileSize, tileSize, true);
     }
 
     private Bitmap makeGhost(Bitmap src) {
@@ -457,6 +473,13 @@ public class GameView extends View {
 
     private boolean inBounds(int r, int c) {
         return r >= 0 && r < ground.length && c >= 0 && c < ground[0].length;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        cancelAnimations();
+        recycleBitmaps();
     }
 
     private void checkWin() {

@@ -84,12 +84,6 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         pauseBgm.setAction("PAUSE");
         startService(pauseBgm);
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
         mediaVolume = prefs.getFloat("media_volume", 1.0f);
@@ -398,6 +392,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mainHandler.removeCallbacksAndMessages(null);
+        cancelTyping();
         stopLevelTimerTicks();
         stopVoice();
         if (levelBgm != null) {
