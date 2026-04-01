@@ -9,183 +9,85 @@
     android:background="@drawable/menu_background"
     tools:context=".activities.LevelSelectActivity">
 
-    <!-- Overlay 面板 -->
-    <LinearLayout
-        android:layout_width="347dp"
-        android:layout_height="547dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+    <!-- Main panel -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/levelPanel"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/settings_panel"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.62"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintWidth_percent="0.84">
 
-        <!-- 標題 -->
+        <!-- Title -->
         <com.speed.sofasogood.views.OutlinedTextView
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:text="@string/title_levels"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 排行榜按鈕 -->
+        <!-- Leaderboard -->
         <com.speed.sofasogood.views.OutlinedTextButton
             android:id="@+id/btnLeaderboard"
             style="@style/NeonButton"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="@string/title_leaderboard" />
-
-        <!-- 翻頁區域 -->
-        <ViewFlipper
-            android:id="@+id/viewFlipper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- 第一頁: 關卡 1-4 -->
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:alignmentMode="alignBounds"
-                android:columnCount="2"
-                android:rowCount="2"
-                android:useDefaultMargins="true">
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="1"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="2"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="3"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="4"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-            </GridLayout>
-
-            <!-- 第二頁: 關卡 5-8 -->
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:alignmentMode="alignBounds"
-                android:columnCount="2"
-                android:rowCount="2"
-                android:useDefaultMargins="true">
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="5"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="6"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel7"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="7"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnLevel8"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/level_cell"
-                    android:minHeight="100dp"
-                    android:text="8"
-                    android:textColor="#FFFFFF"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-            </GridLayout>
-
-        </ViewFlipper>
-
-        <!-- 箭頭導航 -->
-        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:minWidth="160dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/title_leaderboard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <!-- Back -->
+        <com.speed.sofasogood.views.OutlinedTextButton
+            android:id="@+id/btnBack"
+            style="@style/NeonButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="160dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/btn_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Arrow navigation -->
+        <LinearLayout
+            android:id="@+id/navRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/btnBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
                 android:id="@+id/btnPrevPage"
@@ -193,9 +95,11 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="32dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/back"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_left"
-                android:visibility="invisible" />
+                tools:ignore="ImageContrastCheck"
+                android:visibility="invisible"/>
 
             <ImageButton
                 android:id="@+id/btnNextPage"
@@ -203,20 +107,24 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="32dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/next"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_arrow_right" />
-
+                android:src="@drawable/ic_arrow_right"
+                tools:ignore="ImageContrastCheck"/>
         </LinearLayout>
 
-        <!-- 返回 -->
-        <com.speed.sofasogood.views.OutlinedTextButton
-            android:id="@+id/btnBack"
-            style="@style/NeonButton"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
+        <!-- Dynamic pages will be added in Java -->
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:text="@string/btn_back" />
+            android:animateFirstView="false"
+            app:layout_constraintBottom_toTopOf="@id/navRow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnLeaderboard" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

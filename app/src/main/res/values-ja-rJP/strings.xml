@@ -15,8 +15,12 @@
     <string name="btn_logout">ログアウト</string>
     <string name="btn_back">戻る</string>
 
-    <!--leaderboard-->
-    <string name="title_leaderboard">スコアボード</string>
+    <!-- Navigation -->
+    <string name="back">戻る</string>
+    <string name="next">次へ</string>
+
+    <!-- leaderboard -->
+    <string name="title_leaderboard">ランキング</string>
     <string name="label_no_data">データなし</string>
 
     <!-- Level Select -->
@@ -31,10 +35,10 @@
     <!-- Level Result -->
     <string name="title_level_complete">ステージクリア！</string>
     <string name="label_finish_time">タイム: %1$s</string>
+    <string name="label_finish_steps">歩数: %d</string>
     <string name="label_finish_score">スコア: %1$d</string>
     <string name="btn_next_level">次のステージ</string>
     <string name="btn_exit">終了</string>
-    <string name="label_finish_steps">歩数: %d</string>
 
     <!-- Pause -->
     <string name="title_paused">一時停止</string>
@@ -95,5 +99,5 @@
     <string name="l8_d2">何かの方向を指し示しているようだ。</string>
     <string name="l8_d3">家具の位置で仕掛けが作動するかも。</string>
     <string name="l8_d4">ちょっと怖い…</string>
-    <string name="l8_d5">家具が重い、ゆっくり押そう。</string>
+    <string name="l8_d5">家具が重いな、ゆっくり押そう。</string> <!-- TODO: updated line, need new VO -->
 </resources>
