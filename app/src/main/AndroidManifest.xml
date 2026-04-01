@@ -28,6 +28,8 @@
         <activity android:name=".activities.LevelSelectActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.CreditsActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.LeaderboardActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.ExtraContextsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.CameraModeActivity" android:screenOrientation="portrait" />
         <service android:name=".services.BgmService" />
         <activity android:name=".game.levels.Level1Activity" android:screenOrientation="portrait" />
         <activity android:name=".game.levels.Level2Activity" android:screenOrientation="portrait" />

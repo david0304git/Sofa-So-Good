@@ -217,12 +217,31 @@ public class GameView extends View {
     }
 
     private Bitmap scale(int resId) {
+        // Check for custom skin first
+        String key = resIdToKey(resId);
+        if (key != null) {
+            android.graphics.Bitmap custom = AssetSkinManager.loadCustomBitmap(getContext(), key);
+            if (custom != null) {
+                return android.graphics.Bitmap.createScaledBitmap(custom, tileSize, tileSize, true);
+            }
+        }
         Bitmap src = srcCache.get(resId);
         if (src == null || src.isRecycled()) {
             src = BitmapFactory.decodeResource(getResources(), resId);
             srcCache.put(resId, src);
         }
         return Bitmap.createScaledBitmap(src, tileSize, tileSize, true);
+    }
+
+    private static String resIdToKey(int resId) {
+        if (resId == R.drawable.asset_wall) return "asset_wall";
+        if (resId == R.drawable.asset_floor) return "asset_floor";
+        if (resId == R.drawable.asset_player) return "asset_player";
+        if (resId == R.drawable.asset_plant) return "asset_plant";
+        if (resId == R.drawable.asset_sofa_left) return "asset_sofa_left";
+        if (resId == R.drawable.asset_sofa_right) return "asset_sofa_right";
+        if (resId == R.drawable.asset_tv) return "asset_tv";
+        return null;
     }
 
     private Bitmap makeGhost(Bitmap src) {

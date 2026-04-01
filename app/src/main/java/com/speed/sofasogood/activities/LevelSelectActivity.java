@@ -155,6 +155,11 @@ public class LevelSelectActivity extends AppCompatActivity {
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
+
+        View btnExtraContexts = findViewById(R.id.btnExtraContexts);
+        setupButtonAnimation(btnExtraContexts);
+        btnExtraContexts.setOnClickListener(v ->
+                startActivity(new Intent(this, ExtraContextsActivity.class)));
     }
 
     private void buildLevelPages() {

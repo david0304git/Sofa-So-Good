@@ -9,6 +9,18 @@
     android:background="@drawable/menu_background"
     tools:context=".activities.LevelSelectActivity">
 
+    <!-- Extra Contexts 按鈕 -->
+    <com.speed.sofasogood.views.OutlinedTextButton
+        android:id="@+id/btnExtraContexts"
+        style="@style/NeonButton"
+        android:layout_width="310dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/title_extra_contexts"
+        app:layout_constraintBottom_toTopOf="@id/levelPanel"
+        app:layout_constraintEnd_toEndOf="@id/levelPanel"
+        app:layout_constraintStart_toStartOf="@id/levelPanel" />
+
     <!-- Main panel -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/levelPanel"

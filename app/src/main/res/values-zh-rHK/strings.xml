@@ -45,6 +45,21 @@
     <string name="btn_resume">繼續</string>
     <string name="btn_restart">重新開始</string>
 
+    <!-- Extra Contexts -->
+    <string name="title_extra_contexts">額外內容</string>
+    <string name="btn_camera_mode">相機模式</string>
+    <string name="btn_coming_soon">即將推出</string>
+    <string name="title_camera_mode">相機模式</string>
+    <string name="label_asset_wall">牆壁</string>
+    <string name="label_asset_floor">地板</string>
+    <string name="label_asset_player">玩家</string>
+    <string name="label_asset_plant">植物</string>
+    <string name="label_asset_sofa_left">沙發左</string>
+    <string name="label_asset_sofa_right">沙發右</string>
+    <string name="label_asset_tv">電視</string>
+    <string name="label_asset_tub_left">浴缸左</string>
+    <string name="label_asset_tub_right">浴缸右</string>
+
     <!-- Level 1 -->
     <string name="l1_d1">這就是我的新家了！</string>
     <string name="l1_d2">雖然空蕩蕩的，但很有期待感。</string>

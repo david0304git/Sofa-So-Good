@@ -45,6 +45,21 @@
     <string name="btn_resume">再開</string>
     <string name="btn_restart">やり直す</string>
 
+    <!-- Extra Contexts -->
+    <string name="title_extra_contexts">エクストラ</string>
+    <string name="btn_camera_mode">カメラモード</string>
+    <string name="btn_coming_soon">近日公開</string>
+    <string name="title_camera_mode">カメラモード</string>
+    <string name="label_asset_wall">壁</string>
+    <string name="label_asset_floor">床</string>
+    <string name="label_asset_player">プレイヤー</string>
+    <string name="label_asset_plant">植物</string>
+    <string name="label_asset_sofa_left">ソファ左</string>
+    <string name="label_asset_sofa_right">ソファ右</string>
+    <string name="label_asset_tv">テレビ</string>
+    <string name="label_asset_tub_left">バスタブ左</string>
+    <string name="label_asset_tub_right">バスタブ右</string>
+
     <!-- Level 1 -->
     <string name="l1_d1">ここが新しい家か！</string>
     <string name="l1_d2">がらんとしてるけど、期待でいっぱいだ。</string>
