@@ -101,9 +101,11 @@ public class LevelResultActivity extends AppCompatActivity {
         if (nextLevelClass != null) {
             btnNext.setOnClickListener(v -> {
                 try {
-                    startActivity(new Intent(this, Class.forName(nextLevelClass)));
+                    Intent intent = new Intent(this, Class.forName(nextLevelClass));
+                    intent.putExtra("skipDialog", true);
+                    startActivity(intent);
+                    finish();
                 } catch (ClassNotFoundException ignored) {}
-                finish();
             });
         } else {
             btnNext.setVisibility(View.GONE);
