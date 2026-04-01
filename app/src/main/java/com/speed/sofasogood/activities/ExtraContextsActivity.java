@@ -54,6 +54,11 @@ public class ExtraContextsActivity extends AppCompatActivity {
         btnCameraMode.setOnClickListener(v ->
                 startActivity(new Intent(this, CameraModeActivity.class)));
 
+        View btnBathroomMode = findViewById(R.id.btnBathroomMode);
+        setupButtonAnimation(btnBathroomMode);
+        btnBathroomMode.setOnClickListener(v ->
+                startActivity(new Intent(this, BathroomSelectActivity.class)));
+
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
