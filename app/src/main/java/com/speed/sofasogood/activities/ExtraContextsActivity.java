@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -49,6 +50,15 @@ public class ExtraContextsActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
+        // Title image based on language
+        ImageView extraTitle = findViewById(R.id.extraTitle);
+        String lang = LocaleHelper.getLanguage(this);
+        switch (lang) {
+            case "zh-TW": extraTitle.setImageResource(R.drawable.ui_title_extra_cn); break;
+            case "ja":    extraTitle.setImageResource(R.drawable.ui_title_extra_jp); break;
+            default:      extraTitle.setImageResource(R.drawable.ui_title_extra_eng); break;
+        }
+
         View cardCamera = findViewById(R.id.cardCameraMode);
         setupButtonAnimation(cardCamera);
         cardCamera.setOnClickListener(v ->
@@ -64,7 +74,13 @@ public class ExtraContextsActivity extends AppCompatActivity {
         cardCat.setOnClickListener(v ->
                 startActivity(new Intent(this, CatSelectActivity.class)));
 
-        View btnBack = findViewById(R.id.btnBack);
+        // Back button image based on language
+        android.widget.ImageButton btnBack = findViewById(R.id.btnBack);
+        switch (lang) {
+            case "zh-TW": btnBack.setImageResource(R.drawable.ic_btn_extra_cn); break;
+            case "ja":    btnBack.setImageResource(R.drawable.ic_btn_extra_jp); break;
+            default:      btnBack.setImageResource(R.drawable.ic_btn_extra_eng); break;
+        }
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
     }
