@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
                 .setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .build())
                 .build();
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
+        float mediaVolume = prefs.getFloat("media_volume", 1.0f);
 
         // 標題圖片跟隨語言切換
         ImageView gameTitle = findViewById(R.id.gameTitle);
@@ -62,7 +63,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // 啟動背景音樂
-        startService(new Intent(this, BgmService.class));
+        Intent bgmIntent = new Intent(this, BgmService.class);
+        startService(bgmIntent);
+        
+        // Apply saved media volume to BGM
+        Intent volumeIntent = new Intent(this, BgmService.class);
+        volumeIntent.setAction("SET_VOLUME");
+        volumeIntent.putExtra("volume", mediaVolume);
+        startService(volumeIntent);
 
         setupButtonAnimation(findViewById(R.id.btnStart));
         setupButtonAnimation(findViewById(R.id.btnCredits));
@@ -95,10 +103,18 @@ public class MainActivity extends AppCompatActivity {
         // Reload sound volume in case it was changed in Settings
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
+        float mediaVolume = prefs.getFloat("media_volume", 1.0f);
+        
+        // Apply media volume to running BGM service
+        Intent volumeIntent = new Intent(this, BgmService.class);
+        volumeIntent.setAction("SET_VOLUME");
+        volumeIntent.putExtra("volume", mediaVolume);
+        startService(volumeIntent);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
+        button.setHapticFeedbackEnabled(false);
         button.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:

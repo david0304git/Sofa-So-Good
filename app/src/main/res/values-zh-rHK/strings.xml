@@ -49,6 +49,10 @@
     <string name="title_extra_contexts">額外內容</string>
     <string name="btn_camera_mode">相機模式</string>
     <string name="btn_coming_soon">即將推出</string>
+    <string name="btn_cat_mode">壞貓模式</string>
+    <string name="title_cat_mode">調皮搗蛋貓</string>
+    <string name="btn_bathroom_mode">浴室模式</string>
+    <string name="title_bathroom_mode">浴室碰碰走</string>
     <string name="title_camera_mode">相機模式</string>
     <string name="label_asset_wall">牆壁</string>
     <string name="label_asset_floor">地板</string>

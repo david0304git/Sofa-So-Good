@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -39,8 +40,8 @@ public class ExtraContextsActivity extends AppCompatActivity {
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
                 .setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .build())
                 .build();
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
@@ -49,18 +50,44 @@ public class ExtraContextsActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         soundVolume = prefs.getFloat("sound_volume", 1.0f);
 
-        View btnCameraMode = findViewById(R.id.btnCameraMode);
-        setupButtonAnimation(btnCameraMode);
-        btnCameraMode.setOnClickListener(v ->
+        // Title image based on language
+        ImageView extraTitle = findViewById(R.id.extraTitle);
+        String lang = LocaleHelper.getLanguage(this);
+        switch (lang) {
+            case "zh-TW": extraTitle.setImageResource(R.drawable.ui_title_extra_cn); break;
+            case "ja":    extraTitle.setImageResource(R.drawable.ui_title_extra_jp); break;
+            default:      extraTitle.setImageResource(R.drawable.ui_title_extra_eng); break;
+        }
+
+        View cardCamera = findViewById(R.id.cardCameraMode);
+        setupButtonAnimation(cardCamera);
+        cardCamera.setOnClickListener(v ->
                 startActivity(new Intent(this, CameraModeActivity.class)));
 
-        View btnBack = findViewById(R.id.btnBack);
+        View cardBathroom = findViewById(R.id.cardBathroomMode);
+        setupButtonAnimation(cardBathroom);
+        cardBathroom.setOnClickListener(v ->
+                startActivity(new Intent(this, BathroomSelectActivity.class)));
+
+        View cardCat = findViewById(R.id.cardCatMode);
+        setupButtonAnimation(cardCat);
+        cardCat.setOnClickListener(v ->
+                startActivity(new Intent(this, CatSelectActivity.class)));
+
+        // Back button image based on language
+        android.widget.ImageButton btnBack = findViewById(R.id.btnBack);
+        switch (lang) {
+            case "zh-TW": btnBack.setImageResource(R.drawable.ic_btn_extra_cn); break;
+            case "ja":    btnBack.setImageResource(R.drawable.ic_btn_extra_jp); break;
+            default:      btnBack.setImageResource(R.drawable.ic_btn_extra_eng); break;
+        }
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
+        button.setHapticFeedbackEnabled(false);
         button.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:

@@ -91,8 +91,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
                 .setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .build())
                 .build();
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
@@ -375,6 +375,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
+        button.setHapticFeedbackEnabled(false);
         button.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
