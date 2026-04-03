@@ -152,6 +152,18 @@ public class LevelSelectActivity extends AppCompatActivity {
         btnLeaderboard.setOnClickListener(v ->
                 startActivity(new Intent(this, LeaderboardActivity.class)));
 
+        // Set leaderboard button image based on language
+        String lang = LocaleHelper.getLanguage(this);
+        int leaderboardImg;
+        if ("zh-TW".equals(lang)) {
+            leaderboardImg = R.drawable.ui_btnleaderboard_levelselect_cn;
+        } else if ("ja".equals(lang)) {
+            leaderboardImg = R.drawable.ui_btnleaderboard_levelselect_jp;
+        } else {
+            leaderboardImg = R.drawable.ui_btnleaderboard_levelselect_eng;
+        }
+        ((android.widget.ImageButton) btnLeaderboard).setImageResource(leaderboardImg);
+
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
@@ -392,15 +404,13 @@ public class LevelSelectActivity extends AppCompatActivity {
         paint.setShader(shader);
         canvas.drawRoundRect(new RectF(0, 0, w, h), radius, radius, paint);
 
-        GradientDrawable border = new GradientDrawable();
-        border.setShape(GradientDrawable.RECTANGLE);
-        border.setCornerRadius(radius);
-        border.setColor(0x00000000);
-        border.setStroke((int) stroke, 0xFFFFD700);
+        Bitmap frameSrc = BitmapFactory.decodeResource(getResources(), R.drawable.ui_btnframe_levelselect);
+        Bitmap frameScaled = Bitmap.createScaledBitmap(frameSrc, w, h, true);
+        if (frameSrc != frameScaled && !frameSrc.isRecycled()) frameSrc.recycle();
 
         LayerDrawable result = new LayerDrawable(new Drawable[]{
                 new BitmapDrawable(getResources(), rounded),
-                border
+                new BitmapDrawable(getResources(), frameScaled)
         });
 
         btn.setBackground(result);

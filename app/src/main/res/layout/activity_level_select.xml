@@ -24,13 +24,12 @@
     <!-- Main panel -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/levelPanel"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="364dp"
+        android:layout_height="576dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/settings_panel"
+        android:background="@drawable/ui_panel_levelselect"
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,18 +54,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Leaderboard -->
-        <com.speed.sofasogood.views.OutlinedTextButton
+        <ImageButton
             android:id="@+id/btnLeaderboard"
-            style="@style/NeonButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="160dp"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
+            android:layout_width="214dp"
+            android:layout_height="57dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="24dp"
-            android:text="@string/title_leaderboard"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ui_btnleaderboard_levelselect_eng"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -77,12 +75,12 @@
             style="@style/NeonButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="30dp"
             android:minWidth="160dp"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="4dp"
             android:text="@string/btn_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -110,8 +108,8 @@
                 android:contentDescription="@string/back"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_left"
-                tools:ignore="ImageContrastCheck"
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageButton
                 android:id="@+id/btnNextPage"
@@ -122,7 +120,7 @@
                 android:contentDescription="@string/next"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_right"
-                tools:ignore="ImageContrastCheck"/>
+                tools:ignore="ImageContrastCheck" />
         </LinearLayout>
 
         <!-- Dynamic pages will be added in Java -->
