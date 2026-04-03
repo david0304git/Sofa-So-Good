@@ -35,6 +35,7 @@ import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
+import com.speed.sofasogood.game.levels.extra.ExtraLevel1Activity;
 
 public class BathroomSelectActivity extends AppCompatActivity {
 
@@ -98,7 +99,7 @@ public class BathroomSelectActivity extends AppCompatActivity {
 
             setupButtonAnimation(btn);
             btn.setOnClickListener(v ->
-                    Toast.makeText(this, "Bathroom Level " + levelNum, Toast.LENGTH_SHORT).show());
+                    startActivity(new Intent(this, ExtraLevel1Activity.class)));
             setLevelBackground(btn, R.drawable.level3_background, radiusPx, strokePx);
             grid.addView(btn);
         }

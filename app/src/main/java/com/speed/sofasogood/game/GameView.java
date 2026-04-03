@@ -23,6 +23,8 @@ public class GameView extends View {
     public static final int TARGET_TV = 22;
     public static final int TARGET_SOFA_L = 23;
     public static final int TARGET_SOFA_R = 24;
+    public static final int TARGET_TUB_L = 25;
+    public static final int TARGET_TUB_R = 26;
 
     // Object layer codes
     public static final int NONE = 0;
@@ -31,6 +33,8 @@ public class GameView extends View {
     public static final int BOX_TV = 12;
     public static final int BOX_SOFA_L = 13;
     public static final int BOX_SOFA_R = 14;
+    public static final int BOX_TUB_L = 15;
+    public static final int BOX_TUB_R = 16;
 
     private int[][] ground;  // never changes after load
     private int[][] objects; // player + boxes, moves
@@ -39,8 +43,8 @@ public class GameView extends View {
     private int offsetX, offsetY;
 
     private Bitmap bmpWall, bmpFloor, bmpPlayer;
-    private Bitmap bmpPlant, bmpSofaL, bmpSofaR, bmpTv;
-    private Bitmap bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost;
+    private Bitmap bmpPlant, bmpSofaL, bmpSofaR, bmpTv, bmpTubL, bmpTubR;
+    private Bitmap bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost, bmpTubLGhost, bmpTubRGhost;
     // Cache decoded source bitmaps to avoid repeated decoding
     private static final android.util.SparseArray<Bitmap> srcCache = new android.util.SparseArray<>();
 
@@ -97,8 +101,8 @@ public class GameView extends View {
 
     /**
      * Load level from a single combined map.
-     * Codes: 0=floor, 1=wall, 2=player, 10=plant, 12=tv, 13=sofaL, 14=sofaR,
-     *        20=plant target, 22=tv target, 23=sofaL target, 24=sofaR target
+     * Codes: 0=floor, 1=wall, 2=player, 10=plant, 12=tv, 13=sofaL, 14=sofaR, 15=tubL, 16=tubR
+     *        20=plant target, 22=tv target, 23=sofaL target, 24=sofaR target, 25=tubL target, 26=tubR target
      */
     public void loadLevel(int[][] level) {
         cancelAnimations();
@@ -118,10 +122,10 @@ public class GameView extends View {
                     objects[r][c] = PLAYER;
                     playerRow = r;
                     playerCol = c;
-                } else if (v == BOX_PLANT || v == BOX_TV || v == BOX_SOFA_L || v == BOX_SOFA_R) {
+                } else if (v == BOX_PLANT || v == BOX_TV || v == BOX_SOFA_L || v == BOX_SOFA_R || v == BOX_TUB_L || v == BOX_TUB_R) {
                     ground[r][c] = FLOOR;
                     objects[r][c] = v;
-                } else if (v == TARGET_PLANT || v == TARGET_TV || v == TARGET_SOFA_L || v == TARGET_SOFA_R) {
+                } else if (v == TARGET_PLANT || v == TARGET_TV || v == TARGET_SOFA_L || v == TARGET_SOFA_R || v == TARGET_TUB_L || v == TARGET_TUB_R) {
                     ground[r][c] = v;
                     objects[r][c] = NONE;
                 } else {
@@ -202,15 +206,19 @@ public class GameView extends View {
         bmpSofaL = scale(R.drawable.asset_sofa_left);
         bmpSofaR = scale(R.drawable.asset_sofa_right);
         bmpTv = scale(R.drawable.asset_tv);
+        bmpTubL = scale(R.drawable.asset_tub_left);
+        bmpTubR = scale(R.drawable.asset_tub_right);
         bmpPlantGhost = makeGhost(bmpPlant);
         bmpSofaLGhost = makeGhost(bmpSofaL);
         bmpSofaRGhost = makeGhost(bmpSofaR);
         bmpTvGhost = makeGhost(bmpTv);
+        bmpTubLGhost = makeGhost(bmpTubL);
+        bmpTubRGhost = makeGhost(bmpTubR);
     }
 
     private void recycleBitmaps() {
-        Bitmap[] all = { bmpWall, bmpFloor, bmpPlayer, bmpPlant, bmpSofaL, bmpSofaR, bmpTv,
-                bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost };
+        Bitmap[] all = { bmpWall, bmpFloor, bmpPlayer, bmpPlant, bmpSofaL, bmpSofaR, bmpTv, bmpTubL, bmpTubR,
+                bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost, bmpTubLGhost, bmpTubRGhost };
         for (Bitmap b : all) {
             if (b != null && !b.isRecycled()) b.recycle();
         }
@@ -240,6 +248,8 @@ public class GameView extends View {
         if (resId == R.drawable.asset_plant) return "asset_plant";
         if (resId == R.drawable.asset_sofa_left) return "asset_sofa_left";
         if (resId == R.drawable.asset_sofa_right) return "asset_sofa_right";
+        if (resId == R.drawable.asset_tub_left) return "asset_tub_left";
+        if (resId == R.drawable.asset_tub_right) return "asset_tub_right";
         if (resId == R.drawable.asset_tv) return "asset_tv";
         return null;
     }
@@ -316,6 +326,8 @@ public class GameView extends View {
             case TARGET_TV: return bmpTvGhost;
             case TARGET_SOFA_L: return bmpSofaLGhost;
             case TARGET_SOFA_R: return bmpSofaRGhost;
+            case TARGET_TUB_L: return bmpTubLGhost;
+            case TARGET_TUB_R: return bmpTubRGhost;
         }
         return null;
     }
@@ -327,12 +339,14 @@ public class GameView extends View {
             case BOX_TV: return bmpTv;
             case BOX_SOFA_L: return bmpSofaL;
             case BOX_SOFA_R: return bmpSofaR;
+            case BOX_TUB_L: return bmpTubL;
+            case BOX_TUB_R: return bmpTubR;
         }
         return null;
     }
 
     private boolean isBox(int o) {
-        return o == BOX_PLANT || o == BOX_TV || o == BOX_SOFA_L || o == BOX_SOFA_R;
+        return o == BOX_PLANT || o == BOX_TV || o == BOX_SOFA_L || o == BOX_SOFA_R || o == BOX_TUB_L || o == BOX_TUB_R;
     }
 
     private boolean isSofaPart(int o) {
@@ -340,7 +354,7 @@ public class GameView extends View {
     }
 
     private boolean isTarget(int g) {
-        return g == TARGET_PLANT || g == TARGET_TV || g == TARGET_SOFA_L || g == TARGET_SOFA_R;
+        return g == TARGET_PLANT || g == TARGET_TV || g == TARGET_SOFA_L || g == TARGET_SOFA_R || g == TARGET_TUB_L || g == TARGET_TUB_R;
     }
 
     private int[] findSofaPair(int r, int c) {
@@ -350,6 +364,68 @@ public class GameView extends View {
         if (o == BOX_SOFA_R && inBounds(r, c - 1) && objects[r][c - 1] == BOX_SOFA_L)
             return new int[]{r, c - 1};
         return null;
+    }
+
+    // Generic paired-part support (sofa, tub, etc.)
+    private boolean isPairedPart(int o) {
+        return o == BOX_SOFA_L || o == BOX_SOFA_R || o == BOX_TUB_L || o == BOX_TUB_R;
+    }
+
+    private int getPairedPartner(int o) {
+        if (o == BOX_SOFA_L) return BOX_SOFA_R;
+        if (o == BOX_SOFA_R) return BOX_SOFA_L;
+        if (o == BOX_TUB_L) return BOX_TUB_R;
+        if (o == BOX_TUB_R) return BOX_TUB_L;
+        return -1;
+    }
+
+    private int[] findPairedPair(int r, int c) {
+        int o = objects[r][c];
+        int partner = getPairedPartner(o);
+        if (partner == -1) return null;
+        if (inBounds(r, c + 1) && objects[r][c + 1] == partner) return new int[]{r, c + 1};
+        if (inBounds(r, c - 1) && objects[r][c - 1] == partner) return new int[]{r, c - 1};
+        return null;
+    }
+
+    private boolean pushPaired(int pr, int pc, int dr, int dc) {
+        int[] pair = findPairedPair(pr, pc);
+        if (pair == null) return false;
+        int pR = pair[0], pC = pair[1];
+
+        if (dc != 0) {
+            // Horizontal push
+            int leadR, leadC, trailR, trailC;
+            if (dc > 0) {
+                if (pc > pC) { leadR = pr; leadC = pc; trailR = pR; trailC = pC; }
+                else { leadR = pR; leadC = pC; trailR = pr; trailC = pc; }
+            } else {
+                if (pc < pC) { leadR = pr; leadC = pc; trailR = pR; trailC = pC; }
+                else { leadR = pR; leadC = pC; trailR = pr; trailC = pc; }
+            }
+            int destR = leadR + dr, destC = leadC + dc;
+            if (!inBounds(destR, destC) || ground[destR][destC] == WALL || objects[destR][destC] != NONE)
+                return false;
+
+            int leadObj = objects[leadR][leadC];
+            int trailObj = objects[trailR][trailC];
+            objects[destR][destC] = leadObj;
+            objects[leadR][leadC] = trailObj;
+            objects[trailR][trailC] = NONE;
+        } else {
+            // Vertical push
+            int dSR = pr + dr, dSC = pc;
+            int dPR = pR + dr, dPC = pC;
+            if (!inBounds(dSR, dSC) || !inBounds(dPR, dPC)) return false;
+            if (ground[dSR][dSC] == WALL || ground[dPR][dPC] == WALL) return false;
+            if (objects[dSR][dSC] != NONE || objects[dPR][dPC] != NONE) return false;
+
+            objects[dSR][dSC] = objects[pr][pc];
+            objects[dPR][dPC] = objects[pR][pC];
+            objects[pr][pc] = NONE;
+            objects[pR][pC] = NONE;
+        }
+        return true;
     }
 
     @Override
@@ -384,12 +460,12 @@ public class GameView extends View {
         boolean pushed = false;
         java.util.List<long[]> movedCells = new java.util.ArrayList<>();
 
-        if (isSofaPart(nextObj)) {
-            int[] pair = findSofaPair(nr, nc);
+        if (isPairedPart(nextObj)) {
+            int[] pair = findPairedPair(nr, nc);
             if (pair == null) return;
-            if (!pushSofa(nr, nc, dr, dc)) return;
+            if (!pushPaired(nr, nc, dr, dc)) return;
             pushed = true;
-            // sofa cells that moved
+            // paired cells that moved
             movedCells.add(new long[]{cellKey(nr + dr, nc + dc), dr, dc});
             movedCells.add(new long[]{cellKey(pair[0] + dr, pair[1] + dc), dr, dc});
             if (dc != 0) {
@@ -510,6 +586,8 @@ public class GameView extends View {
                 if (g == TARGET_TV && o != BOX_TV) return;
                 if (g == TARGET_SOFA_L && o != BOX_SOFA_L) return;
                 if (g == TARGET_SOFA_R && o != BOX_SOFA_R) return;
+                if (g == TARGET_TUB_L && o != BOX_TUB_L) return;
+                if (g == TARGET_TUB_R && o != BOX_TUB_R) return;
             }
         }
         if (completeListener != null) completeListener.onLevelComplete();
