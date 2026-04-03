@@ -48,7 +48,8 @@ public class LevelSelectActivity extends AppCompatActivity {
     private boolean soundReady = false;
 
     private ViewFlipper viewFlipper;
-    private View btnPrev, btnNext;
+
+    private android.view.GestureDetector gestureDetector;
 
     private float soundVolume = 1.0f;
     private float radiusPx;
@@ -89,7 +90,6 @@ public class LevelSelectActivity extends AppCompatActivity {
 
         currentPageIndex = 0;
         viewFlipper.setDisplayedChild(currentPageIndex);
-        syncArrowState();
     }
 
     private void initSound() {
@@ -122,29 +122,45 @@ public class LevelSelectActivity extends AppCompatActivity {
 
     private void initViews() {
         viewFlipper = findViewById(R.id.viewFlipper);
-        btnPrev = findViewById(R.id.btnPrevPage);
-        btnNext = findViewById(R.id.btnNextPage);
+        // Hide arrow buttons — swipe is used instead
+        findViewById(R.id.btnPrevPage).setVisibility(View.GONE);
+        findViewById(R.id.btnNextPage).setVisibility(View.GONE);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void bindStaticButtons() {
-        setupButtonAnimation(btnPrev);
-        setupButtonAnimation(btnNext);
+        gestureDetector = new android.view.GestureDetector(this,
+                new android.view.GestureDetector.SimpleOnGestureListener() {
+                    private static final int SWIPE_MIN_DISTANCE = 60;
+                    private static final int SWIPE_MIN_VELOCITY = 100;
 
-        btnNext.setOnClickListener(v -> {
-            int lastPageIndex = Math.max(0, viewFlipper.getChildCount() - 1);
-            if (currentPageIndex < lastPageIndex) {
-                currentPageIndex++;
-                viewFlipper.setDisplayedChild(currentPageIndex);
-                syncArrowState();
-            }
-        });
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2,
+                                          float velocityX, float velocityY) {
+                        if (e1 == null || e2 == null) return false;
+                        float dx = e2.getX() - e1.getX();
+                        if (Math.abs(dx) < SWIPE_MIN_DISTANCE) return false;
+                        if (Math.abs(velocityX) < SWIPE_MIN_VELOCITY) return false;
+                        if (dx < 0 && currentPageIndex < viewFlipper.getChildCount() - 1) {
+                            viewFlipper.setInAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_in_right));
+                            viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_out_left));
+                            currentPageIndex++;
+                            viewFlipper.setDisplayedChild(currentPageIndex);
+                            return true;
+                        } else if (dx > 0 && currentPageIndex > 0) {
+                            viewFlipper.setInAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_in_left));
+                            viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_out_right));
+                            currentPageIndex--;
+                            viewFlipper.setDisplayedChild(currentPageIndex);
+                            return true;
+                        }
+                        return false;
+                    }
+                });
 
-        btnPrev.setOnClickListener(v -> {
-            if (currentPageIndex > 0) {
-                currentPageIndex--;
-                viewFlipper.setDisplayedChild(currentPageIndex);
-                syncArrowState();
-            }
+        viewFlipper.setOnTouchListener((v, event) -> {
+            gestureDetector.onTouchEvent(event);
+            return true;
         });
 
         View btnLeaderboard = findViewById(R.id.btnLeaderboard);
@@ -305,24 +321,7 @@ public class LevelSelectActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: switching visibility of arrows not working
-    private void syncArrowState() {
-        int totalPages = viewFlipper.getChildCount();
-
-        boolean hasPrev = currentPageIndex > 0;
-        boolean hasNext = currentPageIndex < totalPages - 1;
-
-        btnPrev.setVisibility(hasPrev ? View.VISIBLE : View.INVISIBLE);
-        btnNext.setVisibility(hasNext ? View.VISIBLE : View.INVISIBLE);
-
-        btnPrev.setEnabled(hasPrev);
-        btnNext.setEnabled(hasNext);
-
-        btnPrev.setClickable(hasPrev);
-        btnNext.setClickable(hasNext);
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
+@SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
         button.setHapticFeedbackEnabled(false);
         button.setOnTouchListener((v, event) -> {
