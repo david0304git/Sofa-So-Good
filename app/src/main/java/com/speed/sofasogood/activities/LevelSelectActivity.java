@@ -168,6 +168,17 @@ public class LevelSelectActivity extends AppCompatActivity {
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
 
+        // Set back button image based on language
+        int backImg;
+        if ("zh-TW".equals(lang)) {
+            backImg = R.drawable.ui_btnback_levelselect_cn;
+        } else if ("ja".equals(lang)) {
+            backImg = R.drawable.ui_btnback_levelselect_jp;
+        } else {
+            backImg = R.drawable.ui_btnback_levelselect_eng;
+        }
+        ((android.widget.ImageButton) btnBack).setImageResource(backImg);
+
         View btnExtraContexts = findViewById(R.id.btnExtraContexts);
         setupButtonAnimation(btnExtraContexts);
         btnExtraContexts.setOnClickListener(v ->
