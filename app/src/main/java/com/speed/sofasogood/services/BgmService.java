@@ -2,12 +2,14 @@ package com.speed.sofasogood.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
 
@@ -29,6 +31,12 @@ public class BgmService extends Service {
         super.onCreate();
         mediaPlayer = MediaPlayer.create(this, R.raw.background_soundtrack_loop);
         mediaPlayer.setLooping(true);
+        
+        // Load saved media volume and apply it immediately
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        float mediaVolume = prefs.getFloat("media_volume", 1.0f);
+        mediaPlayer.setVolume(mediaVolume, mediaVolume);
+        
         ProcessLifecycleOwner.get().getLifecycle().addObserver(lifecycleObserver);
     }
 
