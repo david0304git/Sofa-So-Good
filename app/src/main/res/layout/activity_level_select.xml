@@ -48,7 +48,8 @@
             android:text="@string/title_levels"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
-            android:textStyle="italic"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
