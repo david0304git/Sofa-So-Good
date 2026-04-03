@@ -3,6 +3,7 @@ package com.speed.sofasogood.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.AssetSkinManager;
@@ -31,6 +33,7 @@ public class CameraModeActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int clickSoundId;
     private boolean soundReady = false;
+    private float soundVolume = 1.0f;
 
     private int pendingAssetIndex = -1;
     private ImageView[] previews;
@@ -73,6 +76,9 @@ public class CameraModeActivity extends AppCompatActivity {
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
         clickSoundId = soundPool.load(this, R.raw.button_click, 1);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        soundVolume = prefs.getFloat("sound_volume", 1.0f);
+
         LinearLayout assetList = findViewById(R.id.assetList);
         previews = new ImageView[AssetSkinManager.ASSET_KEYS.length];
 
@@ -90,14 +96,14 @@ public class CameraModeActivity extends AppCompatActivity {
             refreshPreview(i);
 
             btnCamera.setOnClickListener(v -> {
-                if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
                 pendingAssetIndex = index;
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 cameraLauncher.launch(intent);
             });
 
             btnReset.setOnClickListener(v -> {
-                if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
                 AssetSkinManager.resetCustom(this, AssetSkinManager.ASSET_KEYS[index]);
                 refreshPreview(index);
             });
@@ -125,7 +131,7 @@ public class CameraModeActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
-                    if (soundReady) soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+                    if (soundReady) soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1f);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
