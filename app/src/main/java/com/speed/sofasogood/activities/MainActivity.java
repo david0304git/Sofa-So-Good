@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
                 .setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .build())
                 .build();
         soundPool.setOnLoadCompleteListener((sp, sampleId, status) -> soundReady = true);
