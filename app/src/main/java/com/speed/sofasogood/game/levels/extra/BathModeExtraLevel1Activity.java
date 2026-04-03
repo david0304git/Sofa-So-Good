@@ -4,7 +4,7 @@ import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.levels.BaseLevelActivity;
 import com.speed.sofasogood.game.model.ExtraLevelData;
 
-public class ExtraLevel1Activity extends BaseLevelActivity {
+public class BathModeExtraLevel1Activity extends BaseLevelActivity {
     @Override
     protected int[][] getLevelData() {
         return ExtraLevelData.EXTRA_LEVEL_1;
