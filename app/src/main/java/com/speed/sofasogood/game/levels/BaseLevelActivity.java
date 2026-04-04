@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
+import android.view.KeyEvent;
 import com.speed.sofasogood.game.LevelResultActivity;
 import com.speed.sofasogood.game.LevelTimeScore;
 import com.speed.sofasogood.utils.ImmersiveHelper;
@@ -52,6 +53,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private int pauseDepth;
     private long pauseSegmentStart;
 
+    private GameView gameView;
+
     protected abstract int[][] getLevelData();
     protected abstract int[] getDialogResIds();
     protected abstract int[] getExpressions();
@@ -60,6 +63,17 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
     protected int getBackgroundResId() {
         return R.drawable.level1_background;
+    }
+    // For debugging
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (dialogFinished && gameView != null && gameView.getVisibility() == View.VISIBLE) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                boolean handled = gameView.onKeyDown(event.getKeyCode(), event);
+                if (handled) return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     /** Override to provide voice-over resource IDs for each dialog line. Return null if no voice. */
@@ -124,6 +138,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
 
         View countdownOverlay = findViewById(R.id.countdownOverlay);
         com.speed.sofasogood.views.OutlinedTextView countdownText = findViewById(R.id.countdownText);
+
+        // keep reference for forwarding key events
+        this.gameView = gameView;
 
         // 跳過對話按鈕
         View btnSkip = findViewById(R.id.btnSkip);

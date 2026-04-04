@@ -12,7 +12,6 @@ public class BathModeExtraLevel1Activity extends BaseLevelActivity {
 
     @Override
     protected int[] getDialogResIds() {
-        // TODO: write unique dialogue for each extra level, maybe with more humor and character interactions since these are bonus levels
         return new int[]{ R.string.l1_d1, R.string.l1_d2, R.string.l1_d3 };
     }
 

@@ -35,11 +35,19 @@ import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
 import com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity;
+import com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity;
 
 public class BathroomSelectActivity extends AppCompatActivity {
 
     private static final int TOTAL_LEVELS = 4;
     private static final int GRID_COLUMNS = 2;
+
+        private final LevelInfo[] levels = new LevelInfo[] {
+            new LevelInfo(1, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
+            new LevelInfo(2, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
+            new LevelInfo(3, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
+            new LevelInfo(4, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
+        };
 
     private SoundPool soundPool;
     private int clickSoundId;
@@ -77,18 +85,18 @@ public class BathroomSelectActivity extends AppCompatActivity {
         int marginPx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
 
         GridLayout grid = findViewById(R.id.levelGrid);
-        for (int i = 0; i < TOTAL_LEVELS; i++) {
-            final int levelNum = i + 1;
+        for (int idx = 0; idx < Math.min(TOTAL_LEVELS, levels.length); idx++) {
+            LevelInfo info = levels[idx];
             OutlinedTextButton btn = new OutlinedTextButton(this, null);
-            btn.setText(String.valueOf(levelNum));
+            btn.setText(String.valueOf(info.number));
             btn.setTextColor(0xFFFFFFFF);
             btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
             btn.setTypeface(btn.getTypeface(), Typeface.BOLD);
             btn.setGravity(Gravity.CENTER);
 
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(
-                    GridLayout.spec(i / GRID_COLUMNS, 1f),
-                    GridLayout.spec(i % GRID_COLUMNS, 1f)
+                    GridLayout.spec(idx / GRID_COLUMNS, 1f),
+                    GridLayout.spec(idx % GRID_COLUMNS, 1f)
             );
             params.width = 0;
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -97,9 +105,8 @@ public class BathroomSelectActivity extends AppCompatActivity {
             btn.setLayoutParams(params);
 
             setupButtonAnimation(btn);
-            btn.setOnClickListener(v ->
-                    startActivity(new Intent(this, BathModeExtraLevel1Activity.class)));
-            setLevelBackground(btn, R.drawable.level3_background, radiusPx, strokePx);
+            btn.setOnClickListener(v -> startActivity(new Intent(this, info.activityClass)));
+            setLevelBackground(btn, info.backgroundRes, radiusPx, strokePx);
             grid.addView(btn);
         }
 
@@ -199,5 +206,17 @@ public class BathroomSelectActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (soundPool != null) { soundPool.release(); soundPool = null; }
+    }
+
+    private static final class LevelInfo {
+        final int number;
+        final int backgroundRes;
+        final Class<?> activityClass;
+
+        LevelInfo(int number, int backgroundRes, Class<?> activityClass) {
+            this.number = number;
+            this.backgroundRes = backgroundRes;
+            this.activityClass = activityClass;
+        }
     }
 }
