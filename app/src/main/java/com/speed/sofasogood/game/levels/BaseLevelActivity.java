@@ -76,6 +76,11 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         return super.dispatchKeyEvent(event);
     }
 
+    /** Override to provide per-dialog background changes. Return null to keep default. */
+    protected int[] getDialogBackgrounds() {
+        return null;
+    }
+
     /** Override to provide voice-over resource IDs for each dialog line. Return null if no voice. */
     protected int[] getVoiceResIds() {
         return null;
@@ -131,6 +136,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         for (int i = 0; i < dialogResIds.length; i++) dialogs[i] = getString(dialogResIds[i]);
         int[] expressions = getExpressions();
         int[] voiceResIds = getVoiceResIds();
+        int[] dialogBgs = getDialogBackgrounds();
+        View rootView = findViewById(R.id.level1Root);
 
         typeText(dialogBox, dialogs[dialogIndex]);
         dialogCharacter.setImageResource(expressions[dialogIndex]);
@@ -173,6 +180,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 typeText(dialogBox, dialogs[dialogIndex]);
                 dialogCharacter.setImageResource(expressions[dialogIndex]);
                 playVoice(voiceResIds, dialogIndex);
+                if (dialogBgs != null && dialogIndex < dialogBgs.length && dialogBgs[dialogIndex] != 0) {
+                    rootView.setBackgroundResource(dialogBgs[dialogIndex]);
+                }
             } else {
                 dialogFinished = true;
                 dialogBox.setVisibility(View.GONE);
@@ -239,6 +249,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             dialogBox.setText(dialogs[0]);
             dialogCharacter.setImageResource(expressions[0]);
             playVoice(voiceResIds, 0);
+            rootView.setBackgroundResource(getBackgroundResId());
             btnSkip.setVisibility(View.VISIBLE);
             countdownOverlay.setVisibility(View.GONE);
             mainHandler.removeCallbacksAndMessages(null);

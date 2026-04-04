@@ -12,12 +12,12 @@ public class BathModeExtraLevel1Activity extends BaseLevelActivity {
 
     @Override
     protected int[] getDialogResIds() {
-        return new int[]{ R.string.l1_d1, R.string.l1_d2, R.string.l1_d3 };
+        return new int[]{ R.string.e1l1_d1, R.string.e1l1_d2, R.string.e1l1_d3, R.string.e1l1_d4, R.string.e1l1_d5 };
     }
 
     @Override
     protected int[] getExpressions() {
-        return new int[]{ R.drawable.character_happy, R.drawable.character_thinking, R.drawable.character_idea };
+        return new int[]{ R.drawable.character_happy, R.drawable.character_scared2, R.drawable.character_scared, R.drawable.character_angry, R.drawable.character_angry };
     }
 
     @Override
@@ -30,11 +30,16 @@ public class BathModeExtraLevel1Activity extends BaseLevelActivity {
 
     @Override
     protected int[] getVoiceResIds() {
-        return null;
+        return new int[]{ R.raw.e1l1_d1, R.raw.e1l1_d2, R.raw.l1_d3, R.raw.l1_d4, R.raw.l1_d5 };
     }
 
     @Override
     protected int getBackgroundResId() {
         return R.drawable.level3_background;
+    }
+
+    @Override
+    protected int[] getDialogBackgrounds() {
+        return new int[]{ 0, R.drawable.extra1_level1_background, R.drawable.extra1_level1_background, R.drawable.extra1_level1_background, R.drawable.extra1_level1_background };
     }
 }

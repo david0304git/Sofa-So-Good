@@ -86,51 +86,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Arrow navigation -->
+        <!-- Page dots -->
         <LinearLayout
-            android:id="@+id/navRow"
+            android:id="@+id/dotsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
             android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@id/btnBack"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-            <ImageButton
-                android:id="@+id/btnPrevPage"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="32dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/back"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_arrow_left"
-                android:visibility="invisible"
-                tools:ignore="ImageContrastCheck" />
-
-            <ImageButton
-                android:id="@+id/btnNextPage"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="32dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/next"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_arrow_right"
-                tools:ignore="ImageContrastCheck" />
-        </LinearLayout>
-
-        <!-- Dynamic pages will be added in Java -->
-        <ViewFlipper
-            android:id="@+id/viewFlipper"
+        <!-- Swipeable pages -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:animateFirstView="false"
-            app:layout_constraintBottom_toTopOf="@id/navRow"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toTopOf="@id/dotsLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnLeaderboard" />

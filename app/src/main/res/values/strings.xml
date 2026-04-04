@@ -119,4 +119,11 @@
     <string name="l8_d3">Maybe the furniture positions can trigger a mechanism.</string>
     <string name="l8_d4">I\u2019m a little scared\u2026</string>
     <string name="l8_d5">The furniture is heavy, I must push slowly.</string>
+
+    <!-- Bathroom Mode Level 1 -->
+    <string name="e1l1_d1">The next step is to clean the bathroom. Let me see…</string>
+    <string name="e1l1_d2">(Water pipe bursts) Ahh! What happened?!</string>
+    <string name="e1l1_d3">Oh no no no no… my toilet!</string>
+    <string name="e1l1_d4">There\'s water everywhere! The landlord didn\'t tell me any of this!</string>
+    <string name="e1l1_d5">The water needs to be pushed into the drain.</string>
 </resources>

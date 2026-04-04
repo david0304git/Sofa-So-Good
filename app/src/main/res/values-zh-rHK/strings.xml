@@ -119,4 +119,11 @@
     <string name="l8_d3">家具的位置或許能觸發機關。</string>
     <string name="l8_d4">有點害怕…</string>
     <string name="l8_d5">家具有點重，要慢慢推。</string>
+
+    <!-- Bathroom Mode Level 1 -->
+    <string name="e1l1_d1">下一步就是整理浴室了，讓我看看….</string>
+    <string name="e1l1_d2">（水管爆裂）啊啊！發生什麼回事？</string>
+    <string name="e1l1_d3">哦不不不不。。。我的廁所！</string>
+    <string name="e1l1_d4">積水到處都是！房東可沒有跟我說這些！</string>
+    <string name="e1l1_d5">要把水撥去排水口才行。</string>
 </resources>
