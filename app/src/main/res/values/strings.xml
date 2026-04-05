@@ -123,7 +123,7 @@
     <!-- Bathroom Mode Level 1 -->
     <string name="e1l1_d1">The next step is to clean the bathroom. Let me see…</string>
     <string name="e1l1_d2">(Water pipe bursts) Ahh! What happened?!</string>
-    <string name="e1l1_d3">Oh no no no no… my toilet!</string>
+    <string name="e1l1_d3">Oh no no no no！</string>
     <string name="e1l1_d4">There\'s water everywhere! The landlord didn\'t tell me any of this!</string>
     <string name="e1l1_d5">The water needs to be pushed into the drain.</string>
 </resources>

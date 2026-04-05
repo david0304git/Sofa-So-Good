@@ -30,7 +30,7 @@ public class BathModeExtraLevel1Activity extends BaseLevelActivity {
 
     @Override
     protected int[] getVoiceResIds() {
-        return new int[]{ R.raw.e1l1_d1, R.raw.e1l1_d2, R.raw.l1_d3, R.raw.l1_d4, R.raw.l1_d5 };
+        return new int[]{ R.raw.e1l1_d1, R.raw.e1l1_d2, R.raw.e1l1_d3, R.raw.e1l1_d4, R.raw.e1l1_d5 };
     }
 
     @Override

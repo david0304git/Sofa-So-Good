@@ -123,7 +123,7 @@
     <!-- Bathroom Mode Level 1 -->
     <string name="e1l1_d1">次のステップは浴室の整理だ、ちょっと見てみよう…</string>
     <string name="e1l1_d2">（水道管が破裂）あああ！何が起こったんだ？</string>
-    <string name="e1l1_d3">やばいやばいやばい…俺のトイレが！</string>
+    <string name="e1l1_d3">やばいやばいやばい！</string>
     <string name="e1l1_d4">水があちこちに溜まってる！大家さんはこんなこと言ってなかったぞ！</string>
     <string name="e1l1_d5">水を排水口に流さなきゃ。</string>
 
