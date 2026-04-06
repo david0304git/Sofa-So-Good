@@ -7,7 +7,7 @@ public class LevelData {
      * 10 = Plant      12 = TV                        (single boxes)
      * 13 = Sofa Left  14 = Sofa Right                (2-tile box)
      * 20 = Plant pos  22 = TV pos                    (single targets)
-     * 23 = Sofa L c 24 = Sofa R posi                  (2-tile target)
+     * 23 = Sofa L c 24 = Sofa R pos                  (2-tile target)
      */
 
     // L1
