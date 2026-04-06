@@ -29,6 +29,9 @@ public class BathModeExtraLevel2Activity extends BaseLevelActivity {
     protected int getLevelNumber() { return 102; }
 
     @Override
+    protected boolean shouldSkipDialog() { return true; }
+
+    @Override
     protected int[] getVoiceResIds() {
         return null;
     }
