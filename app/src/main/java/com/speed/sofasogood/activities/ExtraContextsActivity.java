@@ -59,17 +59,17 @@ public class ExtraContextsActivity extends AppCompatActivity {
             default:      extraTitle.setImageResource(R.drawable.ui_title_extra_eng); break;
         }
 
-        View cardCamera = findViewById(R.id.cardCameraMode);
+        View cardCamera = findViewById(R.id.frameCameraMode);
         setupButtonAnimation(cardCamera);
         cardCamera.setOnClickListener(v ->
                 startActivity(new Intent(this, CameraModeActivity.class)));
 
-        View cardBathroom = findViewById(R.id.cardBathroomMode);
+        View cardBathroom = findViewById(R.id.frameBathroomMode);
         setupButtonAnimation(cardBathroom);
         cardBathroom.setOnClickListener(v ->
                 startActivity(new Intent(this, BathroomSelectActivity.class)));
 
-        View cardCat = findViewById(R.id.cardCatMode);
+        View cardCat = findViewById(R.id.frameCatMode);
         setupButtonAnimation(cardCat);
         cardCat.setOnClickListener(v ->
                 startActivity(new Intent(this, CatSelectActivity.class)));
