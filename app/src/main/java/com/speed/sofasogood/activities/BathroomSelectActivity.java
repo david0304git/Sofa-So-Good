@@ -143,6 +143,14 @@ public class BathroomSelectActivity extends AppCompatActivity {
         View btnBack = findViewById(R.id.btnBack);
         setupButtonAnimation(btnBack);
         btnBack.setOnClickListener(v -> finish());
+
+        // Set back button image based on language
+        String lang = LocaleHelper.getLanguage(this);
+        int backImg;
+        if ("zh-TW".equals(lang)) backImg = R.drawable.ui_btnback_levelselect_cn;
+        else if ("ja".equals(lang)) backImg = R.drawable.ui_btnback_levelselect_jp;
+        else backImg = R.drawable.ui_btnback_levelselect_eng;
+        ((android.widget.ImageButton) btnBack).setImageResource(backImg);
     }
 
     private void setLevelBackground(View btn, int bgResId, float radius, float stroke) {
@@ -185,8 +193,13 @@ public class BathroomSelectActivity extends AppCompatActivity {
         border.setColor(0x00000000);
         border.setStroke((int) stroke, 0xFFFFD700);
 
+        Bitmap frameSrc = BitmapFactory.decodeResource(getResources(), R.drawable.ui_btnframe_levelselect);
+        Bitmap frameScaled = Bitmap.createScaledBitmap(frameSrc, w, h, true);
+        if (frameSrc != frameScaled && !frameSrc.isRecycled()) frameSrc.recycle();
+
         btn.setBackground(new LayerDrawable(new Drawable[]{
-                new BitmapDrawable(getResources(), rounded), border
+                new BitmapDrawable(getResources(), rounded),
+                new BitmapDrawable(getResources(), frameScaled)
         }));
         if (scaled != src && !scaled.isRecycled()) scaled.recycle();
         if (!src.isRecycled()) src.recycle();

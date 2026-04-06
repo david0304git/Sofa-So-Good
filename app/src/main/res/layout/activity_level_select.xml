@@ -19,7 +19,8 @@
         android:text="@string/title_extra_contexts"
         app:layout_constraintBottom_toTopOf="@id/levelPanel"
         app:layout_constraintEnd_toEndOf="@id/levelPanel"
-        app:layout_constraintStart_toStartOf="@id/levelPanel" />
+        app:layout_constraintStart_toStartOf="@id/levelPanel"
+        android:background="@drawable/ui_btn_extra"/>
 
     <!-- Main panel -->
     <androidx.constraintlayout.widget.ConstraintLayout
