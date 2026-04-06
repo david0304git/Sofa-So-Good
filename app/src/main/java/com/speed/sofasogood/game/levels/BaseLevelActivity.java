@@ -81,6 +81,11 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         return super.dispatchKeyEvent(event);
     }
 
+    /** Override to provide a hint image resource ID. Return 0 for no hint. */
+    protected int getHintResId() {
+        return 0;
+    }
+
     /** Override to provide per-dialog background changes. Return null to keep default. */
     protected int[] getDialogBackgrounds() {
         return null;
@@ -100,7 +105,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.level1);
+        setContentView(R.layout.level);
         findViewById(R.id.level1Root).setBackgroundResource(getBackgroundResId());
         ImmersiveHelper.enable(getWindow());
 
@@ -147,6 +152,24 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         View countdownOverlay = findViewById(R.id.countdownOverlay);
         com.speed.sofasogood.views.OutlinedTextView countdownText = findViewById(R.id.countdownText);
 
+        // Hint
+        View btnHint = findViewById(R.id.btnHint);
+        View hintOverlay = findViewById(R.id.hintOverlay);
+        ImageView hintImage = findViewById(R.id.hintImage);
+        View btnCloseHint = findViewById(R.id.btnCloseHint);
+        int hintResId = getHintResId();
+        if (hintResId != 0) {
+            hintImage.setImageResource(hintResId);
+        }
+        setupButtonAnimation(btnHint);
+        btnHint.setOnClickListener(v -> {
+            if (hintResId != 0) {
+                hintOverlay.setVisibility(View.VISIBLE);
+            }
+        });
+        setupButtonAnimation(btnCloseHint);
+        btnCloseHint.setOnClickListener(v -> hintOverlay.setVisibility(View.GONE));
+
         // keep reference for forwarding key events
         this.gameView = gameView;
 
@@ -164,7 +187,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             v.setVisibility(View.GONE);
             gameView.setVisibility(View.VISIBLE);
             gameView.loadLevel(getLevelData());
-            showCountdownOverlay(countdownOverlay, countdownText, gameView);
+            showCountdownOverlay(countdownOverlay, countdownText, gameView, btnHint, hintResId);
         });
 
         // Skip dialog entirely if subclass requests it
@@ -175,7 +198,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             btnSkip.setVisibility(View.GONE);
             gameView.setVisibility(View.VISIBLE);
             gameView.loadLevel(getLevelData());
-            showCountdownOverlay(countdownOverlay, countdownText, gameView);
+            showCountdownOverlay(countdownOverlay, countdownText, gameView, btnHint, hintResId);
         } else {
             typeText(dialogBox, dialogs[dialogIndex]);
             dialogCharacter.setImageResource(expressions[dialogIndex]);
@@ -207,7 +230,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 btnSkip.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
                 gameView.loadLevel(getLevelData());
-                showCountdownOverlay(countdownOverlay, countdownText, gameView);
+                showCountdownOverlay(countdownOverlay, countdownText, gameView, btnHint, hintResId);
             }
         });
 
@@ -271,6 +294,8 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             playVoice(voiceResIds, 0);
             rootView.setBackgroundResource(getBackgroundResId());
             btnSkip.setVisibility(View.VISIBLE);
+            btnHint.setVisibility(View.GONE);
+            hintOverlay.setVisibility(View.GONE);
             countdownOverlay.setVisibility(View.GONE);
             mainHandler.removeCallbacksAndMessages(null);
         });
@@ -304,7 +329,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         return now - gameStartElapsed - pausedTotalMs - midPause;
     }
 
-    private void showCountdownOverlay(View overlay, com.speed.sofasogood.views.OutlinedTextView text, GameView gameView) {
+    private void showCountdownOverlay(View overlay, com.speed.sofasogood.views.OutlinedTextView text, GameView gameView, View btnHint, int hintResId) {
         overlay.setVisibility(View.VISIBLE);
         text.setText("3");
         text.setTextSize(72);
@@ -312,7 +337,6 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         mainHandler.postDelayed(() -> text.setText("2"), 1000);
         mainHandler.postDelayed(() -> text.setText("1"), 2000);
 
-        // Wait for drop animation to finish, then show "Start!" and begin
         gameView.setOnDropCompleteListener(() -> {
             text.setText("Start!");
             text.setTextSize(52);
@@ -320,6 +344,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 overlay.setVisibility(View.GONE);
                 text.setTextSize(72);
                 startLevelTimer();
+                if (hintResId != 0) {
+                    btnHint.setVisibility(View.VISIBLE);
+                }
                 if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
             }, 800);
         });
