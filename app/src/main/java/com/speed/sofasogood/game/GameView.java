@@ -919,12 +919,11 @@ public class GameView extends View {
                 float gy = event.values[1];
                 int dr = 0, dc = 0;
                 if (Math.abs(gx) > Math.abs(gy)) {
-                    if (gx > gyroThreshold) dc = 1;
-                    else if (gx < -gyroThreshold) dc = -1;
+                    if (gx > gyroThreshold) dc = -1;
+                    else if (gx < -gyroThreshold) dc = 1;
                 } else {
-                    // map forward tilt to dr=+1 as requested
-                    if (gy < -gyroThreshold) dr = 1;
-                    else if (gy > gyroThreshold) dr = -1;
+                    if (gy > gyroThreshold) dr = 1;
+                    else if (gy < -gyroThreshold) dr = -1;
                 }
                 gyroLastDr = dr; gyroLastDc = dc;
             }

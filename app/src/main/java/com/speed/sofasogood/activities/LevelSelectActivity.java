@@ -167,6 +167,7 @@ public class LevelSelectActivity extends AppCompatActivity {
     private void buildLevelPages() {
         pageCount = (int) Math.ceil(levels.length / (float) LEVELS_PER_PAGE);
         viewPager.setAdapter(new LevelPageAdapter());
+        viewPager.setOffscreenPageLimit(pageCount);
         setupDots();
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
