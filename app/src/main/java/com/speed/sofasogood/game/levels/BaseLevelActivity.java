@@ -64,6 +64,11 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected int getBackgroundResId() {
         return R.drawable.level1_background;
     }
+
+    /** Override and return true to skip dialog and start the game directly. */
+    protected boolean shouldSkipDialog() {
+        return false;
+    }
     // For debugging
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -139,10 +144,6 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         int[] dialogBgs = getDialogBackgrounds();
         View rootView = findViewById(R.id.level1Root);
 
-        typeText(dialogBox, dialogs[dialogIndex]);
-        dialogCharacter.setImageResource(expressions[dialogIndex]);
-        playVoice(voiceResIds, dialogIndex);
-
         View countdownOverlay = findViewById(R.id.countdownOverlay);
         com.speed.sofasogood.views.OutlinedTextView countdownText = findViewById(R.id.countdownText);
 
@@ -165,6 +166,21 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             gameView.loadLevel(getLevelData());
             showCountdownOverlay(countdownOverlay, countdownText, gameView);
         });
+
+        // Skip dialog entirely if subclass requests it
+        if (shouldSkipDialog()) {
+            dialogFinished = true;
+            dialogBox.setVisibility(View.GONE);
+            dialogCharacter.setVisibility(View.GONE);
+            btnSkip.setVisibility(View.GONE);
+            gameView.setVisibility(View.VISIBLE);
+            gameView.loadLevel(getLevelData());
+            showCountdownOverlay(countdownOverlay, countdownText, gameView);
+        } else {
+            typeText(dialogBox, dialogs[dialogIndex]);
+            dialogCharacter.setImageResource(expressions[dialogIndex]);
+            playVoice(voiceResIds, dialogIndex);
+        }
 
         findViewById(R.id.level1Root).setOnClickListener(v -> {
             if (dialogFinished) return;
@@ -204,6 +220,10 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             Intent result = new Intent(this, LevelResultActivity.class);
 
             String next = getNextLevelClass();
+            // Also check intent extra for next level (used by bathroom mode etc.)
+            if (next == null && getIntent() != null) {
+                next = getIntent().getStringExtra("nextLevel");
+            }
             if (next != null) {
                 result.putExtra("nextLevel", next);
             }

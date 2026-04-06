@@ -45,8 +45,8 @@ public class BathroomSelectActivity extends AppCompatActivity {
         private final LevelInfo[] levels = new LevelInfo[] {
             new LevelInfo(1, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
             new LevelInfo(2, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
-            new LevelInfo(3, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
-            new LevelInfo(4, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
+            new LevelInfo(3, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
+            new LevelInfo(4, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
         };
 
     private SoundPool soundPool;
@@ -105,7 +105,15 @@ public class BathroomSelectActivity extends AppCompatActivity {
             btn.setLayoutParams(params);
 
             setupButtonAnimation(btn);
-            btn.setOnClickListener(v -> startActivity(new Intent(this, info.activityClass)));
+            final int idx2 = idx;
+            btn.setOnClickListener(v -> {
+                Intent intent = new Intent(this, info.activityClass);
+                // Pass next level class if not the last level
+                if (idx2 + 1 < levels.length) {
+                    intent.putExtra("nextLevel", levels[idx2 + 1].activityClass.getName());
+                }
+                startActivity(intent);
+            });
             setLevelBackground(btn, info.backgroundRes, radiusPx, strokePx);
             grid.addView(btn);
         }
