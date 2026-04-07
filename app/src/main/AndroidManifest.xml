@@ -26,6 +26,9 @@
         </activity>
         <activity android:name=".activities.MainActivity" android:exported="false" android:screenOrientation="portrait" />
         <activity android:name=".activities.SettingsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.LoginActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.RegisterActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.ForgotPasswordActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.LevelSelectActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.CreditsActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.LeaderboardActivity" android:screenOrientation="portrait" />

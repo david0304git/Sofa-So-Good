@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
@@ -90,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, BgmService.class));
             finishAffinity();
         });
+
+        //Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.setFirestoreSettings(
+                new FirebaseFirestoreSettings.Builder()
+                        .setPersistenceEnabled(true)
+                        .build()
+        );
     }
 
     @Override
