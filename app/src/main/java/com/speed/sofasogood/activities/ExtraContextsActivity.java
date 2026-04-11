@@ -17,6 +17,7 @@ import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
 public class ExtraContextsActivity extends AppCompatActivity {
@@ -36,6 +37,7 @@ public class ExtraContextsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extra_contexts);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)

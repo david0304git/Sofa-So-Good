@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.R;
 
@@ -92,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, BgmService.class));
             finishAffinity();
         });
+
+        // User info
+        new UserInfoHelper().setup(this);
 
         //Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();

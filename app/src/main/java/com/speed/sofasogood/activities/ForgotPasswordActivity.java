@@ -1,9 +1,12 @@
 package com.speed.sofasogood.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -12,12 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.auth.AuthManager;
+import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private EditText etEmail;
-    private Button btnResetPassword;
+    private View btnResetPassword;
     private AuthManager authManager;
 
     @Override
@@ -29,6 +33,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+        ImmersiveHelper.enable(getWindow());
 
         authManager = new AuthManager();
 
@@ -36,6 +41,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         btnResetPassword = findViewById(R.id.btnResetPassword);
 
         btnResetPassword.setOnClickListener(v -> sendReset());
+        setupButtonAnimation(btnResetPassword);
+
+        View btnBack = findViewById(R.id.btnBack);
+        setupButtonAnimation(btnBack);
+        btnBack.setOnClickListener(v -> finish());
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupButtonAnimation(View button) {
+        button.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_press));
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_release));
+                    break;
+            }
+            return false;
+        });
     }
 
     private void sendReset() {

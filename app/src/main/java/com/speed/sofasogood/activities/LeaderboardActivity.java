@@ -25,6 +25,7 @@ import com.speed.sofasogood.models.LeaderboardResponse;
 import com.speed.sofasogood.network.LeaderboardApi;
 import com.speed.sofasogood.network.RetrofitClient;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
 import retrofit2.Call;
@@ -59,6 +60,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         // Sound
         soundPool = new SoundPool.Builder()

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.LocaleHelper;
 
@@ -34,6 +35,7 @@ public class CreditsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)

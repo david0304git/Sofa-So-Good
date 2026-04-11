@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.speed.sofasogood" />
+                  <option name="mobileSdkAppId" value="1:164028030581:android:adbff9aec845a4fd87e23c" />
+                  <option name="projectId" value="sofasogood-bc690" />
+                  <option name="projectNumber" value="164028030581" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

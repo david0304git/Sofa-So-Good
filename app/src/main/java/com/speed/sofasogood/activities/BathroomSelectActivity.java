@@ -32,6 +32,7 @@ import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
 import com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity;
@@ -64,6 +65,7 @@ public class BathroomSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bathroom_select);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         // Sound
         soundPool = new SoundPool.Builder()

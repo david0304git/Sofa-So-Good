@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.views.OutlinedTextButton;
@@ -43,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
@@ -156,6 +158,7 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(new Intent(this, LoginActivity.class));
             }
         });
+        setupButtonAnimation(btnLogout);
 
         //Back Button
         View btnBack = findViewById(R.id.btnBack);

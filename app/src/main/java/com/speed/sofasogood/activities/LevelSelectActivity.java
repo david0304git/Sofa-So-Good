@@ -35,6 +35,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
 
@@ -84,6 +85,7 @@ public class LevelSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_select);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         initSound();
         initDimensions();
