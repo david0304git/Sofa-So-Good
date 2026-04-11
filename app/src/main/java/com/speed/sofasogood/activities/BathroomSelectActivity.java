@@ -46,8 +46,8 @@ public class BathroomSelectActivity extends AppCompatActivity {
         private final LevelInfo[] levels = new LevelInfo[] {
             new LevelInfo(1, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity.class),
             new LevelInfo(2, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
-            new LevelInfo(3, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
-            new LevelInfo(4, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity.class),
+            new LevelInfo(3, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel3Activity.class),
+            new LevelInfo(4, R.drawable.level3_background, com.speed.sofasogood.game.levels.extra.BathModeExtraLevel4Activity.class),
         };
 
     private SoundPool soundPool;

@@ -1,12 +1,11 @@
 package com.speed.sofasogood.game.model;
 
 public class ExtraLevelData {
-    // TODO: design 8 extra levels with different layouts and challenges, using all game elements (walls, narrow spaces, multiple items/targets)
-    // TODO: level select problem
-
+    
     /*
      *  0 = Empty       1 = Wall        2 = Player
      *  3 = Water       4 = Drain       5 = Broken Pipe
+     *  7 = Cat
      * 10 = Plant      12 = TV                        (single boxes)
      * 13 = Sofa Left  14 = Sofa Right                (2-tile box)
      * 15 = Tub Left   16 = Tub Right                 (2-tile box)
@@ -15,6 +14,8 @@ public class ExtraLevelData {
      * 25 = Tub L pos  26 = Tub R pos                 (2-tile target)
      */
 
+    // TODO: Redesign levels to be more compact
+    // Bathroom level
     public static final int[][] EXTRA_LEVEL_1 = {
             { 1,  1,  1,  1,  1,  1,  1,  1},
             { 1,  2,  0,  0,  0,  0,  0,  1},
@@ -37,7 +38,6 @@ public class ExtraLevelData {
             { 1,  1,  1,  1,  1,  1,  1,  1},
     };
 
-    // L3 Washroom — wall obstacle, all items solvable
     public static final int[][] EXTRA_LEVEL_3 = {
             { 1,  1,  1,  1,  1,  1,  1,  1},
             { 1,  0,  0,  0,  0,  0,  0,  1},
@@ -49,7 +49,6 @@ public class ExtraLevelData {
             { 1,  1,  1,  1,  1,  1,  1,  1},
     };
 
-    // L4 Bedroom — two single items + sofa, tighter space
     public static final int[][] EXTRA_LEVEL_4 = {
             { 1,  1,  1,  1,  1,  1,  1,  1},
             { 1,  0,  0,  0,  0,  0,  0,  1},
@@ -61,15 +60,15 @@ public class ExtraLevelData {
             { 1,  1,  1,  1,  1,  1,  1,  1},
     };
 
-    // L5 Balcony — narrow corridor with wall blocks
+    // Cat level
     public static final int[][] EXTRA_LEVEL_5 = {
             { 1,  1,  1,  1,  1,  1,  1,  1},
-            { 1,  0,  2,  0,  0,  0,  0,  1},
-            { 1,  1,  0,  1,  0, 10,  0,  1},
-            { 1,  0,  0,  0, 13, 14,  0,  1},
-            { 1,  0, 12,  1,  0,  0,  0,  1},
-            { 1,  0, 22,  0, 23, 24,  0,  1},
-            { 1,  0,  0,  0, 20,  0,  0,  1},
+            { 1,  2,  0,  0,  0,  0,  0,  1},
+            { 1,  0, 10,  0,  0,  0,  0,  1},
+            { 1,  0,  0,  0,  0,  0,  0,  1},
+            { 1,  0,  0,  0,  0,  0,  0,  1},
+            { 1,  0,  0,  0,  0, 20,  0,  1},
+            { 1,  0,  0,  0,  0,  0,  7,  1},
             { 1,  1,  1,  1,  1,  1,  1,  1},
     };
 
