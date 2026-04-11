@@ -131,21 +131,37 @@ public class LeaderboardActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<LeaderboardResponse> call,
                                    @NonNull Response<LeaderboardResponse> response) {
                 progressBar.setVisibility(View.GONE);
-                if (response.isSuccessful() && response.body() != null
-                        && response.body().getEntries() != null
-                        && !response.body().getEntries().isEmpty()) {
-                    adapter.setEntryList(response.body().getEntries());
-                } else {
+
+                if (!response.isSuccessful()) {
                     tvEmpty.setVisibility(View.VISIBLE);
+                    tvEmpty.setText("Failed to load leaderboard");
+                    Toast.makeText(LeaderboardActivity.this,
+                            "HTTP " + response.code(),
+                            Toast.LENGTH_LONG).show();
+                    return;
                 }
+
+                LeaderboardResponse leaderboardResponse = response.body();
+
+                if (leaderboardResponse == null
+                        || leaderboardResponse.getEntries() == null
+                        || leaderboardResponse.getEntries().isEmpty()) {
+                    tvEmpty.setVisibility(View.VISIBLE);
+                    tvEmpty.setText("No leaderboard data for this level");
+                    return;
+                }
+
+                adapter.setEntryList(leaderboardResponse.getEntries());
             }
 
             @Override
             public void onFailure(@NonNull Call<LeaderboardResponse> call, @NonNull Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 tvEmpty.setVisibility(View.VISIBLE);
+                tvEmpty.setText("Network error");
                 Toast.makeText(LeaderboardActivity.this,
-                        "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        "Network error: " + t.getClass().getSimpleName() + ": " + t.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

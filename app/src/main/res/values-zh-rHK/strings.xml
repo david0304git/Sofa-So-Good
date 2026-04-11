@@ -12,8 +12,26 @@
     <string name="label_volume">背景音樂</string>
     <string name="label_sound_volume">操作音效</string>
     <string name="label_language">語言</string>
+    <string name="btn_login">登入</string>
     <string name="btn_logout">登出</string>
     <string name="btn_back">返回</string>
+
+    <!-- login -->
+    <string name="password">密碼</string>
+    <string name="email">電郵</string>
+    <string name="forgot_password">忘記密碼</string>
+    <string name="create_account">註冊新賬户</string>
+
+    <!-- Register -->
+    <string name="username">顯示名稱</string>
+    <string name="confirm_password">確認密碼</string>
+    <string name="register">註冊</string>
+
+    <!-- Forgot Password Page -->
+    <string name="reset_password_title">重設密碼</string>
+    <string name="reset_password_instruction">請輸入您的註冊電郵地址。</string>
+    <string name="btn_send_reset_email">傳送重設郵件</string>
+    <string name="reset_email_sent">重設密碼郵件已傳送到您的註冊電郵地址。</string>
 
     <!-- Navigation -->
     <string name="back">上一頁</string>

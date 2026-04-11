@@ -18,10 +18,12 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.R;
+import com.speed.sofasogood.views.OutlinedTextButton;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -64,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     mediaVolume = progress / 100.0f;
-                    prefs.edit().putFloat("media_volume", mediaVolume).commit();
+                    prefs.edit().putFloat("media_volume", mediaVolume).apply();
                     Intent intent = new Intent(SettingsActivity.this, BgmService.class);
                     intent.setAction("SET_VOLUME");
                     intent.putExtra("volume", mediaVolume);
@@ -91,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     soundVolume = progress / 100.0f;
-                    prefs.edit().putFloat("sound_volume", soundVolume).commit();
+                    prefs.edit().putFloat("sound_volume", soundVolume).apply();
                 }
             }
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -131,20 +133,53 @@ public class SettingsActivity extends AppCompatActivity {
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // Buttons
+        // Login/Logout Buttons
         View btnLogout = findViewById(R.id.btnLogout);
-        View btnBack = findViewById(R.id.btnBack);
-        setupButtonAnimation(btnLogout);
-        setupButtonAnimation(btnBack);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        boolean isLoggedIn = auth.getCurrentUser() != null;
+
+        if (isLoggedIn) {
+            ((OutlinedTextButton) btnLogout).setText(getString(R.string.btn_logout));
+        } else {
+            ((OutlinedTextButton) btnLogout).setText(getString(R.string.btn_login));
+        }
 
         btnLogout.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            if (auth.getCurrentUser() != null) {
+                auth.signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
         });
+
+        //Back Button
+        View btnBack = findViewById(R.id.btnBack);
+
+        setupButtonAnimation(btnBack);
+
         btnBack.setOnClickListener(v -> finish());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        View btnLogout = findViewById(R.id.btnLogout);
+
+        boolean isLoggedIn = auth.getCurrentUser() != null;
+
+        if (isLoggedIn) {
+            ((OutlinedTextButton) btnLogout).setText(getString(R.string.btn_logout));
+        } else {
+            ((OutlinedTextButton) btnLogout).setText(getString(R.string.btn_login));
+        }
+    }
     @SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
         button.setHapticFeedbackEnabled(false);

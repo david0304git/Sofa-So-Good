@@ -4,59 +4,47 @@ import java.util.Locale;
 
 public final class LevelTimeScore {
 
-    private static final int MAX_SCORE = 10000;
-    private static final int MIN_SCORE = 100;
-
-    // Time thresholds
-    private static final long PERFECT_TIME_MS = 30_000;   // ≤30s = max time score
-    private static final long WORST_TIME_MS = 300_000;    // ≥5min = min time score
-
-    // Steps thresholds
-    private static final int PERFECT_STEPS = 15;          // ≤15 steps = max steps score
-    private static final int WORST_STEPS = 150;           // ≥150 steps = min steps score
-
     private LevelTimeScore() {}
 
-    /**
-     * Calculate combined score from time and steps.
-     * Time contributes 50%, steps contribute 50%.
-     */
-    public static int scoreFromElapsedMs(long elapsedMs, int steps) {
-        int timeScore = calcTimeScore(elapsedMs);
-        int stepsScore = calcStepsScore(steps);
-        return (timeScore + stepsScore) / 2;
+    public static int calculateScore(long elapsedMs, int steps, LevelScoreConfig config) {
+        int timeScore = calculateTimeScore(elapsedMs, config);
+        int stepScore = calculateStepScore(steps, config);
+
+        int finalScore = Math.round(timeScore * 0.4f + stepScore * 0.6f);
+        return clamp(finalScore, 0, 100);
     }
 
-    /** Backwards-compatible: time-only scoring */
-    public static int scoreFromElapsedMs(long elapsedMs) {
-        return calcTimeScore(elapsedMs);
+    public static int calculateStars(long elapsedMs, int steps, LevelScoreConfig config) {
+        if (elapsedMs <= config.star3TimeMs && steps <= config.star3Steps) return 3;
+        if (elapsedMs <= config.star2TimeMs && steps <= config.star2Steps) return 2;
+        if (elapsedMs <= config.star1TimeMs && steps <= config.star1Steps) return 1;
+        return 0;
     }
 
-    private static int calcTimeScore(long elapsedMs) {
-        if (elapsedMs <= PERFECT_TIME_MS) return MAX_SCORE;
-        if (elapsedMs >= WORST_TIME_MS) return MIN_SCORE;
-        float ratio = (float)(elapsedMs - PERFECT_TIME_MS) / (WORST_TIME_MS - PERFECT_TIME_MS);
-        return Math.max((int)(MAX_SCORE - ratio * (MAX_SCORE - MIN_SCORE)), MIN_SCORE);
+    private static int calculateTimeScore(long elapsedMs, LevelScoreConfig config) {
+        if (elapsedMs <= config.bestTimeMs) return 100;
+        if (elapsedMs >= config.worstTimeMs) return 0;
+
+        float ratio = (float) (elapsedMs - config.bestTimeMs)
+                / (float) (config.worstTimeMs - config.bestTimeMs);
+
+        return clamp(Math.round(100f * (1f - ratio)), 0, 100);
     }
 
-    private static int calcStepsScore(int steps) {
-        if (steps <= PERFECT_STEPS) return MAX_SCORE;
-        if (steps >= WORST_STEPS) return MIN_SCORE;
-        float ratio = (float)(steps - PERFECT_STEPS) / (WORST_STEPS - PERFECT_STEPS);
-        return Math.max((int)(MAX_SCORE - ratio * (MAX_SCORE - MIN_SCORE)), MIN_SCORE);
+    private static int calculateStepScore(int steps, LevelScoreConfig config) {
+        if (steps <= config.bestSteps) return 100;
+        if (steps >= config.worstSteps) return 0;
+
+        float ratio = (float) (steps - config.bestSteps)
+                / (float) (config.worstSteps - config.bestSteps);
+
+        return clamp(Math.round(100f * (1f - ratio)), 0, 100);
     }
 
-    /**
-     * Star rating based on combined score.
-     * 3 stars: ≥7000, 2 stars: ≥3500, 1 star: rest
-     */
-    public static int starsFromScore(int score) {
-        if (score >= 7000) return 3;
-        if (score >= 3500) return 2;
-        return 1;
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 
-    /** Format as m:ss.cc — e.g. 3:07.45 */
     public static String formatElapsed(long ms) {
         if (ms < 0) ms = 0;
         long totalSec = ms / 1000;

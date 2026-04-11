@@ -1,6 +1,7 @@
 package com.speed.sofasogood.game.levels.extra;
 
 import com.speed.sofasogood.R;
+import com.speed.sofasogood.game.LevelScoreConfig;
 import com.speed.sofasogood.game.levels.BaseLevelActivity;
 import com.speed.sofasogood.game.model.ExtraLevelData;
 
@@ -41,5 +42,23 @@ public class BathModeExtraLevel1Activity extends BaseLevelActivity {
     @Override
     protected int[] getDialogBackgrounds() {
         return new int[]{ 0, R.drawable.extra1_level1_background, R.drawable.extra1_level1_background, R.drawable.extra1_level1_background, R.drawable.extra1_level1_background };
+    }
+
+    @Override
+    protected LevelScoreConfig getScoreConfig() {
+        return new LevelScoreConfig(
+                12_000,   // bestTimeMs
+                90_000,   // worstTimeMs
+                10,       // bestSteps
+                40,       // worstSteps
+
+                20_000,   // star3TimeMs
+                35_000,   // star2TimeMs
+                60_000,   // star1TimeMs
+
+                12,       // star3Steps
+                18,       // star2Steps
+                28        // star1Steps
+        );
     }
 }

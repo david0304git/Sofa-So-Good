@@ -12,8 +12,26 @@
     <string name="label_volume">BGM</string>
     <string name="label_sound_volume">効果音</string>
     <string name="label_language">言語</string>
+    <string name="btn_login">ログイン</string>
     <string name="btn_logout">ログアウト</string>
     <string name="btn_back">戻る</string>
+
+    <!-- login Page-->
+    <string name="password">パスワード</string>
+    <string name="email">メールアドレス </string>
+    <string name="forgot_password">パスワード再設定</string>
+    <string name="create_account">新規登録</string>
+
+    <!-- Register Page-->
+    <string name="username">ユーザー名</string>
+    <string name="confirm_password">パスワード（確認用）</string>
+    <string name="register">登録する</string>
+
+    <!-- Forgot Password Page -->
+    <string name="reset_password_title">パスワードの再設定</string>
+    <string name="reset_password_instruction">登録したメールアドレスを入力してください。</string>
+    <string name="btn_send_reset_email">送信する</string>
+    <string name="reset_email_sent">再設定用のメールを送信しました</string>
 
     <!-- Navigation -->
     <string name="back">戻る</string>

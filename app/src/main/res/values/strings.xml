@@ -12,8 +12,26 @@
     <string name="label_volume">Music Volume</string>
     <string name="label_sound_volume">Sound Effects Volume</string>
     <string name="label_language">Language</string>
+    <string name="btn_login">Login</string>
     <string name="btn_logout">Logout</string>
     <string name="btn_back">Back</string>
+
+    <!-- login -->
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Register -->
+    <string name="username">Username</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+
+    <!-- Forgot Password Page -->
+    <string name="reset_password_title">Reset Password</string>
+    <string name="reset_password_instruction">Please enter your registered email address.</string>
+    <string name="btn_send_reset_email">Send reset email</string>
+    <string name="reset_email_sent">A password reset email has been sent to your registered email address.</string>
 
     <!-- Navigation -->
     <string name="back">Back</string>

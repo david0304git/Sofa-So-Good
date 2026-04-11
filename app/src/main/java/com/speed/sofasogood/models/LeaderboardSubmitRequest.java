@@ -4,14 +4,14 @@ public class LeaderboardSubmitRequest {
 
     private final int level;
     private final int score;
-    private final long timeMs;
     private final String playerName;
+    private final String metadata;
 
-    public LeaderboardSubmitRequest(int level, int score, long timeMs, String playerName) {
+    public LeaderboardSubmitRequest(int level, int score, String playerName, String metadata) {
         this.level = level;
         this.score = score;
-        this.timeMs = timeMs;
         this.playerName = playerName != null ? playerName : "";
+        this.metadata = metadata;
     }
 
     public int getLevel() {
@@ -22,11 +22,11 @@ public class LeaderboardSubmitRequest {
         return score;
     }
 
-    public long getTimeMs() {
-        return timeMs;
-    }
-
     public String getPlayerName() {
         return playerName;
+    }
+
+    public String getMetadata() {
+        return metadata;
     }
 }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -20,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.speed.sofasogood.game.LevelScoreConfig;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
@@ -28,6 +31,8 @@ import com.speed.sofasogood.game.LevelResultActivity;
 import com.speed.sofasogood.game.LevelTimeScore;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
+
+import java.util.HashMap;
 
 public abstract class BaseLevelActivity extends AppCompatActivity {
 
@@ -60,6 +65,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected abstract int[] getExpressions();
     protected abstract String getNextLevelClass();
     protected abstract int getLevelNumber();
+    protected abstract LevelScoreConfig getScoreConfig();
 
     protected int getBackgroundResId() {
         return R.drawable.level1_background;
@@ -234,13 +240,23 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             }
         });
 
+        FirebaseFirestore.getInstance()
+                .collection("test")
+                .add(new HashMap<>())
+                .addOnSuccessListener(doc -> Log.d("TEST", "WRITE OK"))
+                .addOnFailureListener(e -> Log.e("TEST", "WRITE FAIL", e));
+
         gameView.setOnLevelCompleteListener(() -> {
             long finishMs = elapsedPlayMs();
             int steps = gameView.getMoveCount();
-            int score = LevelTimeScore.scoreFromElapsedMs(finishMs, steps);
+            LevelScoreConfig config = getScoreConfig();
+            int score = LevelTimeScore.calculateScore(finishMs, steps, config);
+            int stars = LevelTimeScore.calculateStars(finishMs, steps, config);
             resetLevelTimerUi();
 
             Intent result = new Intent(this, LevelResultActivity.class);
+
+            result.putExtra("stars", stars);
 
             String next = getNextLevelClass();
             // Also check intent extra for next level (used by bathroom mode etc.)
