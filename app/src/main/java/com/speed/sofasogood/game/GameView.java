@@ -75,7 +75,7 @@ public class GameView extends View {
     private AudioRecord audioRecord;
     private Thread micThread;
     private volatile boolean micMonitoring = false;
-    private float micThresholdDb = 70f; // default medium sensitivity
+    private float micThresholdDb = 50f; // default medium sensitivity
     private long micLastTriggerMs = 0;
     private static final int MIC_COOLDOWN_MS = 1000;
     public static final int MIC_REQUEST_CODE = 1234;
