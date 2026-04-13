@@ -2,6 +2,7 @@ package com.speed.sofasogood.game.levels;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -414,6 +415,15 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (dialogFinished) popPause();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == GameView.MIC_REQUEST_CODE) {
+            boolean granted = grantResults != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            if (gameView != null) gameView.onMicPermissionResult(granted);
+        }
     }
 
     private static final long TYPE_DELAY = 40; // ms per character

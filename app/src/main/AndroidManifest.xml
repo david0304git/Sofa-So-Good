@@ -50,6 +50,9 @@
         <activity android:name=".game.levels.extra.BathModeExtraLevel3Activity" android:screenOrientation="portrait" />
         <activity android:name=".game.levels.extra.BathModeExtraLevel4Activity" android:screenOrientation="portrait" />
         <activity android:name=".game.levels.extra.CatModeExtraLevel1Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.extra.CatModeExtraLevel2Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.extra.CatModeExtraLevel3Activity" android:screenOrientation="portrait" />
+        <activity android:name=".game.levels.extra.CatModeExtraLevel4Activity" android:screenOrientation="portrait" />
         <activity android:name=".game.LevelResultActivity" android:screenOrientation="portrait" />
     </application>
 </manifest>

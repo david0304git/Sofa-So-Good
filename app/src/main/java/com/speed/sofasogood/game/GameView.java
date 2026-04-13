@@ -18,6 +18,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorEvent;
 import android.os.Handler;
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Looper;
 
 import com.speed.sofasogood.R;
@@ -27,6 +34,7 @@ public class GameView extends View {
     // For debugging
     public static final String KEYCODE = "KeyCode";
     public static final String GYRO = "GyroEvent";
+    public static final String MIC = "MicEvent";
 
     // Ground layer codes
     public static final int FLOOR = 0;
@@ -43,6 +51,7 @@ public class GameView extends View {
     // Object layer codes
     public static final int NONE = 0;
     public static final int PLAYER = 2;
+    public static final int CAT = 7;
     public static final int BOX_WATER = 3;
     public static final int BOX_PLANT = 10;
     public static final int BOX_TV = 12;
@@ -59,7 +68,17 @@ public class GameView extends View {
     private int offsetX, offsetY;
 
     private Bitmap bmpWall, bmpFloor, bmpPlayer;
+    private Bitmap bmpCatIdle, bmpCatSleep;
     private Bitmap bmpPlant, bmpSofaL, bmpSofaR, bmpTv, bmpTubL, bmpTubR, bmpWater;
+    private boolean catAwake = false;
+    // Microphone monitoring
+    private AudioRecord audioRecord;
+    private Thread micThread;
+    private volatile boolean micMonitoring = false;
+    private float micThresholdDb = 70f; // default medium sensitivity
+    private long micLastTriggerMs = 0;
+    private static final int MIC_COOLDOWN_MS = 1000;
+    public static final int MIC_REQUEST_CODE = 1234;
     private Bitmap bmpDrain;
     private Bitmap bmpDrainGhost;
     private Bitmap bmpBrokePipe;
@@ -145,7 +164,7 @@ public class GameView extends View {
 
     /**
      * Load level from a single combined map.
-    * Codes: 0=floor, 1=wall, 2=player, 3=water, 4=drain, 10=plant, 12=tv, 13=sofaL, 14=sofaR, 15=tubL, 16=tubR
+     * Codes: 0=floor, 1=wall, 2=player, 3=water, 4=drain, 10=plant, 12=tv, 13=sofaL, 14=sofaR, 15=tubL, 16=tubR
      *        20=plant target, 22=tv target, 23=sofaL target, 24=sofaR target, 25=tubL target, 26=tubR target
      */
     public void loadLevel(int[][] level) {
@@ -169,6 +188,9 @@ public class GameView extends View {
                     objects[r][c] = PLAYER;
                     playerRow = r;
                     playerCol = c;
+                } else if (v == CAT) {
+                    ground[r][c] = FLOOR;
+                    objects[r][c] = CAT;
                 } else if (v == BOX_PLANT || v == BOX_TV || v == BOX_SOFA_L || v == BOX_SOFA_R || v == BOX_TUB_L || v == BOX_TUB_R || v == BOX_WATER) {
                     ground[r][c] = FLOOR;
                     if (v == BOX_WATER) {
@@ -200,6 +222,8 @@ public class GameView extends View {
         // Auto-enable gyro control if level contains water
         updateGyroState();
         startBrokePipeSpawner();
+        // Start microphone monitoring for loud sound trigger
+        startMicMonitoring();
         invalidate();
     }
 
@@ -263,6 +287,8 @@ public class GameView extends View {
         bmpWall = scale(R.drawable.asset_wall);
         bmpFloor = scale(R.drawable.asset_floor);
         bmpPlayer = scale(R.drawable.asset_player);
+        bmpCatIdle = scale(R.drawable.asset_cat_idle);
+        bmpCatSleep = scale(R.drawable.asset_cat_sleep);
         bmpPlant = scale(R.drawable.asset_plant);
         bmpSofaL = scale(R.drawable.asset_sofa_left);
         bmpSofaR = scale(R.drawable.asset_sofa_right);
@@ -283,7 +309,7 @@ public class GameView extends View {
 
     private void recycleBitmaps() {
         Bitmap[] all = { bmpWall, bmpFloor, bmpPlayer, bmpPlant, bmpSofaL, bmpSofaR, bmpTv, bmpTubL, bmpTubR, bmpWater,
-            bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost, bmpTubLGhost, bmpTubRGhost, bmpDrain, bmpDrainGhost, bmpBrokePipe };
+            bmpPlantGhost, bmpSofaLGhost, bmpSofaRGhost, bmpTvGhost, bmpTubLGhost, bmpTubRGhost, bmpDrain, bmpDrainGhost, bmpBrokePipe, bmpCatIdle, bmpCatSleep };
         for (Bitmap b : all) {
             if (b != null && !b.isRecycled()) b.recycle();
         }
@@ -319,6 +345,8 @@ public class GameView extends View {
         if (resId == R.drawable.asset_drain) return "asset_drain";
         if (resId == R.drawable.asset_brokepipe) return "asset_brokepipe";
         if (resId == R.drawable.asset_tv) return "asset_tv";
+        if (resId == R.drawable.asset_cat_idle) return "asset_cat_idle";
+        if (resId == R.drawable.asset_cat_sleep) return "asset_cat_sleep";
         return null;
     }
 
@@ -426,6 +454,7 @@ public class GameView extends View {
     private Bitmap getObjectBitmap(int o) {
         switch (o) {
             case PLAYER: return bmpPlayer;
+            case CAT: return catAwake ? bmpCatIdle : bmpCatSleep;
             case BOX_PLANT: return bmpPlant;
             case BOX_TV: return bmpTv;
             case BOX_WATER: return bmpWater;
@@ -549,6 +578,8 @@ public class GameView extends View {
         setFocusable(true);
         setFocusableInTouchMode(true);
         requestFocus();
+        requestFocusFromTouch();
+        post(() -> requestFocus());
     }
 
     // For debugging
@@ -571,6 +602,9 @@ public class GameView extends View {
             case KeyEvent.KEYCODE_DPAD_RIGHT:
             case KeyEvent.KEYCODE_D:
                 moveWater(0, 1);
+                return true;
+            case KeyEvent.KEYCODE_SPACE:
+                runCatsAway();
                 return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -655,6 +689,14 @@ public class GameView extends View {
             movedCells.add(new long[]{cellKey(nr, nc), dr, dc});
         }
 
+        // Set cat image to idle for this player move (will revert after animations)
+        catAwake = true;
+        invalidate();
+
+        // Possibly move cats after player's move (every 2 player moves)
+        java.util.List<long[]> catMoves = maybeMoveCats();
+        for (long[] mc : catMoves) movedCells.add(mc);
+
         if (pushed && soundPool != null) soundPool.play(moveSoundId, soundVolume * 0.5f, soundVolume * 0.5f, 1, 0, 1f);
 
         // Setup slide offsets (start from -1 tile in move direction, animate to 0)
@@ -678,11 +720,14 @@ public class GameView extends View {
             }
             invalidate();
         });
+        final boolean catsMoved = catMoves.size() > 0;
         anim.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
                 slideOffsets.clear();
                 sliding = false;
+                // After animation, set cat image based on move parity: awake if odd, sleep if even
+                catAwake = (moveCount % 2 == 1);
                 invalidate();
                 checkWin();
             }
@@ -886,6 +931,153 @@ public class GameView extends View {
         return false;
     }
 
+    // Move cats: every 2 player moves, each cat randomly moves 1 step (if possible).
+    private java.util.List<long[]> maybeMoveCats() {
+        java.util.List<long[]> res = new java.util.ArrayList<>();
+        if (ground == null || objects == null) return res;
+        // Only move cats on every 2nd player move
+        if (moveCount % 2 != 0) return res;
+        java.util.Random rnd = new java.util.Random();
+        int rows = ground.length, cols = ground[0].length;
+        java.util.List<int[]> moves = new java.util.ArrayList<>();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (objects[r][c] == CAT) {
+                    java.util.List<int[]> opts = new java.util.ArrayList<>();
+                    int[][] dirs = new int[][]{{-1,0},{1,0},{0,-1},{0,1}};
+                    for (int[] d : dirs) {
+                        int tr = r + d[0], tc = c + d[1];
+                        if (!inBounds(tr, tc)) continue;
+                        if (ground[tr][tc] == WALL) continue;
+                        if (objects[tr][tc] != NONE) continue;
+                        opts.add(new int[]{tr, tc, d[0], d[1]});
+                    }
+                    if (!opts.isEmpty()) {
+                        int[] pick = opts.get(rnd.nextInt(opts.size()));
+                        moves.add(new int[]{r, c, pick[0], pick[1], pick[2], pick[3]});
+                    }
+                }
+            }
+        }
+        for (int[] m : moves) {
+            int sr = m[0], sc = m[1], tr = m[2], tc = m[3], dr = m[4], dc = m[5];
+            if (objects[tr][tc] == NONE) {
+                objects[tr][tc] = CAT;
+                objects[sr][sc] = NONE;
+                res.add(new long[]{cellKey(tr, tc), dr, dc});
+            }
+        }
+        return res;
+    }
+
+    // When space pressed: nearest cat(s) around player run away along a straight line to the farthest reachable empty cell.
+    private void runCatsAway() {
+        if (sliding) return;
+        if (ground == null || objects == null) return;
+
+        // show awake image while cats are about to run
+        catAwake = true;
+        invalidate();
+
+        // find nearest distance
+        int rows = ground.length, cols = ground[0].length;
+        int bestDist = Integer.MAX_VALUE;
+        java.util.List<int[]> candidates = new java.util.ArrayList<>();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (objects[r][c] == CAT) {
+                    int dist = Math.abs(r - playerRow) + Math.abs(c - playerCol);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        candidates.clear();
+                        candidates.add(new int[]{r, c});
+                    } else if (dist == bestDist) {
+                        candidates.add(new int[]{r, c});
+                    }
+                }
+            }
+        }
+        if (candidates.isEmpty()) return;
+
+        java.util.List<long[]> movedCats = new java.util.ArrayList<>();
+
+        for (int[] cat : candidates) {
+            int sr = cat[0], sc = cat[1];
+            int dR = sr - playerRow;
+            int dC = sc - playerCol;
+            int dr = 0, dc = 0;
+            if (Math.abs(dR) >= Math.abs(dC)) {
+                dr = Integer.signum(dR);
+                if (dr == 0) dc = Integer.signum(dC == 0 ? 1 : dC);
+            } else {
+                dc = Integer.signum(dC);
+            }
+            if (dr == 0 && dc == 0) {
+                // fallback: choose up
+                dr = -1;
+            }
+
+            // Step along direction until blocked; record farthest valid cell
+            int tr = sr, tc = sc;
+            int lastR = sr, lastC = sc;
+            while (true) {
+                int nr = tr + dr, nc = tc + dc;
+                if (!inBounds(nr, nc) || ground[nr][nc] == WALL) break;
+                if (objects[nr][nc] != NONE) break; // blocked by object (player/box/cat)
+                lastR = nr; lastC = nc;
+                tr = nr; tc = nc;
+            }
+            // If cannot move at least one cell, skip
+            if (lastR == sr && lastC == sc) continue;
+
+            // Move cat
+            objects[lastR][lastC] = CAT;
+            objects[sr][sc] = NONE;
+            int stepsR = lastR - sr;
+            int stepsC = lastC - sc;
+            // For animation, provide total dr,dc distance
+            movedCats.add(new long[]{cellKey(lastR, lastC), stepsR, stepsC});
+            //Log.d(KEYCODE, "Cat ran from (" + sr + "," + sc + ") to (" + lastR + "," + lastC + ")");
+        }
+
+        if (movedCats.isEmpty()) {
+            invalidate();
+            return;
+        }
+
+        slideOffsets.clear();
+        for (long[] mc : movedCats) {
+            slideOffsets.put(mc[0], new float[]{-mc[2] * tileSize, -mc[1] * tileSize});
+        }
+        sliding = true;
+        invalidate();
+
+        ValueAnimator anim = ValueAnimator.ofFloat(1f, 0f);
+        anim.setDuration(SLIDE_DURATION);
+        anim.addUpdateListener(a -> {
+            float f = (float) a.getAnimatedValue();
+            for (long[] mc : movedCats) {
+                float[] off = slideOffsets.get(mc[0]);
+                if (off != null) {
+                    off[0] = -mc[2] * tileSize * f;
+                    off[1] = -mc[1] * tileSize * f;
+                }
+            }
+            invalidate();
+        });
+        anim.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                slideOffsets.clear();
+                sliding = false;
+                // restore cat image based on player move parity
+                catAwake = (moveCount % 2 == 1);
+                invalidate();
+            }
+        });
+        anim.start();
+    }
+
     /**
      * Start listening to gravity sensor and repeatedly call moveWater() while tilt is held.
      * Uses Sensor.TYPE_GRAVITY (falls back to ACCELEROMETER).
@@ -970,6 +1162,79 @@ public class GameView extends View {
         Log.d(GYRO,"stopGyroControl called");
     }
 
+    private void startMicMonitoring() {
+        if (micMonitoring) return;
+        Context ctx = getContext();
+        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            if (ctx instanceof Activity) {
+                ActivityCompat.requestPermissions((Activity) ctx, new String[]{Manifest.permission.RECORD_AUDIO}, MIC_REQUEST_CODE);
+            }
+            Log.d(MIC, "Microphone permission not granted; skipping mic monitoring");
+            return;
+        }
+
+        final int sampleRate = 8000;
+        final int bufSize = Math.max(AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT), sampleRate);
+        try {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT, bufSize);
+            audioRecord.startRecording();
+        } catch (Exception e) {
+            Log.d(MIC, "Failed to start AudioRecord: " + e.getMessage());
+            return;
+        }
+
+        micMonitoring = true;
+        micThread = new Thread(() -> {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+            short[] buffer = new short[bufSize];
+            while (micMonitoring && audioRecord != null) {
+                int read = audioRecord.read(buffer, 0, buffer.length);
+                if (read > 0) {
+                    double sum = 0;
+                    for (int i = 0; i < read; i++) {
+                        sum += buffer[i] * (double) buffer[i];
+                    }
+                    double rms = Math.sqrt(sum / read);
+                    double amp = rms / 32768.0;
+                    double db = amp > 0 ? 20.0 * Math.log10(amp) + 90.0 : 0.0; // offset so ambient values are > 0
+                    if (db >= micThresholdDb) {
+                        long now = System.currentTimeMillis();
+                        if (now - micLastTriggerMs > MIC_COOLDOWN_MS) {
+                            micLastTriggerMs = now;
+                            Log.d(MIC, "Mic loud detected: " + db + " dB, triggering cats");
+                            post(() -> runCatsAway());
+                        }
+                    }
+                }
+                try { Thread.sleep(150); } catch (InterruptedException ignored) {}
+            }
+        }, "MicMonitor");
+        micThread.start();
+    }
+
+    private void stopMicMonitoring() {
+        micMonitoring = false;
+        if (micThread != null) {
+            try { micThread.join(200); } catch (InterruptedException ignored) {}
+            micThread = null;
+        }
+        if (audioRecord != null) {
+            try { audioRecord.stop(); } catch (Exception ignored) {}
+            try { audioRecord.release(); } catch (Exception ignored) {}
+            audioRecord = null;
+        }
+    }
+
+    // Called by hosting Activity when permission result is available
+    public void onMicPermissionResult(boolean granted) {
+        if (granted) {
+            startMicMonitoring();
+        } else {
+            Log.d(MIC, "Microphone permission denied by user");
+        }
+    }
+
     // Start brokepipe spawner: every brokepipeIntervalMs try to create water at each BROKE_PIPE cell
     public void startBrokePipeSpawner() {
         if (brokepipeActive) return;
@@ -992,6 +1257,7 @@ public class GameView extends View {
                         // Only create water if cell not blocked: no object and no existing water
                         if (objects[r][c] == NONE && underObjects[r][c] != BOX_WATER) {
                             underObjects[r][c] = BOX_WATER;
+                            updateGyroState();
                             newWaterCells.add(new long[]{cellKey(r, c), 0, 0});
                         }
                     }
@@ -1014,6 +1280,7 @@ public class GameView extends View {
         if (brokepipeHandler != null && brokepipeRunnable != null) brokepipeHandler.removeCallbacks(brokepipeRunnable);
         brokepipeRunnable = null;
         brokepipeHandler = null;
+        stopMicMonitoring();
     }
 
     // Start or stop gyro depending on whether any water exists
