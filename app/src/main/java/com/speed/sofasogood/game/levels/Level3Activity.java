@@ -15,6 +15,7 @@ public class Level3Activity extends BaseLevelActivity {
     }
     @Override protected int getBackgroundResId() { return R.drawable.level3_background; }
     @Override protected int getLevelNumber() { return 3; }
+    @Override protected int getHintResId() { return R.drawable.level3_hint; }
     @Override protected int[] getVoiceResIds() {
         return new int[]{ R.raw.l3_d1, R.raw.l3_d2, R.raw.l3_d3, R.raw.l3_d4, R.raw.l3_d5 };
     }

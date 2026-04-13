@@ -15,6 +15,7 @@ public class Level8Activity extends BaseLevelActivity {
     }
     @Override protected int getBackgroundResId() { return R.drawable.level8_background; }
     @Override protected int getLevelNumber() { return 8; }
+    @Override protected int getHintResId() { return R.drawable.level8_hint; }
     @Override
     protected LevelScoreConfig getScoreConfig() {
         return new LevelScoreConfig(
