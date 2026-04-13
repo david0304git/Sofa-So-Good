@@ -27,6 +27,7 @@ public class ExtraLevelData {
     };
 
     public static final int[][] EXTRA_LEVEL_2 = {
+            { 1,  1,  1,  1,  1,  1,  1,  1},
             { 1,  0,  0,  0,  0,  1,  0,  1},
             { 1,  0,  2, 15, 16,  0,  0,  1},
             { 1,  0,  1,  0,  5,  1,  0,  1},
@@ -38,6 +39,7 @@ public class ExtraLevelData {
 
     // L3 Washroom — wall obstacle, all items solvable
     public static final int[][] EXTRA_LEVEL_3 = {
+            { 1,  1,  1,  1,  1,  1,  1,  1},
             { 1,  0,  2,  0,  0,  1,  0,  1},
             { 1,  0, 10,  0,  0,  0,  1,  1},
             { 1,  1,  0, 15, 16,  0,  1,  1},
@@ -48,6 +50,7 @@ public class ExtraLevelData {
 
     // L4 Bedroom — two single items + sofa, tighter space
     public static final int[][] EXTRA_LEVEL_4 = {
+            { 1,  1,  1,  1,  1,  1,  1,  1},
             { 1,  0,  0,  0,  0,  1, 20,  1},
             { 1,  0,  0,  1, 12,  0,  0,  1},
             { 1,  0,  0,  4,  2,  1,  0,  1},
