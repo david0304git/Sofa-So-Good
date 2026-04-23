@@ -25,7 +25,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -37,6 +39,9 @@ import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
 import com.speed.sofasogood.game.levels.extra.BathModeExtraLevel1Activity;
 import com.speed.sofasogood.game.levels.extra.BathModeExtraLevel2Activity;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class BathroomSelectActivity extends AppCompatActivity {
 
@@ -86,15 +91,48 @@ public class BathroomSelectActivity extends AppCompatActivity {
         float strokePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics());
         int marginPx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
 
+        Set<String> completedLevels = new HashSet<>(getSharedPreferences("game_progress", MODE_PRIVATE)
+                .getStringSet("completed_levels", new HashSet<>()));
+
         GridLayout grid = findViewById(R.id.levelGrid);
         for (int idx = 0; idx < Math.min(TOTAL_LEVELS, levels.length); idx++) {
             LevelInfo info = levels[idx];
+            FrameLayout wrapper = new FrameLayout(this);
+            wrapper.setClipChildren(false);
+            wrapper.setClipToPadding(false);
+
             OutlinedTextButton btn = new OutlinedTextButton(this, null);
             btn.setText(String.valueOf(info.number));
             btn.setTextColor(0xFFFFFFFF);
             btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
             btn.setTypeface(btn.getTypeface(), Typeface.BOLD);
             btn.setGravity(Gravity.CENTER);
+            btn.setLayoutParams(new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+            setupButtonAnimation(btn);
+            final int idx2 = idx;
+            btn.setOnClickListener(v -> {
+                Intent intent = new Intent(this, info.activityClass);
+                if (idx2 + 1 < levels.length) {
+                    intent.putExtra("nextLevel", levels[idx2 + 1].activityClass.getName());
+                }
+                startActivity(intent);
+            });
+            setLevelBackground(btn, info.backgroundRes, radiusPx, strokePx);
+            wrapper.addView(btn);
+
+            if (completedLevels.contains(String.valueOf(info.levelNumber))) {
+                ImageView tick = new ImageView(this);
+                int tickSize = Math.round(TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 36, getResources().getDisplayMetrics()));
+                FrameLayout.LayoutParams tickParams = new FrameLayout.LayoutParams(tickSize, tickSize);
+                tickParams.gravity = Gravity.TOP | Gravity.END;
+                tick.setLayoutParams(tickParams);
+                tick.setImageResource(R.drawable.ic_level_complete);
+                tick.setElevation(10f);
+                wrapper.addView(tick);
+            }
 
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(
                     GridLayout.spec(idx / GRID_COLUMNS, 1f),
@@ -104,20 +142,8 @@ public class BathroomSelectActivity extends AppCompatActivity {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             params.setMargins(marginPx, marginPx, marginPx, marginPx);
             params.setGravity(Gravity.FILL_HORIZONTAL);
-            btn.setLayoutParams(params);
-
-            setupButtonAnimation(btn);
-            final int idx2 = idx;
-            btn.setOnClickListener(v -> {
-                Intent intent = new Intent(this, info.activityClass);
-                // Pass next level class if not the last level
-                if (idx2 + 1 < levels.length) {
-                    intent.putExtra("nextLevel", levels[idx2 + 1].activityClass.getName());
-                }
-                startActivity(intent);
-            });
-            setLevelBackground(btn, info.backgroundRes, radiusPx, strokePx);
-            grid.addView(btn);
+            wrapper.setLayoutParams(params);
+            grid.addView(wrapper);
         }
 
         // Resize tiles to 2:3 ratio after layout
@@ -129,14 +155,15 @@ public class BathroomSelectActivity extends AppCompatActivity {
                 int firstW = 0;
                 for (int i = 0; i < grid.getChildCount(); i++) {
                     View child = grid.getChildAt(i);
-                    if (child.getWidth() > 0) { firstW = child.getWidth(); break; }
+                    if (child instanceof FrameLayout && child.getWidth() > 0) { firstW = child.getWidth(); break; }
                 }
                 if (firstW <= 0) return;
                 int targetH = Math.round(firstW * 2f / 3f);
                 for (int i = 0; i < grid.getChildCount(); i++) {
-                    ViewGroup.LayoutParams p = grid.getChildAt(i).getLayoutParams();
-                    p.height = targetH;
-                    grid.getChildAt(i).setLayoutParams(p);
+                    View child = grid.getChildAt(i);
+                    ViewGroup.LayoutParams p = child.getLayoutParams();
+                    p.height = child instanceof FrameLayout ? targetH : 0;
+                    child.setLayoutParams(p);
                 }
             }
         });
@@ -234,12 +261,15 @@ public class BathroomSelectActivity extends AppCompatActivity {
     private static final class LevelInfo {
         final int number;
         final int backgroundRes;
+        final int levelNumber;
         final Class<?> activityClass;
 
         LevelInfo(int number, int backgroundRes, Class<?> activityClass) {
             this.number = number;
             this.backgroundRes = backgroundRes;
             this.activityClass = activityClass;
+            // Bath extra levels use 101-104
+            this.levelNumber = 100 + number;
         }
     }
 }

@@ -287,7 +287,6 @@ public class LevelSelectActivity extends AppCompatActivity {
             tickParams.gravity = Gravity.TOP | Gravity.END;
             tick.setLayoutParams(tickParams);
             tick.setImageResource(R.drawable.ic_level_complete);
-            tick.setBackgroundColor(0xFFFF0000); // DEBUG: red bg to confirm visibility
             tick.setElevation(10f);
             wrapper.addView(tick);
             Log.d("GameProgress", "[SELECT] TICK ADDED for level " + levelInfo.number
