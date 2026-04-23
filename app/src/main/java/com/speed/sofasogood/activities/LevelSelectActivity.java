@@ -24,7 +24,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -39,8 +41,12 @@ import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
 
+import android.util.Log;
+
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class LevelSelectActivity extends AppCompatActivity {
 
@@ -63,6 +69,7 @@ public class LevelSelectActivity extends AppCompatActivity {
     private int pageCount;
 
     private final Map<String, Drawable.ConstantState> backgroundCache = new HashMap<>();
+    private Set<String> completedLevels;
 
     private final LevelInfo[] levels = new LevelInfo[] {
             new LevelInfo(1, R.drawable.level1_background, com.speed.sofasogood.game.levels.Level1Activity.class),
@@ -87,11 +94,30 @@ public class LevelSelectActivity extends AppCompatActivity {
         ImmersiveHelper.enable(getWindow());
         new UserInfoHelper().setup(this);
 
+        completedLevels = new HashSet<>(getSharedPreferences("game_progress", MODE_PRIVATE)
+                .getStringSet("completed_levels", new HashSet<>()));
+        Log.d("GameProgress", "[SELECT] onCreate completedLevels=" + completedLevels);
+
         initSound();
         initDimensions();
         initViews();
         buildLevelPages();
         bindStaticButtons();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Set<String> latest = new HashSet<>(getSharedPreferences("game_progress", MODE_PRIVATE)
+                .getStringSet("completed_levels", new HashSet<>()));
+        Log.d("GameProgress", "[SELECT] onResume latest=" + latest + ", current=" + completedLevels + ", equal=" + latest.equals(completedLevels));
+        if (!latest.equals(completedLevels)) {
+            completedLevels = latest;
+            buildLevelPages();
+            Log.d("GameProgress", "[SELECT] Rebuilt pages with: " + completedLevels);
+        } else {
+            Log.d("GameProgress", "[SELECT] onResume NO change, skipping rebuild");
+        }
     }
 
     private void initSound() {
@@ -226,6 +252,15 @@ public class LevelSelectActivity extends AppCompatActivity {
     }
 
     private View createLevelButton(LevelInfo levelInfo, int slotIndex) {
+        boolean isCompleted = completedLevels.contains(String.valueOf(levelInfo.number));
+        Log.d("GameProgress", "[SELECT] createLevelButton level=" + levelInfo.number
+                + ", isCompleted=" + isCompleted
+                + ", completedLevels=" + completedLevels);
+
+        FrameLayout wrapper = new FrameLayout(this);
+        wrapper.setClipChildren(false);
+        wrapper.setClipToPadding(false);
+
         OutlinedTextButton button = new OutlinedTextButton(this, null);
         button.setId(View.generateViewId());
         button.setText(String.valueOf(levelInfo.number));
@@ -234,6 +269,30 @@ public class LevelSelectActivity extends AppCompatActivity {
         button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
         button.setGravity(Gravity.CENTER);
         button.setAllCaps(false);
+        button.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        setupButtonAnimation(button);
+        button.setOnClickListener(v ->
+                startActivity(new Intent(this, levelInfo.activityClass)));
+        setLevelBackground(button, levelInfo.backgroundRes, radiusPx, strokePx);
+
+        wrapper.addView(button);
+
+        if (isCompleted) {
+            ImageView tick = new ImageView(this);
+            int tickSize = Math.round(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 36, getResources().getDisplayMetrics()));
+            FrameLayout.LayoutParams tickParams = new FrameLayout.LayoutParams(tickSize, tickSize);
+            tickParams.gravity = Gravity.TOP | Gravity.END;
+            tick.setLayoutParams(tickParams);
+            tick.setImageResource(R.drawable.ic_level_complete);
+            tick.setBackgroundColor(0xFFFF0000); // DEBUG: red bg to confirm visibility
+            tick.setElevation(10f);
+            wrapper.addView(tick);
+            Log.d("GameProgress", "[SELECT] TICK ADDED for level " + levelInfo.number
+                    + ", tickSize=" + tickSize + ", wrapperChildCount=" + wrapper.getChildCount());
+        }
 
         GridLayout.LayoutParams params = new GridLayout.LayoutParams(
                 GridLayout.spec(slotIndex / GRID_COLUMNS, 1f),
@@ -243,14 +302,9 @@ public class LevelSelectActivity extends AppCompatActivity {
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         params.setMargins(tileMarginPx, tileMarginPx, tileMarginPx, tileMarginPx);
         params.setGravity(Gravity.FILL_HORIZONTAL);
-        button.setLayoutParams(params);
+        wrapper.setLayoutParams(params);
 
-        setupButtonAnimation(button);
-        button.setOnClickListener(v ->
-                startActivity(new Intent(this, levelInfo.activityClass)));
-        setLevelBackground(button, levelInfo.backgroundRes, radiusPx, strokePx);
-
-        return button;
+        return wrapper;
     }
 
     private void fillRemainingSlots(GridLayout grid, int usedSlots) {
@@ -285,7 +339,7 @@ public class LevelSelectActivity extends AppCompatActivity {
                 int firstMeasuredWidth = 0;
                 for (int i = 0; i < grid.getChildCount(); i++) {
                     View child = grid.getChildAt(i);
-                    if (child instanceof OutlinedTextButton && child.getWidth() > 0) {
+                    if (child instanceof FrameLayout && child.getWidth() > 0) {
                         firstMeasuredWidth = child.getWidth();
                         break;
                     }
@@ -303,7 +357,7 @@ public class LevelSelectActivity extends AppCompatActivity {
                     if (params == null) {
                         continue;
                     }
-                    params.height = child instanceof OutlinedTextButton ? targetHeight : 0;
+                    params.height = child instanceof FrameLayout ? targetHeight : 0;
                     child.setLayoutParams(params);
                 }
             }

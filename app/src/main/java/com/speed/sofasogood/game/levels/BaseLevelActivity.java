@@ -22,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.speed.sofasogood.game.LevelScoreConfig;
 import com.speed.sofasogood.services.BgmService;
@@ -254,6 +257,19 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             int score = LevelTimeScore.calculateScore(finishMs, steps, config);
             int stars = LevelTimeScore.calculateStars(finishMs, steps, config);
             resetLevelTimerUi();
+
+            // Mark level as completed
+            SharedPreferences progressPrefs = getSharedPreferences("game_progress", MODE_PRIVATE);
+            Set<String> before = progressPrefs.getStringSet("completed_levels", new HashSet<>());
+            Log.d("GameProgress", "[SAVE] BEFORE write, prefs has: " + before);
+            Set<String> completed = new HashSet<>(before);
+            completed.add(String.valueOf(getLevelNumber()));
+            boolean saved = progressPrefs.edit().putStringSet("completed_levels", completed).commit();
+            Log.d("GameProgress", "[SAVE] level=" + getLevelNumber() + ", commit=" + saved + ", set=" + completed);
+            // Verify immediately after write
+            Set<String> verify = getSharedPreferences("game_progress", MODE_PRIVATE)
+                    .getStringSet("completed_levels", new HashSet<>());
+            Log.d("GameProgress", "[SAVE] VERIFY re-read: " + verify);
 
             Intent result = new Intent(this, LevelResultActivity.class);
 
