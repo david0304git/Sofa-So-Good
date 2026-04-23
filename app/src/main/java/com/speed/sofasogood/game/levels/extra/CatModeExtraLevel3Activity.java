@@ -17,6 +17,11 @@ public class CatModeExtraLevel3Activity extends BaseLevelActivity {
     }
 
     @Override
+    protected boolean shouldSkipDialog() {
+        return true;
+    }
+
+    @Override
     protected int[] getExpressions() {
         return new int[]{ R.drawable.character_happy, R.drawable.character_scared2, R.drawable.character_scared, R.drawable.character_angry, R.drawable.character_angry };
     }
