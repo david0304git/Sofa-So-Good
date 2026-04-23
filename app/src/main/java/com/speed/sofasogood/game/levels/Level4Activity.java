@@ -1,6 +1,7 @@
 package com.speed.sofasogood.game.levels;
 
 import com.speed.sofasogood.R;
+import com.speed.sofasogood.game.LevelScoreConfig;
 import com.speed.sofasogood.game.model.LevelData;
 
 public class Level4Activity extends BaseLevelActivity {
@@ -14,4 +15,22 @@ public class Level4Activity extends BaseLevelActivity {
     }
     @Override protected int getBackgroundResId() { return R.drawable.level4_background; }
     @Override protected int getLevelNumber() { return 4; }
+    @Override protected int getHintResId() { return R.drawable.level4_hint; }
+    @Override
+    protected LevelScoreConfig getScoreConfig() {
+        return new LevelScoreConfig(
+                12_000,   // bestTimeMs
+                90_000,   // worstTimeMs
+                10,       // bestSteps
+                40,       // worstSteps
+
+                20_000,   // star3TimeMs
+                35_000,   // star2TimeMs
+                60_000,   // star1TimeMs
+
+                12,       // star3Steps
+                18,       // star2Steps
+                28        // star1Steps
+        );
+    }
 }

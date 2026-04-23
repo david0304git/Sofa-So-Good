@@ -7,13 +7,18 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface LeaderboardApi {
+
     @GET("leaderboard/top")
     Call<LeaderboardResponse> getTopScores(@Query("level") int level);
 
     @POST("leaderboard/submit")
-    Call<ResponseBody> submitScore(@Body LeaderboardSubmitRequest body);
+    Call<ResponseBody> submitScore(
+            @Header("Authorization") String authorization,
+            @Body LeaderboardSubmitRequest body
+    );
 }

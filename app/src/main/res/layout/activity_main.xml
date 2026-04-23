@@ -9,6 +9,16 @@
     android:background="@drawable/menu_background"
     tools:context=".activities.MainActivity">
 
+    <!-- 用戶資訊按鈕 -->
+    <include
+        layout="@layout/include_user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <ImageView
         android:id="@+id/gameTitle"
         android:layout_width="0dp"

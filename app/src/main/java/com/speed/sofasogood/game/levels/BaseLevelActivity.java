@@ -2,6 +2,7 @@ package com.speed.sofasogood.game.levels;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -20,13 +22,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.speed.sofasogood.game.LevelScoreConfig;
 import com.speed.sofasogood.services.BgmService;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.game.GameView;
+import android.view.KeyEvent;
 import com.speed.sofasogood.game.LevelResultActivity;
 import com.speed.sofasogood.game.LevelTimeScore;
 import com.speed.sofasogood.utils.ImmersiveHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
+
+import java.util.HashMap;
 
 public abstract class BaseLevelActivity extends AppCompatActivity {
 
@@ -52,14 +59,43 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     private int pauseDepth;
     private long pauseSegmentStart;
 
+    private GameView gameView;
+
     protected abstract int[][] getLevelData();
     protected abstract int[] getDialogResIds();
     protected abstract int[] getExpressions();
     protected abstract String getNextLevelClass();
     protected abstract int getLevelNumber();
+    protected abstract LevelScoreConfig getScoreConfig();
 
     protected int getBackgroundResId() {
         return R.drawable.level1_background;
+    }
+
+    /** Override and return true to skip dialog and start the game directly. */
+    protected boolean shouldSkipDialog() {
+        return false;
+    }
+    // For debugging
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (dialogFinished && gameView != null && gameView.getVisibility() == View.VISIBLE) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                boolean handled = gameView.onKeyDown(event.getKeyCode(), event);
+                if (handled) return true;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    /** Override to provide a hint image resource ID. Return 0 for no hint. */
+    protected int getHintResId() {
+        return 0;
+    }
+
+    /** Override to provide per-dialog background changes. Return null to keep default. */
+    protected int[] getDialogBackgrounds() {
+        return null;
     }
 
     /** Override to provide voice-over resource IDs for each dialog line. Return null if no voice. */
@@ -76,7 +112,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.level1);
+        setContentView(R.layout.level);
         findViewById(R.id.level1Root).setBackgroundResource(getBackgroundResId());
         ImmersiveHelper.enable(getWindow());
 
@@ -117,13 +153,32 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         for (int i = 0; i < dialogResIds.length; i++) dialogs[i] = getString(dialogResIds[i]);
         int[] expressions = getExpressions();
         int[] voiceResIds = getVoiceResIds();
-
-        typeText(dialogBox, dialogs[dialogIndex]);
-        dialogCharacter.setImageResource(expressions[dialogIndex]);
-        playVoice(voiceResIds, dialogIndex);
+        int[] dialogBgs = getDialogBackgrounds();
+        View rootView = findViewById(R.id.level1Root);
 
         View countdownOverlay = findViewById(R.id.countdownOverlay);
         com.speed.sofasogood.views.OutlinedTextView countdownText = findViewById(R.id.countdownText);
+
+        // Hint
+        View btnHint = findViewById(R.id.btnHint);
+        View hintOverlay = findViewById(R.id.hintOverlay);
+        ImageView hintImage = findViewById(R.id.hintImage);
+        View btnCloseHint = findViewById(R.id.btnCloseHint);
+        int hintResId = getHintResId();
+        if (hintResId != 0) {
+            hintImage.setImageResource(hintResId);
+        }
+        setupButtonAnimation(btnHint);
+        btnHint.setOnClickListener(v -> {
+            if (hintResId != 0) {
+                hintOverlay.setVisibility(View.VISIBLE);
+            }
+        });
+        setupButtonAnimation(btnCloseHint);
+        btnCloseHint.setOnClickListener(v -> hintOverlay.setVisibility(View.GONE));
+
+        // keep reference for forwarding key events
+        this.gameView = gameView;
 
         // 跳過對話按鈕
         View btnSkip = findViewById(R.id.btnSkip);
@@ -139,8 +194,23 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             v.setVisibility(View.GONE);
             gameView.setVisibility(View.VISIBLE);
             gameView.loadLevel(getLevelData());
-            showCountdownOverlay(countdownOverlay, countdownText, gameView);
+            showCountdownOverlay(countdownOverlay, countdownText, gameView, btnHint, hintResId);
         });
+
+        // Skip dialog entirely if subclass requests it
+        if (shouldSkipDialog()) {
+            dialogFinished = true;
+            dialogBox.setVisibility(View.GONE);
+            dialogCharacter.setVisibility(View.GONE);
+            btnSkip.setVisibility(View.GONE);
+            gameView.setVisibility(View.VISIBLE);
+            gameView.loadLevel(getLevelData());
+            showCountdownOverlay(countdownOverlay, countdownText, gameView, btnHint, hintResId);
+        } else {
+            typeText(dialogBox, dialogs[dialogIndex]);
+            dialogCharacter.setImageResource(expressions[dialogIndex]);
+            playVoice(voiceResIds, dialogIndex);
+        }
 
         findViewById(R.id.level1Root).setOnClickListener(v -> {
             if (dialogFinished) return;
@@ -156,6 +226,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 typeText(dialogBox, dialogs[dialogIndex]);
                 dialogCharacter.setImageResource(expressions[dialogIndex]);
                 playVoice(voiceResIds, dialogIndex);
+                if (dialogBgs != null && dialogIndex < dialogBgs.length && dialogBgs[dialogIndex] != 0) {
+                    rootView.setBackgroundResource(dialogBgs[dialogIndex]);
+                }
             } else {
                 dialogFinished = true;
                 dialogBox.setVisibility(View.GONE);
@@ -164,19 +237,33 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 btnSkip.setVisibility(View.GONE);
                 gameView.setVisibility(View.VISIBLE);
                 gameView.loadLevel(getLevelData());
-                showCountdownOverlay(countdownOverlay, countdownText, gameView);
+                showCountdownOverlay(countdownOverlay, countdownText, gameView, btnHint, hintResId);
             }
         });
+
+        FirebaseFirestore.getInstance()
+                .collection("test")
+                .add(new HashMap<>())
+                .addOnSuccessListener(doc -> Log.d("TEST", "WRITE OK"))
+                .addOnFailureListener(e -> Log.e("TEST", "WRITE FAIL", e));
 
         gameView.setOnLevelCompleteListener(() -> {
             long finishMs = elapsedPlayMs();
             int steps = gameView.getMoveCount();
-            int score = LevelTimeScore.scoreFromElapsedMs(finishMs, steps);
+            LevelScoreConfig config = getScoreConfig();
+            int score = LevelTimeScore.calculateScore(finishMs, steps, config);
+            int stars = LevelTimeScore.calculateStars(finishMs, steps, config);
             resetLevelTimerUi();
 
             Intent result = new Intent(this, LevelResultActivity.class);
 
+            result.putExtra("stars", stars);
+
             String next = getNextLevelClass();
+            // Also check intent extra for next level (used by bathroom mode etc.)
+            if (next == null && getIntent() != null) {
+                next = getIntent().getStringExtra("nextLevel");
+            }
             if (next != null) {
                 result.putExtra("nextLevel", next);
             }
@@ -222,7 +309,10 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
             dialogBox.setText(dialogs[0]);
             dialogCharacter.setImageResource(expressions[0]);
             playVoice(voiceResIds, 0);
+            rootView.setBackgroundResource(getBackgroundResId());
             btnSkip.setVisibility(View.VISIBLE);
+            btnHint.setVisibility(View.GONE);
+            hintOverlay.setVisibility(View.GONE);
             countdownOverlay.setVisibility(View.GONE);
             mainHandler.removeCallbacksAndMessages(null);
         });
@@ -256,7 +346,7 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         return now - gameStartElapsed - pausedTotalMs - midPause;
     }
 
-    private void showCountdownOverlay(View overlay, com.speed.sofasogood.views.OutlinedTextView text, GameView gameView) {
+    private void showCountdownOverlay(View overlay, com.speed.sofasogood.views.OutlinedTextView text, GameView gameView, View btnHint, int hintResId) {
         overlay.setVisibility(View.VISIBLE);
         text.setText("3");
         text.setTextSize(72);
@@ -264,7 +354,6 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
         mainHandler.postDelayed(() -> text.setText("2"), 1000);
         mainHandler.postDelayed(() -> text.setText("1"), 2000);
 
-        // Wait for drop animation to finish, then show "Start!" and begin
         gameView.setOnDropCompleteListener(() -> {
             text.setText("Start!");
             text.setTextSize(52);
@@ -272,6 +361,9 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
                 overlay.setVisibility(View.GONE);
                 text.setTextSize(72);
                 startLevelTimer();
+                if (hintResId != 0) {
+                    btnHint.setVisibility(View.VISIBLE);
+                }
                 if (levelBgm != null && !levelBgm.isPlaying()) levelBgm.start();
             }, 800);
         });
@@ -323,6 +415,15 @@ public abstract class BaseLevelActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (dialogFinished) popPause();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == GameView.MIC_REQUEST_CODE) {
+            boolean granted = grantResults != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            if (gameView != null) gameView.onMicPermissionResult(granted);
+        }
     }
 
     private static final long TYPE_DELAY = 40; // ms per character

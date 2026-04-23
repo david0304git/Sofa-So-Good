@@ -12,8 +12,26 @@
     <string name="label_volume">背景音樂</string>
     <string name="label_sound_volume">操作音效</string>
     <string name="label_language">語言</string>
+    <string name="btn_login">登入</string>
     <string name="btn_logout">登出</string>
     <string name="btn_back">返回</string>
+
+    <!-- login -->
+    <string name="password">密碼</string>
+    <string name="email">電郵</string>
+    <string name="forgot_password">忘記密碼</string>
+    <string name="create_account">註冊新賬户</string>
+
+    <!-- Register -->
+    <string name="username">顯示名稱</string>
+    <string name="confirm_password">確認密碼</string>
+    <string name="register">註冊</string>
+
+    <!-- Forgot Password Page -->
+    <string name="reset_password_title">重設密碼</string>
+    <string name="reset_password_instruction">請輸入您的註冊電郵地址。</string>
+    <string name="btn_send_reset_email">傳送重設郵件</string>
+    <string name="reset_email_sent">重設密碼郵件已傳送到您的註冊電郵地址。</string>
 
     <!-- Navigation -->
     <string name="back">上一頁</string>
@@ -119,4 +137,11 @@
     <string name="l8_d3">家具的位置或許能觸發機關。</string>
     <string name="l8_d4">有點害怕…</string>
     <string name="l8_d5">家具有點重，要慢慢推。</string>
+
+    <!-- Bathroom Mode Level 1 -->
+    <string name="e1l1_d1">下一步就是整理浴室了，讓我看看….</string>
+    <string name="e1l1_d2">（水管爆裂）啊啊！發生什麼回事？</string>
+    <string name="e1l1_d3">哦不不不不。。。</string>
+    <string name="e1l1_d4">積水到處都是！房東可沒有跟我說這些！</string>
+    <string name="e1l1_d5">要把水撥去排水口才行。</string>
 </resources>

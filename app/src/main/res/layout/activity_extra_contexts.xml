@@ -2,171 +2,60 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/extraContexts"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/menu_background">
 
-    <!-- Panel -->
+    <include layout="@layout/include_user_info" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginTop="16dp" android:layout_marginEnd="16dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Panel (same size/position as level select) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/panel"
-        android:layout_width="367dp"
-        android:layout_height="904dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="366dp"
+        android:layout_height="586dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/ui_panel_extra"
-        android:padding="24dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.62"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintWidth_percent="0.84">
 
-        <!-- Title image (bottom layer, behind buttons) -->
+        <!-- Title image (same position as leaderboard in level select) -->
 
-        <!-- Buttons (on top of title) -->
+        <!-- Back (same position as level select back) -->
 
         <ImageView
             android:id="@+id/extraTitle"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="116dp"
+            android:layout_width="224dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="24dp"
             android:adjustViewBounds="true"
             android:clickable="false"
             android:focusable="false"
             android:scaleType="fitCenter"
             android:src="@drawable/ui_title_extra_eng"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Back (bottom of panel, independent layer) -->
-        <LinearLayout
-            android:id="@+id/buttonGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.492"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.515">
-
-            <!-- Camera Mode -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardCameraMode"
-                android:layout_width="250dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/btn_camera_mode" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/btn_border_only" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnCameraMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:text="@string/btn_camera_mode"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </androidx.cardview.widget.CardView>
-
-            <!-- Bathroom Mode -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardBathroomMode"
-                android:layout_width="250dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/btn_bathroom_mode" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/btn_border_only" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnBathroomMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:text="@string/btn_bathroom_mode"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </androidx.cardview.widget.CardView>
-
-            <!-- Cat Mode -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardCatMode"
-                android:layout_width="250dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/btn_cat_mode" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/btn_border_only" />
-
-                <com.speed.sofasogood.views.OutlinedTextButton
-                    android:id="@+id/btnCatMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:text="@string/btn_cat_mode"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
+        <!-- Buttons (between title and back) -->
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="188dp"
+            android:layout_width="144dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="40dp"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:elevation="2dp"
@@ -174,8 +63,162 @@
             android:src="@drawable/ic_btn_extra_eng"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/buttonGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@id/btnBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/extraTitle">
+
+            <!-- Camera Mode -->
+            <FrameLayout
+                android:id="@+id/frameCameraMode"
+                android:layout_width="260dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="12dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardCameraMode"
+                    android:layout_width="240dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/btn_camera_mode" />
+
+                    <com.speed.sofasogood.views.OutlinedTextButton
+                        android:id="@+id/btnCameraMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:text="@string/btn_camera_mode"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="260dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ui_btnframe_extra1" />
+
+            </FrameLayout>
+
+            <!-- Bathroom Mode -->
+            <FrameLayout
+                android:id="@+id/frameBathroomMode"
+                android:layout_width="260dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="12dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardBathroomMode"
+                    android:layout_width="240dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/btn_bathroom_mode" />
+
+                    <com.speed.sofasogood.views.OutlinedTextButton
+                        android:id="@+id/btnBathroomMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:text="@string/btn_bathroom_mode"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="260dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ui_btnframe_extra2" />
+
+            </FrameLayout>
+
+            <!-- Cat Mode -->
+            <FrameLayout
+                android:id="@+id/frameCatMode"
+                android:layout_width="260dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="12dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardCatMode"
+                    android:layout_width="240dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/btn_cat_mode" />
+
+                    <com.speed.sofasogood.views.OutlinedTextButton
+                        android:id="@+id/btnCatMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:gravity="center"
+                        android:text="@string/btn_cat_mode"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="260dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ui_btnframe_extra3" />
+
+            </FrameLayout>
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

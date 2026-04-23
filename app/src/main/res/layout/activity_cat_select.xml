@@ -8,15 +8,17 @@
     android:background="@drawable/menu_background"
     tools:context=".activities.CatSelectActivity">
 
+    <include layout="@layout/include_user_info" android:layout_width="wrap_content" android:layout_height="40dp" android:layout_marginTop="16dp" android:layout_marginEnd="16dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Panel (same as level select) -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/panel"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="362dp"
+        android:layout_height="577dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="48dp"
-        android:background="@drawable/settings_panel"
+        android:background="@drawable/ui_panel_levelselect"
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,33 +28,38 @@
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintWidth_percent="0.84">
 
+        <!-- Title -->
         <com.speed.sofasogood.views.OutlinedTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/title_cat_mode"
             android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="italic"
+            android:textSize="28sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.speed.sofasogood.views.OutlinedTextButton
+        <!-- Back -->
+        <ImageButton
             android:id="@+id/btnBack"
-            style="@style/NeonButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:minWidth="160dp"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:text="@string/btn_back"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="30dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ui_btnback_levelselect_eng"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Level Grid -->
         <GridLayout
             android:id="@+id/levelGrid"
             android:layout_width="0dp"

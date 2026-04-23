@@ -17,6 +17,7 @@ import androidx.preference.PreferenceManager;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
 public class ExtraContextsActivity extends AppCompatActivity {
@@ -36,6 +37,7 @@ public class ExtraContextsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extra_contexts);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
@@ -59,17 +61,17 @@ public class ExtraContextsActivity extends AppCompatActivity {
             default:      extraTitle.setImageResource(R.drawable.ui_title_extra_eng); break;
         }
 
-        View cardCamera = findViewById(R.id.cardCameraMode);
+        View cardCamera = findViewById(R.id.frameCameraMode);
         setupButtonAnimation(cardCamera);
         cardCamera.setOnClickListener(v ->
                 startActivity(new Intent(this, CameraModeActivity.class)));
 
-        View cardBathroom = findViewById(R.id.cardBathroomMode);
+        View cardBathroom = findViewById(R.id.frameBathroomMode);
         setupButtonAnimation(cardBathroom);
         cardBathroom.setOnClickListener(v ->
                 startActivity(new Intent(this, BathroomSelectActivity.class)));
 
-        View cardCat = findViewById(R.id.cardCatMode);
+        View cardCat = findViewById(R.id.frameCatMode);
         setupButtonAnimation(cardCat);
         cardCat.setOnClickListener(v ->
                 startActivity(new Intent(this, CatSelectActivity.class)));

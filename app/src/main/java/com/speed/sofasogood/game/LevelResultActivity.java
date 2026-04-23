@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -16,12 +17,17 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.activities.LeaderboardActivity;
 import com.speed.sofasogood.models.LeaderboardSubmitRequest;
+import com.speed.sofasogood.models.UserProfile;
 import com.speed.sofasogood.network.LeaderboardApi;
 import com.speed.sofasogood.network.RetrofitClient;
+import com.speed.sofasogood.utils.AppConstants;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 
 import okhttp3.ResponseBody;
@@ -50,6 +56,7 @@ public class LevelResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_result);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         soundPool = new SoundPool.Builder()
                 .setMaxStreams(4)
@@ -78,7 +85,7 @@ public class LevelResultActivity extends AppCompatActivity {
         resultScore.setText(getString(R.string.label_finish_score, score));
 
         // Stars
-        int stars = LevelTimeScore.starsFromScore(score);
+        int stars = getIntent().getIntExtra("stars", 0);
         ImageView star1 = findViewById(R.id.star1);
         ImageView star2 = findViewById(R.id.star2);
         ImageView star3 = findViewById(R.id.star3);
@@ -86,7 +93,7 @@ public class LevelResultActivity extends AppCompatActivity {
         star2.setImageResource(stars >= 2 ? R.drawable.ic_star_filled : R.drawable.ic_star_empty);
         star3.setImageResource(stars >= 3 ? R.drawable.ic_star_filled : R.drawable.ic_star_empty);
 
-        submitScoreToLeaderboard(level, score, finishTimeMs);
+        submitScoreToLeaderboard(level, score, finishTimeMs, steps);
 
         View btnLeaderboard = findViewById(R.id.btnLeaderboard);
         setupButtonAnimation(btnLeaderboard);
@@ -116,20 +123,94 @@ public class LevelResultActivity extends AppCompatActivity {
         btnExit.setOnClickListener(v -> finish());
     }
 
-    private void submitScoreToLeaderboard(int level, int score, long timeMs) {
-        LeaderboardApi api = RetrofitClient.getClient().create(LeaderboardApi.class);
-        LeaderboardSubmitRequest body = new LeaderboardSubmitRequest(level, score, timeMs, "");
-        api.submitScore(body).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                // Best-effort; webhook may not implement POST yet.
-            }
+    private void submitScoreToLeaderboard(int level, int score, long timeMs, int steps) {
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Ignore network errors for gameplay flow.
-            }
-        });
+        // ✅ STEP 1 — method entered
+        Log.d("LeaderboardSubmit", "STEP 1: method called level=" + level + " score=" + score);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // ✅ STEP 2 — check login
+        if (auth.getCurrentUser() == null) {
+            Log.e("LeaderboardSubmit", "STEP 2: user is NULL → not logged in");
+            return;
+        }
+
+        Log.d("LeaderboardSubmit", "STEP 3: user exists");
+
+        String uid = auth.getCurrentUser().getUid();
+
+        // ✅ STEP 4 — Firestore request starts
+        Log.d("LeaderboardSubmit", "STEP 4: fetching profile from Firestore");
+
+        FirebaseFirestore.getInstance()
+                .collection(AppConstants.USERS_COLLECTION)
+                .document(uid)
+                .get()
+
+                // ✅ STEP 5 — Firestore success
+                .addOnSuccessListener(snapshot -> {
+                    Log.d("LeaderboardSubmit", "STEP 5: profile loaded");
+
+                    UserProfile profile = snapshot.toObject(UserProfile.class);
+
+                    String playerName = (profile != null && profile.getPlayerName() != null)
+                            ? profile.getPlayerName().trim()
+                            : "";
+
+                    if (playerName.isEmpty()) {
+                        Log.e("LeaderboardSubmit", "STEP 6: playerName EMPTY → abort");
+                        return;
+                    }
+
+                    Log.d("LeaderboardSubmit", "STEP 6: playerName=" + playerName);
+
+                    // build metadata
+                    String metadata = "{\"timeTaken\":" + (timeMs / 1000) + ",\"steps\":" + steps + "}";
+
+                    LeaderboardSubmitRequest body =
+                            new LeaderboardSubmitRequest(level, score, playerName, metadata);
+
+                    LeaderboardApi api = RetrofitClient.getClient().create(LeaderboardApi.class);
+                    String authHeader = "Bearer g21-TUVW";
+
+                    // ✅ STEP 7 — about to send request
+                    Log.d("LeaderboardSubmit", "STEP 7: sending API request");
+
+                    api.submitScore(authHeader, body).enqueue(new Callback<ResponseBody>() {
+
+                        // ✅ STEP 8 — RESPONSE RECEIVED
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            try {
+                                String raw = response.body() != null
+                                        ? response.body().string()
+                                        : response.errorBody() != null
+                                        ? response.errorBody().string()
+                                        : "null";
+
+                                Log.e("LeaderboardSubmit",
+                                        "STEP 8: HTTP " + response.code() + " → " + raw);
+
+                            } catch (Exception e) {
+                                Log.e("LeaderboardSubmit",
+                                        "STEP 8: error reading response", e);
+                            }
+                        }
+
+                        // ✅ STEP 9 — NETWORK FAILURE
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Log.e("LeaderboardSubmit",
+                                    "STEP 9: network failure → " + t.getMessage(), t);
+                        }
+                    });
+                })
+
+                // ❌ Firestore failed
+                .addOnFailureListener(e -> {
+                    Log.e("LeaderboardSubmit", "STEP X: Firestore FAILED → " + e.getMessage(), e);
+                });
     }
 
     @SuppressLint("ClickableViewAccessibility")

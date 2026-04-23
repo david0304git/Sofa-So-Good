@@ -19,6 +19,11 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="68dp"
         android:elevation="10dp"
+        android:background="@drawable/dialog_box"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:text="0:00.00"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -38,6 +43,21 @@
         android:elevation="10dp"
         android:scaleType="centerInside"
         android:src="@android:drawable/ic_media_next"
+        app:layout_constraintEnd_toStartOf="@id/btnPause"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 提示按鈕 (遊戲開始後顯示在跳過按鈕的位置) -->
+    <ImageButton
+        android:id="@+id/btnHint"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/dialog_box"
+        android:elevation="10dp"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_menu_help"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/btnPause"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,6 +134,42 @@
             android:text="3"/>
 
     </FrameLayout>
+
+    <!-- 提示 Overlay -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hintOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000"
+        android:visibility="gone"
+        android:elevation="18dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/hintImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="32dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/btnCloseHint"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/dialog_box"
+            android:scaleType="centerInside"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- 暫停 Overlay -->
     <androidx.constraintlayout.widget.ConstraintLayout

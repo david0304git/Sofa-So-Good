@@ -12,8 +12,26 @@
     <string name="label_volume">Music Volume</string>
     <string name="label_sound_volume">Sound Effects Volume</string>
     <string name="label_language">Language</string>
+    <string name="btn_login">Login</string>
     <string name="btn_logout">Logout</string>
     <string name="btn_back">Back</string>
+
+    <!-- login -->
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Register -->
+    <string name="username">Username</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+
+    <!-- Forgot Password Page -->
+    <string name="reset_password_title">Reset Password</string>
+    <string name="reset_password_instruction">Please enter your registered email address.</string>
+    <string name="btn_send_reset_email">Send reset email</string>
+    <string name="reset_email_sent">A password reset email has been sent to your registered email address.</string>
 
     <!-- Navigation -->
     <string name="back">Back</string>
@@ -119,4 +137,11 @@
     <string name="l8_d3">Maybe the furniture positions can trigger a mechanism.</string>
     <string name="l8_d4">I\u2019m a little scared\u2026</string>
     <string name="l8_d5">The furniture is heavy, I must push slowly.</string>
+
+    <!-- Bathroom Mode Level 1 -->
+    <string name="e1l1_d1">The next step is to clean the bathroom. Let me see…</string>
+    <string name="e1l1_d2">(Water pipe bursts) Ahh! What happened?!</string>
+    <string name="e1l1_d3">Oh no no no no！</string>
+    <string name="e1l1_d4">There\'s water everywhere! The landlord didn\'t tell me any of this!</string>
+    <string name="e1l1_d5">The water needs to be pushed into the drain.</string>
 </resources>

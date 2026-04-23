@@ -25,13 +25,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.GridLayout;
-import android.widget.ViewFlipper;
+import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.speed.sofasogood.R;
 import com.speed.sofasogood.utils.ImmersiveHelper;
+import com.speed.sofasogood.utils.UserInfoHelper;
 import com.speed.sofasogood.utils.LocaleHelper;
 import com.speed.sofasogood.views.OutlinedTextButton;
 
@@ -47,9 +51,8 @@ public class LevelSelectActivity extends AppCompatActivity {
     private int clickSoundId;
     private boolean soundReady = false;
 
-    private ViewFlipper viewFlipper;
-
-    private android.view.GestureDetector gestureDetector;
+    private ViewPager2 viewPager;
+    private LinearLayout dotsLayout;
 
     private float soundVolume = 1.0f;
     private float radiusPx;
@@ -57,6 +60,7 @@ public class LevelSelectActivity extends AppCompatActivity {
     private int tileMarginPx;
 
     private int currentPageIndex = 0;
+    private int pageCount;
 
     private final Map<String, Drawable.ConstantState> backgroundCache = new HashMap<>();
 
@@ -81,15 +85,13 @@ public class LevelSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_select);
         ImmersiveHelper.enable(getWindow());
+        new UserInfoHelper().setup(this);
 
         initSound();
         initDimensions();
         initViews();
         buildLevelPages();
         bindStaticButtons();
-
-        currentPageIndex = 0;
-        viewFlipper.setDisplayedChild(currentPageIndex);
     }
 
     private void initSound() {
@@ -121,48 +123,11 @@ public class LevelSelectActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        viewFlipper = findViewById(R.id.viewFlipper);
-        // Hide arrow buttons — swipe is used instead
-        findViewById(R.id.btnPrevPage).setVisibility(View.GONE);
-        findViewById(R.id.btnNextPage).setVisibility(View.GONE);
+        viewPager = findViewById(R.id.viewPager);
+        dotsLayout = findViewById(R.id.dotsLayout);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void bindStaticButtons() {
-        gestureDetector = new android.view.GestureDetector(this,
-                new android.view.GestureDetector.SimpleOnGestureListener() {
-                    private static final int SWIPE_MIN_DISTANCE = 60;
-                    private static final int SWIPE_MIN_VELOCITY = 100;
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2,
-                                          float velocityX, float velocityY) {
-                        if (e1 == null || e2 == null) return false;
-                        float dx = e2.getX() - e1.getX();
-                        if (Math.abs(dx) < SWIPE_MIN_DISTANCE) return false;
-                        if (Math.abs(velocityX) < SWIPE_MIN_VELOCITY) return false;
-                        if (dx < 0 && currentPageIndex < viewFlipper.getChildCount() - 1) {
-                            viewFlipper.setInAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_in_right));
-                            viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_out_left));
-                            currentPageIndex++;
-                            viewFlipper.setDisplayedChild(currentPageIndex);
-                            return true;
-                        } else if (dx > 0 && currentPageIndex > 0) {
-                            viewFlipper.setInAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_in_left));
-                            viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(LevelSelectActivity.this, R.anim.slide_out_right));
-                            currentPageIndex--;
-                            viewFlipper.setDisplayedChild(currentPageIndex);
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-
-        viewFlipper.setOnTouchListener((v, event) -> {
-            gestureDetector.onTouchEvent(event);
-            return true;
-        });
-
         View btnLeaderboard = findViewById(R.id.btnLeaderboard);
         setupButtonAnimation(btnLeaderboard);
         btnLeaderboard.setOnClickListener(v ->
@@ -202,21 +167,45 @@ public class LevelSelectActivity extends AppCompatActivity {
     }
 
     private void buildLevelPages() {
-        viewFlipper.removeAllViews();
+        pageCount = (int) Math.ceil(levels.length / (float) LEVELS_PER_PAGE);
+        viewPager.setAdapter(new LevelPageAdapter());
+        viewPager.setOffscreenPageLimit(pageCount);
+        setupDots();
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                updateDots(position);
+            }
+        });
+    }
 
-        int pageCount = (int) Math.ceil(levels.length / (float) LEVELS_PER_PAGE);
-        for (int pageIndex = 0; pageIndex < pageCount; pageIndex++) {
-            int start = pageIndex * LEVELS_PER_PAGE;
-            int endExclusive = Math.min(start + LEVELS_PER_PAGE, levels.length);
-            viewFlipper.addView(createLevelPage(start, endExclusive));
+    private void setupDots() {
+        dotsLayout.removeAllViews();
+        int sizePx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()));
+        int marginPx = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, getResources().getDisplayMetrics()));
+        for (int i = 0; i < pageCount; i++) {
+            View dot = new View(this);
+            android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(sizePx, sizePx);
+            params.setMargins(marginPx, 0, marginPx, 0);
+            dot.setLayoutParams(params);
+            android.graphics.drawable.GradientDrawable shape = new android.graphics.drawable.GradientDrawable();
+            shape.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+            shape.setColor(i == 0 ? 0xFFFFD700 : 0x88FFFFFF);
+            dot.setBackground(shape);
+            dotsLayout.addView(dot);
         }
+    }
 
-        currentPageIndex = 0;
+    private void updateDots(int selected) {
+        for (int i = 0; i < dotsLayout.getChildCount(); i++) {
+            android.graphics.drawable.GradientDrawable shape = (android.graphics.drawable.GradientDrawable) dotsLayout.getChildAt(i).getBackground();
+            shape.setColor(i == selected ? 0xFFFFD700 : 0x88FFFFFF);
+        }
     }
 
     private View createLevelPage(int startInclusive, int endExclusive) {
         GridLayout grid = new GridLayout(this);
-        grid.setLayoutParams(new ViewFlipper.LayoutParams(
+        grid.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
@@ -321,7 +310,34 @@ public class LevelSelectActivity extends AppCompatActivity {
         });
     }
 
-@SuppressLint("ClickableViewAccessibility")
+    private class LevelPageAdapter extends RecyclerView.Adapter<LevelPageAdapter.PageHolder> {
+        @NonNull
+        @Override
+        public PageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new PageHolder(new android.widget.FrameLayout(parent.getContext()));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull PageHolder holder, int position) {
+            android.widget.FrameLayout container = (android.widget.FrameLayout) holder.itemView;
+            container.removeAllViews();
+            container.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            int start = position * LEVELS_PER_PAGE;
+            int end = Math.min(start + LEVELS_PER_PAGE, levels.length);
+            container.addView(createLevelPage(start, end));
+        }
+
+        @Override
+        public int getItemCount() { return pageCount; }
+
+        class PageHolder extends RecyclerView.ViewHolder {
+            PageHolder(@NonNull View itemView) { super(itemView); }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private void setupButtonAnimation(View button) {
         button.setHapticFeedbackEnabled(false);
         button.setOnTouchListener((v, event) -> {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/userInfoContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:clipChildren="false">
+
+    <!-- Expandable email text (logged in) -->
+    <TextView
+        android:id="@+id/tvUserEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/main_button"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="48dp"
+        android:textColor="#5A3A1A"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:layout_gravity="end"/>
+
+    <!-- Circle avatar button (logged in) / Login button (logged out) -->
+    <ImageButton
+        android:id="@+id/btnUserInfo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/circle_button"
+        android:scaleType="centerInside"
+        android:padding="8dp"
+        android:src="@drawable/ic_avatar"
+        android:layout_gravity="end"/>
+
+</FrameLayout>
