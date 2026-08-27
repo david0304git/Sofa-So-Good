@@ -1,8 +1,8 @@
 00# Sofa So Good
 ## To Do List
-- [ ] Login Function
-- [ ] Leaderboard Function
-- [ ] Beginner's Guide
+- [x] Login Function
+- [x] Leaderboard Function
+- [x] Beginner's Guide
 - [x] Anime Character (4 types of view)
     - Happy
     - Thinking
